@@ -1,0 +1,6 @@
+framework module Pods_PiVolumeSwift {
+  umbrella header "Pods-PiVolumeSwift-umbrella.h"
+
+  export *
+  module * { export * }
+}
