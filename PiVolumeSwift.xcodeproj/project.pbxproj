@@ -10,13 +10,14 @@
 		C89323969CB7E0826A4A00D0 /* Pods_PiVolumeSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AA75E1876D83014D2F5C2FE /* Pods_PiVolumeSwift.framework */; };
 		CA9D9ACA24EE7FEFD39E57FC /* Pods_PiVolumeSwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5852042A934ED7BA28D93E84 /* Pods_PiVolumeSwiftTests.framework */; };
 		D50B53241E4D00A3003FE794 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53231E4D00A3003FE794 /* AppDelegate.swift */; };
-		D50B53261E4D00A3003FE794 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53251E4D00A3003FE794 /* FirstViewController.swift */; };
-		D50B53281E4D00A3003FE794 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53271E4D00A3003FE794 /* SecondViewController.swift */; };
+		D50B53261E4D00A3003FE794 /* VolumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53251E4D00A3003FE794 /* VolumeViewController.swift */; };
+		D50B53281E4D00A3003FE794 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53271E4D00A3003FE794 /* SettingsViewController.swift */; };
 		D50B532B1E4D00A3003FE794 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D50B53291E4D00A3003FE794 /* Main.storyboard */; };
 		D50B532D1E4D00A3003FE794 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D50B532C1E4D00A3003FE794 /* Assets.xcassets */; };
 		D50B53301E4D00A3003FE794 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D50B532E1E4D00A3003FE794 /* LaunchScreen.storyboard */; };
 		D50B533B1E4D00A3003FE794 /* PiVolumeSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B533A1E4D00A3003FE794 /* PiVolumeSwiftTests.swift */; };
 		D50B53461E4D00A3003FE794 /* PiVolumeSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53451E4D00A3003FE794 /* PiVolumeSwiftUITests.swift */; };
+		D5916C531E4D10C70050458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C521E4D10C70050458B /* Constants.swift */; };
 		D94AF42112017DB80BD225D5 /* Pods_PiVolumeSwiftUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E0AF0E408A6F39086F0874 /* Pods_PiVolumeSwiftUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,8 +48,8 @@
 		A35256545158E92D93E90463 /* Pods-PiVolumeSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PiVolumeSwift.release.xcconfig"; path = "Pods/Target Support Files/Pods-PiVolumeSwift/Pods-PiVolumeSwift.release.xcconfig"; sourceTree = "<group>"; };
 		D50B53201E4D00A3003FE794 /* PiVolumeSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PiVolumeSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D50B53231E4D00A3003FE794 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D50B53251E4D00A3003FE794 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		D50B53271E4D00A3003FE794 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		D50B53251E4D00A3003FE794 /* VolumeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeViewController.swift; sourceTree = "<group>"; };
+		D50B53271E4D00A3003FE794 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D50B532A1E4D00A3003FE794 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D50B532C1E4D00A3003FE794 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D50B532F1E4D00A3003FE794 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -59,6 +60,7 @@
 		D50B53411E4D00A3003FE794 /* PiVolumeSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PiVolumeSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D50B53451E4D00A3003FE794 /* PiVolumeSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiVolumeSwiftUITests.swift; sourceTree = "<group>"; };
 		D50B53471E4D00A3003FE794 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D5916C521E4D10C70050458B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		DF01F718CA154B072E787851 /* Pods-PiVolumeSwiftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PiVolumeSwiftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PiVolumeSwiftTests/Pods-PiVolumeSwiftTests.release.xcconfig"; sourceTree = "<group>"; };
 		E88A76A88DF116194C40FD0C /* Pods-PiVolumeSwiftUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PiVolumeSwiftUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PiVolumeSwiftUITests/Pods-PiVolumeSwiftUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -140,9 +142,10 @@
 			isa = PBXGroup;
 			children = (
 				D50B53231E4D00A3003FE794 /* AppDelegate.swift */,
-				D50B53251E4D00A3003FE794 /* FirstViewController.swift */,
-				D50B53271E4D00A3003FE794 /* SecondViewController.swift */,
+				D50B53251E4D00A3003FE794 /* VolumeViewController.swift */,
+				D50B53271E4D00A3003FE794 /* SettingsViewController.swift */,
 				D50B53291E4D00A3003FE794 /* Main.storyboard */,
+				D5916C521E4D10C70050458B /* Constants.swift */,
 				D50B532C1E4D00A3003FE794 /* Assets.xcassets */,
 				D50B532E1E4D00A3003FE794 /* LaunchScreen.storyboard */,
 				D50B53311E4D00A3003FE794 /* Info.plist */,
@@ -452,9 +455,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D50B53281E4D00A3003FE794 /* SecondViewController.swift in Sources */,
+				D50B53281E4D00A3003FE794 /* SettingsViewController.swift in Sources */,
 				D50B53241E4D00A3003FE794 /* AppDelegate.swift in Sources */,
-				D50B53261E4D00A3003FE794 /* FirstViewController.swift in Sources */,
+				D50B53261E4D00A3003FE794 /* VolumeViewController.swift in Sources */,
+				D5916C531E4D10C70050458B /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,6 +715,7 @@
 				D50B534C1E4D00A3003FE794 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D50B534D1E4D00A3003FE794 /* Build configuration list for PBXNativeTarget "PiVolumeSwiftTests" */ = {
 			isa = XCConfigurationList;
@@ -719,6 +724,7 @@
 				D50B534F1E4D00A3003FE794 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D50B53501E4D00A3003FE794 /* Build configuration list for PBXNativeTarget "PiVolumeSwiftUITests" */ = {
 			isa = XCConfigurationList;
@@ -727,6 +733,7 @@
 				D50B53521E4D00A3003FE794 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

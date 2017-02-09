@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController {
+class VolumeViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -21,5 +21,14 @@ class FirstViewController: UIViewController {
 	}
 
 
+	@IBOutlet weak var volumeLabel: UILabel!
+	@IBOutlet weak var volumeSlider: UISlider!
+	
+	
+	@IBAction func sliderMoved(_ sender: UISlider) {
+		print("xxx")
+		print(sender)
+		
+	}
 }
 
