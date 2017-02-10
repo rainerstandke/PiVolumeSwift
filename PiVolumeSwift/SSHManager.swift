@@ -56,7 +56,7 @@ class SSHManager: NSObject {
 		
 		if let inComingVolume = notif?.userInfo?[K.Key.PercentValue] as? Float {
 			lastInComingVolume = inComingVolume
-			print("lastInComingVolume: \(lastInComingVolume)")
+			print("lastInComingVolume: \(lastInComingVolume!)")
 		}
 		
 		
@@ -79,49 +79,45 @@ class SSHManager: NSObject {
 		opQueue.addOperation { 
 			self.lastProcessedVolume = self.lastInComingVolume
 
+
+			
 			if	self.session == nil {
 				self.session = NMSSHSession.connect(toHost: self.userDefs.string(forKey: K.UserDef.IpAddress),
 				                                    withUsername: self.userDefs.string(forKey: K.UserDef.UserName))
 			}
 			
-			if !(self.session?.isConnected)! {
-				if	!(self.session?.connect())! {
-					return
-				}
+			guard let localSession: NMSSHSession = self.session else { return }
+			
+			if !localSession.isConnected {
+				if !localSession.connect() { return }
 			}
 			
-			if !(self.session?.isAuthorized)! {
-				if !(self.session?.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)))! {
-					return
-				}
+			if !localSession.isAuthorized {
+				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) { return }
 			}
 			
-			let commandStr = String("amixer -c 0 cset numid=6 \(self.lastInComingVolume!)%")
+			guard let commandStr = String("amixer -c 0 cset numid=6 \(self.lastInComingVolume!)%") else { return }
 			
-			let response = try! self.session?.channel.execute(commandStr)
-			
-			let resVol = self.volumeFromRemote(outputStr: response!)
-			print("resVol: \(resVol!)")
-			
-			if resVol == nil {
-				return
-			}
-
-			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: self, userInfo: [K.Key.PercentValue: resVol!])
+			/*???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
+			guard let response = try? localSession.channel.execute(commandStr) else { return }
 			
 			DispatchQueue.main.async {
 				self.timer?.invalidate()
-				self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { (t: Timer) in
-					print("t: \(t)")
+				self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { (timer: Timer) in
 					self.serialQueue.async {
+						print("timer fired")
 						self.session?.disconnect()
 						self.session = nil
 					}
 				})
 			}
+
+			guard let resVol = self.volumeFromRemote(outputStr: response) else { return }
+			print("resVol: \(resVol)")
+			
+			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: self, userInfo: [K.Key.PercentValue: resVol])
 		}
 	}
-
 	
 	func volumeFromRemote(outputStr: String) -> Int?
 	{

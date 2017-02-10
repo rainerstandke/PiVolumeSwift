@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		// force init
 		_ = SSHManager.sharedInstance
-//		NMSSHLogger.shared().isEnabled = false
+		NMSSHLogger.shared().isEnabled = false
 		
 		
 		return true
