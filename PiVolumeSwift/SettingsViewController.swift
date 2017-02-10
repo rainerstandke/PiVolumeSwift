@@ -32,7 +32,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	@IBOutlet weak var passTextField: UITextField!
 
 	
-	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		print("textFieldShouldReturn")
 		
@@ -54,6 +53,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		default:
 			break
 		}
+
+		userDefs.synchronize()
 
 		return true
 	}
