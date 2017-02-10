@@ -18,7 +18,7 @@ class VolumeViewController: UIViewController {
 		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.VolChanged)"),
 		                     object: nil,
 		                     queue: OperationQueue.main) { (notif) in
-			print(notif);
+								self.volumeLabel.text = String(describing: notif.userInfo![K.Key.PercentValue]!)
 		}
 	}
 	
@@ -42,11 +42,7 @@ class VolumeViewController: UIViewController {
 	
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
-		print("xxx")
-		print(sender)
-		
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"), object: self, userInfo: [K.Key.PercentValue: sender.value])
-		
 	}
 }
 
