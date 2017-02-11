@@ -34,9 +34,13 @@ class SSHManager: NSObject {
 		instance.notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.SliderMoved)"), object: nil, queue: OperationQueue.main, using: { [unowned instance] (notif) in
 			instance.pushVolumeToRemote(notif: notif)
 		})
+	
+		instance.getVolumeFromRemote() // to populate label
 		
 		return instance
 	}()
+	
+	
 	
 	deinit {
 		notifCtr.removeObserver(self)
@@ -53,16 +57,14 @@ class SSHManager: NSObject {
 	
 	func pushVolumeToRemote(notif: Notification?)
 	{
+		// can be called with and w/o notif
+		// w/ notif - update lastIncoming, then work on authenticate
+		// w/o notif - just use lastIncoming as last scheduledTimer
+		// should only be called w/o after op ran at least once, so that lastIncoming was set fer sure
 		
 		if let inComingVolume = notif?.userInfo?[K.Key.PercentValue] as? Float {
 			lastInComingVolume = inComingVolume
 			print("lastInComingVolume: \(lastInComingVolume!)")
-		}
-		
-		
-		if ( lastInComingVolume! < 0) {
-			// should not happen, but still...
-			return
 		}
 		
 		if opQueue.operationCount > 0 {
@@ -71,15 +73,56 @@ class SSHManager: NSObject {
 		}
 		
 		if lastInComingVolume == lastProcessedVolume {
-			// would be redundant
+			// would be redundant, but confirm - turn black - whatever value is currently displayed in UI
+			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.ConfirmedVolume)"), object: self, userInfo: nil)
 			return;
 		}
 		
-		
-		opQueue.addOperation { 
+		opQueue.addOperation {
 			self.lastProcessedVolume = self.lastInComingVolume
-
-
+			
+			if	self.session == nil {
+				self.session = NMSSHSession.connect(toHost: self.userDefs.string(forKey: K.UserDef.IpAddress),
+				                                    withUsername: self.userDefs.string(forKey: K.UserDef.UserName))
+			}
+			
+			guard let localSession: NMSSHSession = self.session else { return }
+			
+			if !localSession.isConnected {
+				if !localSession.connect() { return } // TODO: tell user
+			}
+			
+			if !localSession.isAuthorized {
+				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) { return }  // TODO: tell user
+			}
+			
+			guard let commandStr = String("amixer -c 0 cset numid=6 \(self.lastInComingVolume!)%") else { return }
+			print("commandStr: \(commandStr)")
+			
+			/*???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
+			guard let response = try? localSession.channel.execute(commandStr) else { return }
+			
+			DispatchQueue.main.async {
+				self.timer?.invalidate()
+				self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { (timer: Timer) in
+					self.serialQueue.async {
+						print("push timer fired")
+						self.session?.disconnect()
+						self.session = nil
+					}
+				})
+			}
+			
+			guard let resVol = self.volumeFromRemote(outputStr: response) else { return }
+			print("push resVol: \(resVol)")
+			
+			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: self, userInfo: [K.Key.PercentValue: resVol])
+		}
+	}
+	
+	func getVolumeFromRemote()
+	{
+		opQueue.addOperation {
 			
 			if	self.session == nil {
 				self.session = NMSSHSession.connect(toHost: self.userDefs.string(forKey: K.UserDef.IpAddress),
@@ -96,24 +139,22 @@ class SSHManager: NSObject {
 				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) { return }
 			}
 			
-			guard let commandStr = String("amixer -c 0 cset numid=6 \(self.lastInComingVolume!)%") else { return }
-			
 			/*???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
-			guard let response = try? localSession.channel.execute(commandStr) else { return }
+			guard let response = try? localSession.channel.execute("amixer -c 0 cget numid=6") else { return }
 			
 			DispatchQueue.main.async {
 				self.timer?.invalidate()
 				self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { (timer: Timer) in
 					self.serialQueue.async {
-						print("timer fired")
+						print("get timer fired")
 						self.session?.disconnect()
 						self.session = nil
 					}
 				})
 			}
-
+			
 			guard let resVol = self.volumeFromRemote(outputStr: response) else { return }
-			print("resVol: \(resVol)")
+			print("get resVol: \(resVol)")
 			
 			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: self, userInfo: [K.Key.PercentValue: resVol])
 		}

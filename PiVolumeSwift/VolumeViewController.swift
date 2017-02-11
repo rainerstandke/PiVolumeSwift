@@ -19,12 +19,22 @@ class VolumeViewController: UIViewController {
 		                     object: nil,
 		                     queue: OperationQueue.main) { (notif) in
 								self.volumeLabel.text = String(describing: notif.userInfo![K.Key.PercentValue]!)
+								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 		}
+		
+		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
+		                     object: nil,
+		                     queue: OperationQueue.main) { (notif) in
+								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+		}
+		
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// Do any additional setup after loading the view, typically from a nib.
+		
+		volumeLabel.text = UserDefaults.standard.string(forKey: K.UserDef.LastUIVolumeStr)
+		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -42,6 +52,7 @@ class VolumeViewController: UIViewController {
 	
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
+		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"), object: self, userInfo: [K.Key.PercentValue: sender.value])
 	}
 }

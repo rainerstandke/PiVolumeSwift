@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		_ = SSHManager.sharedInstance
 		NMSSHLogger.shared().isEnabled = false
 		
+		_ = K() // to force userDefs initial, non-nil values
 		
 		return true
 	}
