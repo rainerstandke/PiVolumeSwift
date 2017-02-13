@@ -21,10 +21,13 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func updateViewConstraints() {
 		print("presetTableView.contentSize.height: \(presetTableView.contentSize.height)")
 		super.updateViewConstraints()
-		tableViewHeightConstraint.constant = presetTableView.contentSize.height
-		print("tableViewHeightConstraint.constant: \(tableViewHeightConstraint.constant)")
+//		tableViewHeightConstraint.constant = presetTableView.contentSize.height
+//		print("tableViewHeightConstraint.constant: \(tableViewHeightConstraint.constant)")
 //		tableViewHeightConstraint.constant = 86
 //		view.updateConstraints()
+		
+		
+		
 	}
 	
 	override func awakeFromNib() {
@@ -134,7 +137,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		updateViewConstraints()
-		return 1
+		return 15
 	}
 	
 	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
