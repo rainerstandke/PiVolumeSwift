@@ -33,6 +33,11 @@ struct K {
 		static let Password = 1236
 	}
 	
+	struct CellID {
+		static let PresetTableViewCell = "kPresetTableViewCell"
+	}
+	
+	
 //	// ???: How about an enum in here? - wasn't recognized when used
 //	enum UIElementTag: Int {
 //		case IpAddress = 1234
@@ -51,6 +56,7 @@ struct K {
 			UserDef.LastUIVolumeStr : "??"
 		]
 		defaults.register(defaults: defaultValues)
+		defaults.synchronize()
 	}
 	
 }

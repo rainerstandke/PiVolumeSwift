@@ -14,15 +14,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
-
+//	func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+//		<#code#>
+//	}
+	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
+		
+		_ = K() // to force userDefs initial, non-nil values
 		
 		// force init
 		_ = SSHManager.sharedInstance
 		NMSSHLogger.shared().isEnabled = false
-		
-		_ = K() // to force userDefs initial, non-nil values
 		
 		return true
 	}
