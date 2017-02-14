@@ -22,27 +22,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-63-VUd">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-63-VUd">
                                 <rect key="frame" x="16" y="139.5" width="288" height="428.5"/>
-                                <color key="backgroundColor" red="0.80000001190000003" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="kPresetTableViewCell" id="Qhd-yI-5Yc">
                                         <rect key="frame" x="0.0" y="28" width="288" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Qhd-yI-5Yc" id="Q1I-xr-cj2">
-                                            <rect key="frame" x="0.0" y="0.0" width="288" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="288" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="39" translatesAutoresizingMaskIntoConstraints="NO" id="vY3-rI-nq4">
                                                     <rect key="frame" x="31" y="5" width="227" height="33"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pM-EV-FmO">
+                                                        <button opaque="NO" tag="9958" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pM-EV-FmO">
                                                             <rect key="frame" x="0.0" y="0.0" width="94" height="33"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                                            <state key="normal" title="Button"/>
+                                                            <state key="normal" title="Preset"/>
+                                                            <connections>
+                                                                <action selector="presetButtonTouched:" destination="9pv-A4-QxB" eventType="touchUpInside" id="1nU-eP-E64"/>
+                                                                <outletCollection property="gestureRecognizers" destination="60V-tf-MOK" appends="YES" id="OJP-x9-Ede"/>
+                                                            </connections>
                                                         </button>
                                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-100" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Zzz-Ai-b92">
                                                             <rect key="frame" x="133" y="2" width="94" height="29"/>
+                                                            <connections>
+                                                                <action selector="stepped:" destination="9pv-A4-QxB" eventType="valueChanged" id="AbH-xj-MAl"/>
+                                                            </connections>
                                                         </stepper>
                                                     </subviews>
                                                     <constraints>
@@ -55,9 +62,6 @@
                                                 <constraint firstItem="vY3-rI-nq4" firstAttribute="centerY" secondItem="Q1I-xr-cj2" secondAttribute="centerY" id="icZ-aV-KSk"/>
                                                 <constraint firstItem="vY3-rI-nq4" firstAttribute="centerX" secondItem="Q1I-xr-cj2" secondAttribute="centerX" id="jQq-vL-Y3m"/>
                                             </constraints>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="60V-tf-MOK" appends="YES" id="cfV-3n-7wS"/>
-                                            </connections>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
@@ -117,6 +121,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="First" image="first" id="acW-dT-cKf"/>
                     <connections>
+                        <outlet property="PresetTableView" destination="zIr-63-VUd" id="hGo-sI-sF9"/>
                         <outlet property="presetTableView" destination="zIr-63-VUd" id="F6U-AP-vLW"/>
                         <outlet property="volumeLabel" destination="9cn-dV-GrP" id="nvT-JR-qBH"/>
                         <outlet property="volumeSlider" destination="KhZ-IX-3NK" id="rav-HX-f7B"/>
