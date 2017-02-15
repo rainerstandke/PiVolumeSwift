@@ -15,16 +15,21 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	let notifCtr = NotificationCenter.default
 	var firstVolumeUpdateSinceDidLoad = true
 	
-	@IBOutlet weak var presetTableView: UITableView!
+	var presetArray: Array <String> = [] {
+		didSet {
+			UserDefaults.standard.set(presetArray, forKey: K.UserDef.PresetStrArray)
+			UserDefaults.standard.synchronize()
+		}
+	}
 	
+	@IBOutlet weak var presetTableView: UITableView!
+
 	@IBOutlet weak var volumeLabel: UILabel!
 	@IBOutlet weak var volumeSlider: UISlider!
-	@IBOutlet weak var presetButton: UIButton! // OBSOLETE
-	
-	let presets = Array<String>()
+	@IBOutlet weak var longPressGR: UILongPressGestureRecognizer!
 	
 	
-	// MARK:
+	// MARK: - life cycle
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
@@ -51,6 +56,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		                     queue: OperationQueue.main) { notif in
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 		}
+		
 	}
 	
 	
@@ -59,12 +65,21 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		volumeLabel.text = UserDefaults.standard.string(forKey: K.UserDef.LastUIVolumeStr)
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+		
+		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
+		
+		presetTableView.allowsMultipleSelectionDuringEditing = false
 	}
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		self.presetTableView.flashScrollIndicators()
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		UserDefaults.standard.set(presetArray, forKey:K.UserDef.PresetStrArray)
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -76,6 +91,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	{
 		notifCtr.removeObserver(self)
 	}
+	
+	
+	// MARK: -
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
 		firstVolumeUpdateSinceDidLoad = false
@@ -89,37 +107,39 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	
-	// MARK preset
+	// MARK: - preset
 	
 	@IBAction func longPressRecognizer(_ lpGestRecog: UILongPressGestureRecognizer) {
-		print("lpGestRecog: \(lpGestRecog)")
-		
-		
-		// NEXT: check to see if tag == 9958 for preset btn, then set preset to int of curr text
-		// THEN: make model in this con to store presets -> array of strings (for label texts)
-		
-		
 		
 		if lpGestRecog.state != .began {
 			return
 		}
 		
+		let lpLocation = lpGestRecog.location(in: lpGestRecog.view)
 		
-		if lpGestRecog.view!.tag == 9958 {
-			let presetBtn = lpGestRecog.view! as! UIButton
+		guard let tableView = lpGestRecog.view as? UITableView else { return }
+		
+		guard let idxPath = tableView.indexPathForRow(at: lpLocation) else {return }
+		
+		guard let pressedView = lpGestRecog.view?.hitTest(lpLocation, with: nil) else {return }
+		
+		if pressedView.tag == K.UIElementTag.PresetButton {
+			// long touch on preset button to aquire new preset value
+			let presetBtn = pressedView as! UIButton
 			presetBtn.setTitle(volumeLabel.text, for: .normal)
+
+			presetArray[idxPath.row] = volumeLabel.text!
+		} else {
+			//long press on row to reorder - toggle tv isEditing
+			tableView.setEditing(!tableView.isEditing, animated: true)
 		}
-		
 		
 	}
 	
-	
 	@IBAction func stepped(_ stepper: UIStepper) {
 		
-		
 		let presetButton = stepper.superview!.subviews.first { siblingOrSelf -> Bool in
-			print("siblingOrSelf: \(siblingOrSelf)")
-			return siblingOrSelf.tag == 9958
+			return siblingOrSelf.tag == K.UIElementTag.PresetButton
 		} as! UIButton
 		
 		var newPreset: Int?
@@ -132,12 +152,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		stepper.value = 0.0
 		
-		if newPreset! < 0 || newPreset! > 100 {
+		if newPreset! < 0 || newPreset! > 151 {
 			return
 		}
-		print("newPreset: \(newPreset)")
 		
-		presetButton.setTitle(String(describing: newPreset), for: .normal)
+		presetButton.setTitle(String(newPreset!), for: .normal)
 		
 		UIView.animate(withDuration: 0.3,
 		               animations: {
@@ -145,17 +164,19 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 						self.volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 		})
 		
-		
-
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
 		              object: self,
 		              userInfo: [K.Key.PercentValue: Float(newPreset!)]
 		)
-
 		
 		
-//		let currPresetValue = presetButton.titleLabel?.text
-//		print("currPresetValue: \(currPresetValue)")
+		if let tv = stepper.superview(of: UITableView.self) {
+			let tvLocation = tv.convert(stepper.center, from: stepper.superview)
+			guard let idxPath = tv.indexPathForRow(at: tvLocation) else {
+				return }
+			presetArray[idxPath.row] = String(newPreset!)
+		}
+		
 	}
 	
 	
@@ -170,26 +191,70 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	
-	// MARK table view delegate
+	@IBAction func addPreset(_ plusBtn: Any) {
+		presetArray.append("Preset")
+		presetTableView.reloadData()
+	}
+
+	
+	
+	// MARK: - table view delegate / datasource
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		print("indexPath: \(indexPath)")
-		return tableView.dequeueReusableCell(withIdentifier: K.CellID.PresetTableViewCell)!
+		let cell = tableView.dequeueReusableCell(withIdentifier: K.CellID.PresetTableViewCell)!
+		
+		if let presetBtn = cell.viewWithTag(K.UIElementTag.PresetButton) as? UIButton {
+			if presetArray.count >= indexPath.row + 1 {
+				presetBtn.setTitle(presetArray[indexPath.row] as String, for: .normal)
+			} else {
+				presetBtn.setTitle("Preset", for: .normal)
+			}
+		}
+		
+		return cell
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		updateViewConstraints()
-		return 2
+		return presetArray.count
 	}
 	
-	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		print("will display cell @ indexPath: \(indexPath)")
-		if indexPath.row == ((tableView.indexPathsForVisibleRows?.last)! as IndexPath).row {
-			print("last")
-			updateViewConstraints()
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+		if tableView.isEditing {
+			return .none // to suppress ⛔️ on left
+		} else {
+			return .delete // for swipe left
 		}
 	}
-
-
+	
+	func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+		return false
+	}
+	
+	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		let removedStr = presetArray.remove(at: sourceIndexPath.row)
+		presetArray.insert(removedStr, at: destinationIndexPath.row)
+	}
+	
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			presetArray.remove(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .fade)
+		}
+	}
+	
 }
 
+
+
+
+extension UIView {
+	// from: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
+	// returns either superview if of type T, or recursively superView's superViews
+	
+	// ???: explain this better - why does it stop recursing, why does it only return one, and is it the first of type?
+	
+	func superview<T>(of type: T.Type) -> T? {
+		return superview as? T ?? superview.flatMap { $0.superview(of: T.self) }
+	}
+}

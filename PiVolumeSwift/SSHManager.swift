@@ -9,6 +9,10 @@
 import Foundation
 import NMSSH
 
+
+// TODO: revamp to scale from 2-151 or 0-151
+
+
 class SSHManager: NSObject {
 	
 	let notifCtr = NotificationCenter.default
@@ -61,11 +65,12 @@ class SSHManager: NSObject {
 		// w/ notif - update lastIncoming, then work on authenticate
 		// w/o notif - just use lastIncoming as last scheduledTimer
 		// should only be called w/o after op ran at least once, so that lastIncoming was set fer sure
+		// NOTE: incoming volume is float, like:133.958 - given to alsa on pi the post comma part is ignored - slider in UI seems to do the same
 		
 		if let inComingVolume = notif?.userInfo?[K.Key.PercentValue] as? Float {
-			lastInComingVolume = inComingVolume
+			lastInComingVolume = floor(inComingVolume)
 			print("lastInComingVolume: \(lastInComingVolume!)")
-		}
+		} else { return }
 		
 		if opQueue.operationCount > 0 {
 			// throttle
@@ -96,8 +101,7 @@ class SSHManager: NSObject {
 				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) { return }  // TODO: tell user
 			}
 			
-			guard let commandStr = String("amixer -c 0 cset numid=6 \(self.lastInComingVolume!)%") else { return }
-			print("commandStr: \(commandStr)")
+			guard let commandStr = String("amixer -c 0 cset numid=6 \(self.lastInComingVolume!)") else { return }
 			
 			/*???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
 			guard let response = try? localSession.channel.execute(commandStr) else { return }
@@ -168,9 +172,7 @@ class SSHManager: NSObject {
 			return nil
 		}
 		
-		let perCent = ((volStr! as NSString).floatValue) * 100 / 151
-		
-		return Int(perCent.rounded(.toNearestOrAwayFromZero))
+		return Int(volStr!)
 	}
 	
 	

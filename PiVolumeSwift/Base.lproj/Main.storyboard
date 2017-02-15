@@ -39,16 +39,15 @@
                                                         <button opaque="NO" tag="9958" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pM-EV-FmO">
                                                             <rect key="frame" x="0.0" y="0.0" width="94" height="33"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                                            <state key="normal" title="Preset"/>
+                                                            <state key="normal" title="??"/>
                                                             <connections>
                                                                 <action selector="presetButtonTouched:" destination="9pv-A4-QxB" eventType="touchUpInside" id="1nU-eP-E64"/>
-                                                                <outletCollection property="gestureRecognizers" destination="60V-tf-MOK" appends="YES" id="OJP-x9-Ede"/>
                                                             </connections>
                                                         </button>
                                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-100" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Zzz-Ai-b92">
                                                             <rect key="frame" x="133" y="2" width="94" height="29"/>
                                                             <connections>
-                                                                <action selector="stepped:" destination="9pv-A4-QxB" eventType="valueChanged" id="AbH-xj-MAl"/>
+                                                                <action selector="stepped:" destination="9pv-A4-QxB" eventType="valueChanged" id="dvX-5B-Fjh"/>
                                                             </connections>
                                                         </stepper>
                                                     </subviews>
@@ -68,9 +67,10 @@
                                 <connections>
                                     <outlet property="dataSource" destination="9pv-A4-QxB" id="qFd-kt-fGU"/>
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="Rz3-ex-o6Z"/>
+                                    <outletCollection property="gestureRecognizers" destination="60V-tf-MOK" appends="YES" id="p4Q-4G-lk9"/>
                                 </connections>
                             </tableView>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="KhZ-IX-3NK">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="151" translatesAutoresizingMaskIntoConstraints="NO" id="KhZ-IX-3NK">
                                 <rect key="frame" x="14" y="56.5" width="292" height="31"/>
                                 <connections>
                                     <action selector="sliderMoved:" destination="9pv-A4-QxB" eventType="valueChanged" id="WBs-zT-BUA"/>
@@ -90,6 +90,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="31"/>
                                 <state key="normal" title="+"/>
+                                <connections>
+                                    <action selector="addPreset:" destination="9pv-A4-QxB" eventType="touchUpInside" id="v8f-FT-CM8"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Ys-b8-dXv">
                                 <rect key="frame" x="16" y="101" width="46" height="30"/>
@@ -121,7 +124,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="First" image="first" id="acW-dT-cKf"/>
                     <connections>
-                        <outlet property="PresetTableView" destination="zIr-63-VUd" id="hGo-sI-sF9"/>
+                        <outlet property="longPressGR" destination="60V-tf-MOK" id="pfl-zJ-gyf"/>
                         <outlet property="presetTableView" destination="zIr-63-VUd" id="F6U-AP-vLW"/>
                         <outlet property="volumeLabel" destination="9cn-dV-GrP" id="nvT-JR-qBH"/>
                         <outlet property="volumeSlider" destination="KhZ-IX-3NK" id="rav-HX-f7B"/>

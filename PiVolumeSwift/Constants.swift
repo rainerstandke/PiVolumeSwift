@@ -15,6 +15,7 @@ struct K {
 		static let Password = "kUsDef_Password"
 		
 		static let LastUIVolumeStr = "kUsDef_LastUIVolumeStr"
+		static let PresetStrArray = "kPresetStrArray"
 	}
 	
 	struct Notif {
@@ -31,6 +32,8 @@ struct K {
 		static let IpAddress = 1234
 		static let UserName = 1235
 		static let Password = 1236
+		
+		static let PresetButton = 9958
 	}
 	
 	struct CellID {
@@ -53,8 +56,9 @@ struct K {
 			UserDef.IpAddress : "??",
 			UserDef.UserName : "??",
 			UserDef.Password : "??",
-			UserDef.LastUIVolumeStr : "??"
-		]
+			UserDef.LastUIVolumeStr : "??",
+			UserDef.PresetStrArray : [String](),
+		] as [String : Any]
 		defaults.register(defaults: defaultValues)
 		defaults.synchronize()
 	}
