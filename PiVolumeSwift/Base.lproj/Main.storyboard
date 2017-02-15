@@ -102,6 +102,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="35"/>
                                 <state key="normal" title="⚙"/>
+                                <connections>
+                                    <segue destination="8rJ-Kc-sve" kind="presentation" identifier="ToSettingsSegue" modalPresentationStyle="overFullScreen" modalTransitionStyle="coverVertical" id="L9y-no-HhL"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -151,13 +154,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="Second View" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zEq-FU-wV5">
-                                <rect key="frame" x="55.5" y="518.5" width="209.5" height="41.5"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="36"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="F3k-O9-fOk">
                                 <rect key="frame" x="16" y="52" width="288" height="30"/>
                                 <subviews>
@@ -218,6 +214,21 @@
                                     </textField>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tad-vk-YFl">
+                                <rect key="frame" x="263" y="183" width="37" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <segue destination="MDO-3F-VqS" kind="unwind" identifier="FromSettingsSegue" unwindAction="unwindFromSettingsWithUnwindSegue:" id="06u-17-2xy"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="☹…☺︎☕︎" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oGL-Ea-msO">
+                                <rect key="frame" x="4" y="187" width="171" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -228,8 +239,6 @@
                             <constraint firstItem="l6S-bK-Xbk" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" constant="1" id="TT3-9f-fKh"/>
                             <constraint firstItem="l6S-bK-Xbk" firstAttribute="top" secondItem="F3k-O9-fOk" secondAttribute="bottom" constant="8" id="cNZ-Mf-Jtj"/>
                             <constraint firstAttribute="trailingMargin" secondItem="F3k-O9-fOk" secondAttribute="trailing" id="dnq-0A-NDT"/>
-                            <constraint firstAttribute="centerX" secondItem="zEq-FU-wV5" secondAttribute="centerX" id="qqM-NS-xev"/>
-                            <constraint firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" constant="-255.25" id="qzY-Ky-pLD"/>
                             <constraint firstItem="VKl-id-vN3" firstAttribute="leading" secondItem="FQ7-f7-VTP" secondAttribute="leading" id="sDm-Jf-72U"/>
                             <constraint firstAttribute="trailingMargin" secondItem="l6S-bK-Xbk" secondAttribute="trailing" id="tL0-Mf-AFq"/>
                             <constraint firstItem="F3k-O9-fOk" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="32" id="toN-d8-6qZ"/>
@@ -240,12 +249,14 @@
                     <connections>
                         <outlet property="ipTextField" destination="cZZ-cS-GXY" id="8c9-Ig-sfs"/>
                         <outlet property="passTextField" destination="VKl-id-vN3" id="CG7-zI-Cmu"/>
+                        <outlet property="statusLabel" destination="oGL-Ea-msO" id="W6B-a0-W98"/>
                         <outlet property="userTextField" destination="FQ7-f7-VTP" id="8sJ-Vm-VxU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
+                <exit id="MDO-3F-VqS" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="750" y="360"/>
+            <point key="canvasLocation" x="750" y="359.15492957746477"/>
         </scene>
     </scenes>
     <resources>

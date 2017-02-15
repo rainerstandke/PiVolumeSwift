@@ -22,10 +22,12 @@ struct K {
 		static let VolChanged = "kNotif_VolumeChanged"
 		static let SliderMoved = "kNotif_SliderMoved"
 		static let ConfirmedVolume = "kNotif_ConfirmedVolume"
+		static let SshConnectionStatusChanged = "SshConnectionStatusChanged"
 	}
 	
 	struct Key {
 		static let PercentValue = "kKey_PercentValue"
+		static let ConnectionStatus = "kConnectionStatus"
 	}
 	
 	struct UIElementTag {
@@ -40,6 +42,12 @@ struct K {
 		static let PresetTableViewCell = "kPresetTableViewCell"
 	}
 	
+	struct Misc {
+		static let TimerInterval = 2 // TODO: make 30 again
+	}
+	
+	
+	
 	
 //	// ???: How about an enum in here? - wasn't recognized when used
 //	enum UIElementTag: Int {
@@ -48,7 +56,7 @@ struct K {
 //		case Password = 1236
 //	}
 	
-	// ???: this construct a good idea?
+	// ???: this construct a good idea? (i.e. init in a struct)
 	init()
 	{
 		let defaults = UserDefaults.standard
@@ -63,6 +71,14 @@ struct K {
 		defaults.synchronize()
 	}
 	
+}
+
+
+enum SshConnectionStatus: Int {
+	case Succeded = 7845
+	case Failed
+	case InProgress
+	case Unknown
 }
 
 

@@ -25,7 +25,17 @@ class SSHManager: NSObject {
 	var lastInComingVolume: Float?
 	var lastProcessedVolume: Float?
 	var timer: Timer?
+	var connectionStatus: SshConnectionStatus = .Unknown {
+		didSet {
+			print("SSHMan connectionStatus: \(connectionStatus)")
+			// ???: alternative syntax? Complicated, long...
+			NotificationCenter.default.post(name:NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
+			                                object:self,
+			                                userInfo:[K.Key.ConnectionStatus : connectionStatus])
+		}
+	}
 	
+	// ???: construct OK for singleton?
 	static let sharedInstance: SSHManager = {
 		let instance = SSHManager()
 		
@@ -43,7 +53,6 @@ class SSHManager: NSObject {
 		
 		return instance
 	}()
-	
 	
 	
 	deinit {
@@ -74,13 +83,13 @@ class SSHManager: NSObject {
 		
 		if opQueue.operationCount > 0 {
 			// throttle
-			return;
+			return
 		}
 		
 		if lastInComingVolume == lastProcessedVolume {
 			// would be redundant, but confirm - turn black - whatever value is currently displayed in UI
 			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.ConfirmedVolume)"), object: self, userInfo: nil)
-			return;
+			return
 		}
 		
 		opQueue.addOperation {
@@ -94,65 +103,90 @@ class SSHManager: NSObject {
 			guard let localSession: NMSSHSession = self.session else { return }
 			
 			if !localSession.isConnected {
-				if !localSession.connect() { return } // TODO: tell user
+				if !localSession.connect() { self.connectionStatus = .Failed; return } // TODO: tell user
 			}
 			
 			if !localSession.isAuthorized {
-				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) { return }  // TODO: tell user
+				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) { self.connectionStatus = .Failed; return }  // TODO: tell user
 			}
 			
 			guard let commandStr = String("amixer -c 0 cset numid=6 \(self.lastInComingVolume!)") else { return }
 			
-			/*???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
+			/* ???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
 			guard let response = try? localSession.channel.execute(commandStr) else { return }
 			
 			DispatchQueue.main.async {
 				self.timer?.invalidate()
-				self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { (timer: Timer) in
+				self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(K.Misc.TimerInterval), repeats: false, block: { (timer: Timer) in
 					self.serialQueue.async {
 						print("push timer fired")
 						self.session?.disconnect()
 						self.session = nil
+						// NOTE: no connectionStatus change b/c timeout is not a failure in normal operation
 					}
 				})
 			}
 			
-			guard let resVol = self.volumeFromRemote(outputStr: response) else { return }
+			guard let resVol = self.volumeFromRemote(outputStr: response) else { self.connectionStatus = .Failed; return }
 			print("push resVol: \(resVol)")
 			
 			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: self, userInfo: [K.Key.PercentValue: resVol])
+			
+			self.connectionStatus = .Succeded
 		}
+		
+		self.connectionStatus = .InProgress;
 	}
 	
 	func getVolumeFromRemote()
 	{
 		opQueue.addOperation {
 			
+			
+			
+			Reachability* reachability = [[Reachability reachabilityWithHostName: @"www.apple.com"] retain];
+			NetworkStatus netStatus = [reachability currentReachabilityStatus];
+			
 			if	self.session == nil {
 				self.session = NMSSHSession.connect(toHost: self.userDefs.string(forKey: K.UserDef.IpAddress),
 				                                    withUsername: self.userDefs.string(forKey: K.UserDef.UserName))
 			}
 			
-			guard let localSession: NMSSHSession = self.session else { return }
+			// ??: good construct? - 'local' function?
+			func resetSession() {
+				self.session = nil // need to nil out 
+				self.connectionStatus = .Failed;
+			}
+			
+			guard let localSession: NMSSHSession = self.session else {
+				resetSession()
+				return
+			}
 			
 			if !localSession.isConnected {
-				if !localSession.connect() { return }
+				if !localSession.connect() {
+					resetSession()
+					return
+				}
 			}
 			
 			if !localSession.isAuthorized {
-				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) { return }
+				if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) {
+					resetSession()
+					return
+				}
 			}
 			
 			/*???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
-			guard let response = try? localSession.channel.execute("amixer -c 0 cget numid=6") else { return }
+			guard let response = try? localSession.channel.execute("amixer -c 0 cget numid=6") else { self.connectionStatus = .Failed; return }
 			
 			DispatchQueue.main.async {
 				self.timer?.invalidate()
-				self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { (timer: Timer) in
+				self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(K.Misc.TimerInterval), repeats: false, block: { (timer: Timer) in
 					self.serialQueue.async {
-						print("get timer fired")
 						self.session?.disconnect()
 						self.session = nil
+						self.connectionStatus = .Unknown // this func is used for sentry purposes from SettingsCon - thus status is changed on disconnect
 					}
 				})
 			}
@@ -161,8 +195,11 @@ class SSHManager: NSObject {
 			print("get resVol: \(resVol)")
 			
 			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: self, userInfo: [K.Key.PercentValue: resVol])
+			self.connectionStatus = .Succeded;
 		}
+		self.connectionStatus = .InProgress;
 	}
+
 	
 	func volumeFromRemote(outputStr: String) -> Int?
 	{

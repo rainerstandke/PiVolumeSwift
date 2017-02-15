@@ -11,6 +11,24 @@ import UIKit
 class SettingsViewController: UIViewController, UITextFieldDelegate
 {
 	let userDefs = UserDefaults.standard
+	var sshConnectionStatus: SshConnectionStatus = .Unknown {
+		didSet {
+			print("sshConnectionStatus: \(sshConnectionStatus)")
+			
+		}
+	}
+	
+	@IBOutlet weak var ipTextField: UITextField!
+	@IBOutlet weak var userTextField: UITextField!
+	@IBOutlet weak var passTextField: UITextField!
+	
+	@IBOutlet weak var statusLabel: UILabel!
+	
+	// MARK: -
+	
+	override func awakeFromNib() {
+		super.awakeFromNib()
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -18,30 +36,57 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		ipTextField.text = userDefs.string(forKey: K.UserDef.IpAddress)
 		userTextField.text = userDefs.string(forKey: K.UserDef.UserName)
 		passTextField.text = userDefs.string(forKey: K.UserDef.Password)
-	
-	
 	}
-
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
-
-	@IBOutlet weak var ipTextField: UITextField!
-	@IBOutlet weak var userTextField: UITextField!
-	@IBOutlet weak var passTextField: UITextField!
-
 	
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+	
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		updateStatusLabel(status: SSHManager.sharedInstance.connectionStatus)
+		
+		NotificationCenter.default.addObserver(forName: NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
+		                                       object: nil,
+		                                       queue: OperationQueue.main,
+		                                       using: { [weak self] (notif) in
+												guard let state = notif.userInfo?[K.Key.ConnectionStatus] as? SshConnectionStatus else { return }
+												self?.updateStatusLabel(status: state)
+		})
+		
+		SSHManager.sharedInstance.getVolumeFromRemote() // force status update
+	}
+	
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		view.endEditing(true) // this retracts keyboard on all textFields
+		NotificationCenter.default.removeObserver(self)
+		super.viewWillDisappear(animated)
+	}
+	
+	
+	func updateStatusLabel(status: SshConnectionStatus) {
+		switch status {
+		case .Succeded:
+			self.statusLabel.text = "☺︎"
+		case .Failed:
+			self.statusLabel.text = "☹"
+		case .InProgress:
+			self.statusLabel.text = "…"
+		case .Unknown:
+			self.statusLabel.text = "⁇"
+		}
+	}
+	
+
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		print("textFieldShouldReturn")
-		
 		textField.resignFirstResponder()
-		
 		return true
 	}
 	
 	func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-		print("textFieldShouldEndEditing")
 		
 		switch textField.tag {
 		case K.UIElementTag.IpAddress:
@@ -56,9 +101,11 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 
 		userDefs.synchronize()
 
+		textField.resignFirstResponder()
+		
+		SSHManager.sharedInstance.getVolumeFromRemote() // force status update
+		
 		return true
 	}
-	
-
 }
 

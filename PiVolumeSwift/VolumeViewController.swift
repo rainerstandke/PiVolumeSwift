@@ -28,8 +28,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@IBOutlet weak var volumeSlider: UISlider!
 	@IBOutlet weak var longPressGR: UILongPressGestureRecognizer!
 	
-	
 	// MARK: - life cycle
+	
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
@@ -40,21 +40,21 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								let newVolInt = notif.userInfo![K.Key.PercentValue]! as! Int
 								self.volumeLabel.text = String(describing: newVolInt)
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-//								if	self.firstVolumeUpdateSinceDidLoad {
-//									self.firstVolumeUpdateSinceDidLoad = false
+								if	self.firstVolumeUpdateSinceDidLoad {
+									self.firstVolumeUpdateSinceDidLoad = false
 									UIView.animate(withDuration: 0.3,
 									               animations: {
 													self.volumeSlider.setValue(Float(newVolInt), animated: true)
-//													self.volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 									})
-//								}
+								}
 		}
 		
-//		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
-//		                     object: nil,
-//		                     queue: OperationQueue.main) { notif in
-//								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-//		}
+		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
+		                     object: nil,
+		                     queue: OperationQueue.main) { notif in
+								// runs when SSHMan decides not to send a redundant value to pi
+								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+		}
 		
 	}
 	
@@ -81,14 +81,24 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		UserDefaults.standard.set(presetArray, forKey:K.UserDef.PresetStrArray)
 	}
 
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
-
 	deinit
 	{
 		notifCtr.removeObserver(self)
+	}
+	
+	
+	// MARK: -
+	
+	
+	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
+		print("unwindFromSettings")
+		
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//		print("segue: \(segue)")
+//		print("sender: \(sender)")
+		
 	}
 	
 	
@@ -98,8 +108,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		firstVolumeUpdateSinceDidLoad = false
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 		
-//		UserDefaults.standard.set(String(Int(floor(sender.value))), forKey: K.UserDef.LastUIVolumeStr)
-//		UserDefaults.standard.synchronize()
+		UserDefaults.standard.set(String(Int(floor(sender.value))), forKey: K.UserDef.LastUIVolumeStr)
+		UserDefaults.standard.synchronize()
 		
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
 		              object: self,
