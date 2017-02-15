@@ -70,7 +70,7 @@
                                     <outletCollection property="gestureRecognizers" destination="60V-tf-MOK" appends="YES" id="p4Q-4G-lk9"/>
                                 </connections>
                             </tableView>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="151" translatesAutoresizingMaskIntoConstraints="NO" id="KhZ-IX-3NK">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="76" minValue="0.0" maxValue="151" translatesAutoresizingMaskIntoConstraints="NO" id="KhZ-IX-3NK">
                                 <rect key="frame" x="14" y="56.5" width="292" height="31"/>
                                 <connections>
                                     <action selector="sliderMoved:" destination="9pv-A4-QxB" eventType="valueChanged" id="WBs-zT-BUA"/>

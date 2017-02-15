@@ -40,22 +40,21 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								let newVolInt = notif.userInfo![K.Key.PercentValue]! as! Int
 								self.volumeLabel.text = String(describing: newVolInt)
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-								if	self.firstVolumeUpdateSinceDidLoad {
-									self.firstVolumeUpdateSinceDidLoad = false
+//								if	self.firstVolumeUpdateSinceDidLoad {
+//									self.firstVolumeUpdateSinceDidLoad = false
 									UIView.animate(withDuration: 0.3,
 									               animations: {
 													self.volumeSlider.setValue(Float(newVolInt), animated: true)
-													self.volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-													
+//													self.volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 									})
-								}
+//								}
 		}
 		
-		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
-		                     object: nil,
-		                     queue: OperationQueue.main) { notif in
-								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-		}
+//		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
+//		                     object: nil,
+//		                     queue: OperationQueue.main) { notif in
+//								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+//		}
 		
 	}
 	
@@ -98,6 +97,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@IBAction func sliderMoved(_ sender: UISlider) {
 		firstVolumeUpdateSinceDidLoad = false
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+		
+//		UserDefaults.standard.set(String(Int(floor(sender.value))), forKey: K.UserDef.LastUIVolumeStr)
+//		UserDefaults.standard.synchronize()
+		
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
 		              object: self,
 		              userInfo: [K.Key.PercentValue:
