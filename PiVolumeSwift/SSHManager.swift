@@ -144,8 +144,6 @@ class SSHManager: NSObject {
 			
 			
 			
-			Reachability* reachability = [[Reachability reachabilityWithHostName: @"www.apple.com"] retain];
-			NetworkStatus netStatus = [reachability currentReachabilityStatus];
 			
 			if	self.session == nil {
 				self.session = NMSSHSession.connect(toHost: self.userDefs.string(forKey: K.UserDef.IpAddress),
