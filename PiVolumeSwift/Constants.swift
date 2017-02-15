@@ -82,3 +82,7 @@ enum SshConnectionStatus: Int {
 }
 
 
+enum OperationMode: Int {
+	case Push = 1496
+	case Pull
+}
