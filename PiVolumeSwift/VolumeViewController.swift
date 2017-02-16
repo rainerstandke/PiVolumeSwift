@@ -56,6 +56,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 		}
 		
+		navigationItem.title = "Pi Volume"
 	}
 	
 	
@@ -68,6 +69,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
+		self.automaticallyAdjustsScrollViewInsets = false
 	}
 	
 	
@@ -119,11 +121,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	
-	
 	// MARK: - preset
 	
 	@IBAction func longPressRecognizer(_ lpGestRecog: UILongPressGestureRecognizer) {
-		
+		// long press on tableView gets us into edit mode - i.e. moving rows, or set preset value
 		if lpGestRecog.state != .began {
 			return
 		}
@@ -144,9 +145,29 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			presetArray[idxPath.row] = volumeLabel.text!
 		} else {
 			//long press on row to reorder - toggle tv isEditing
+			let barBtnItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(tableViewStopEditing))
+			navigationItem.setRightBarButton(barBtnItem, animated: true)
+
 			tableView.setEditing(!tableView.isEditing, animated: true)
 		}
 		
+	}
+	
+	
+	@IBAction func contentViewTap(_ tapRecog: UITapGestureRecognizer) {
+		// tap somewhere in the main contentView to get tableView out of edit mode
+		if tapRecog.state != .ended || tapRecog.view != view {
+			return
+		}
+		if presetTableView.isEditing {
+			tableViewStopEditing()
+		}
+	// NOTE we are getting into edit mode w/ left-swipe 'automatically'
+	}
+	
+	func tableViewStopEditing() {
+		presetTableView .setEditing(false, animated: true)
+		navigationItem.setRightBarButton(nil, animated: true)
 	}
 	
 	@IBAction func stepped(_ stepper: UIStepper) {
@@ -247,6 +268,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
 		let removedStr = presetArray.remove(at: sourceIndexPath.row)
 		presetArray.insert(removedStr, at: destinationIndexPath.row)
+		// seems like this method being here enables swipe-left to delete
 	}
 	
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

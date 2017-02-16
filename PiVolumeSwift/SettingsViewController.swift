@@ -28,6 +28,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	
 	override func awakeFromNib() {
 		super.awakeFromNib()
+		navigationItem.title = "Connection"
+		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(performBackSegue))
+		
 	}
 	
 	override func viewDidLoad() {
@@ -66,6 +69,10 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		super.viewWillDisappear(animated)
 	}
 	
+	
+	func performBackSegue() {
+		performSegue(withIdentifier: "FromSettingsSegue", sender: self)
+	}
 	
 	func updateStatusLabel(status: SshConnectionStatus) {
 		switch status {
