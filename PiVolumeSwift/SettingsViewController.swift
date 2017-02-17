@@ -71,19 +71,20 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	
 	
 	func performBackSegue() {
+		print("performBackSegue: \(performBackSegue)")
 		performSegue(withIdentifier: "FromSettingsSegue", sender: self)
 	}
 	
 	func updateStatusLabel(status: SshConnectionStatus) {
 		switch status {
 		case .Succeded:
-			self.statusLabel.text = "☺︎"
+			self.statusLabel.text = "ok"
 		case .Failed:
-			self.statusLabel.text = "☹"
+			self.statusLabel.text = "failed"
 		case .InProgress:
 			self.statusLabel.text = "…"
 		case .Unknown:
-			self.statusLabel.text = "⁇"
+			self.statusLabel.text = "??"
 		}
 	}
 	

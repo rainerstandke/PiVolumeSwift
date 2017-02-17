@@ -57,6 +57,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 		
 		navigationItem.title = "Pi Volume"
+//		"⚙"
+//		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(performBackSegue))
+//		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(segueToSettings))
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
 	}
 	
 	
@@ -91,6 +95,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	// MARK: -
 	
+	
+	func segueToSettings() {
+		performSegue(withIdentifier: "ToSettingsSegue", sender: self)
+	}
 	
 	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
 		print("unwindFromSettings")
@@ -281,6 +289,36 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 }
 
 
+extension UIView {
+	@IBInspectable var cornerRadius: CGFloat {
+		get {
+			return layer.cornerRadius
+		}
+		set {
+			layer.cornerRadius = newValue
+			layer.masksToBounds = newValue > 0
+		}
+	}
+	
+	@IBInspectable var borderWidth: CGFloat {
+		get {
+			return layer.borderWidth
+		}
+		set {
+			layer.borderWidth = newValue
+			layer.masksToBounds = newValue > 0
+		}
+	}
+	
+	@IBInspectable var borderColor: UIColor {
+		get {
+			return UIColor.init(cgColor: layer.borderColor!)
+		}
+		set {
+			layer.borderColor = newValue.cgColor
+		}
+	}
+}
 
 
 extension UIView {

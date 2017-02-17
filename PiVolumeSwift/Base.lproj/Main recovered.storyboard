@@ -34,31 +34,20 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="39" translatesAutoresizingMaskIntoConstraints="NO" id="vY3-rI-nq4">
-                                                    <rect key="frame" x="8" y="8" width="304" height="28"/>
+                                                    <rect key="frame" x="8" y="8" width="304" height="27.5"/>
                                                     <subviews>
-                                                        <button opaque="NO" tag="9958" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I1f-bo-Vo3">
-                                                            <rect key="frame" x="0.0" y="0.0" width="132.5" height="28"/>
+                                                        <button opaque="NO" tag="9958" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pM-EV-FmO">
+                                                            <rect key="frame" x="0.0" y="0.0" width="132.5" height="27.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                             <state key="normal" title="??"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                    <real key="value" value="6"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                    <real key="value" value="1"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                    <color key="value" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
-                                                                <action selector="presetButtonTouched:" destination="9pv-A4-QxB" eventType="touchUpInside" id="MNI-3r-dsw"/>
+                                                                <action selector="presetButtonTouched:" destination="9pv-A4-QxB" eventType="touchUpInside" id="1nU-eP-E64"/>
                                                             </connections>
                                                         </button>
-                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-100" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="He2-Gh-qtb">
+                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-100" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Zzz-Ai-b92">
                                                             <rect key="frame" x="171.5" y="0.0" width="94" height="29"/>
                                                             <connections>
-                                                                <action selector="stepped:" destination="9pv-A4-QxB" eventType="valueChanged" id="8eK-vS-jUZ"/>
+                                                                <action selector="stepped:" destination="9pv-A4-QxB" eventType="valueChanged" id="dvX-5B-Fjh"/>
                                                             </connections>
                                                         </stepper>
                                                     </subviews>
@@ -95,13 +84,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O73-Zg-0cZ">
-                                <rect key="frame" x="273" y="166" width="44" height="44"/>
+                                <rect key="frame" x="273" y="166" width="23" height="33"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="7gi-yc-fOP"/>
-                                    <constraint firstAttribute="height" constant="44" id="rgZ-fC-vKl"/>
+                                    <constraint firstAttribute="width" constant="23" id="7gi-yc-fOP"/>
+                                    <constraint firstAttribute="height" constant="33" id="rgZ-fC-vKl"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="31"/>
-                                <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="-2" maxY="0.0"/>
                                 <state key="normal" title="+"/>
                                 <connections>
                                     <action selector="addPreset:" destination="9pv-A4-QxB" eventType="touchUpInside" id="v8f-FT-CM8"/>
@@ -114,11 +102,11 @@
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="centerX" secondItem="zIr-63-VUd" secondAttribute="centerX" id="6JL-1N-pfq"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="top" secondItem="9cn-dV-GrP" secondAttribute="bottom" constant="8" symbolic="YES" id="DfG-cY-LsH"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="centerX" secondItem="9cn-dV-GrP" secondAttribute="centerX" id="KuZ-xP-FBd"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="O73-Zg-0cZ" secondAttribute="trailing" constant="-13" id="Luh-gs-7ep"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="O73-Zg-0cZ" secondAttribute="trailing" constant="8" id="Luh-gs-7ep"/>
                             <constraint firstAttribute="leadingMargin" secondItem="KhZ-IX-3NK" secondAttribute="leading" id="MPk-Ak-CHO"/>
                             <constraint firstItem="zIr-63-VUd" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="RCU-bk-Ieq"/>
                             <constraint firstItem="O73-Zg-0cZ" firstAttribute="top" secondItem="KhZ-IX-3NK" secondAttribute="bottom" constant="20" id="S1L-Bs-9yg"/>
-                            <constraint firstItem="zIr-63-VUd" firstAttribute="top" secondItem="O73-Zg-0cZ" secondAttribute="bottom" constant="5" id="pfr-4B-AAU"/>
+                            <constraint firstItem="zIr-63-VUd" firstAttribute="top" secondItem="O73-Zg-0cZ" secondAttribute="bottom" constant="16" id="pfr-4B-AAU"/>
                             <constraint firstItem="9cn-dV-GrP" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" constant="20" id="vWb-1h-oWz"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="trailing" secondItem="tsR-hK-woN" secondAttribute="trailingMargin" id="zAj-rJ-N6d"/>
                         </constraints>
@@ -132,7 +120,6 @@
                         <outlet property="presetTableView" destination="zIr-63-VUd" id="F6U-AP-vLW"/>
                         <outlet property="volumeLabel" destination="9cn-dV-GrP" id="nvT-JR-qBH"/>
                         <outlet property="volumeSlider" destination="KhZ-IX-3NK" id="rav-HX-f7B"/>
-                        <segue destination="8rJ-Kc-sve" kind="show" identifier="ToSettingsSegue" id="El0-Gu-Ko4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
