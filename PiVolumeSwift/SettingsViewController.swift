@@ -64,14 +64,19 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	
 	
 	override func viewWillDisappear(_ animated: Bool) {
-		view.endEditing(true) // this retracts keyboard on all textFields
+		view.endEditing(true) // retracts keyboard on any textField
 		NotificationCenter.default.removeObserver(self)
 		super.viewWillDisappear(animated)
 	}
 	
 	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// called before we are transitioned to from VolumeViewCon
+	}
+	
+	
 	func performBackSegue() {
-		print("performBackSegue: \(performBackSegue)")
+		// called when we transition back to VolumeViewCon
 		performSegue(withIdentifier: "FromSettingsSegue", sender: self)
 	}
 	

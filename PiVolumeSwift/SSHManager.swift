@@ -10,7 +10,7 @@ import Foundation
 import NMSSH
 
 
-// TODO: revamp to scale from 2-151 or 0-151
+// TODO: have long timeout during normal ops, short when doing settings
 
 
 class SSHManager: NSObject {

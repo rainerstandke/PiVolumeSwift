@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import CoreGraphics
 
 class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
 {
@@ -27,6 +27,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@IBOutlet weak var volumeLabel: UILabel!
 	@IBOutlet weak var volumeSlider: UISlider!
 	@IBOutlet weak var longPressGR: UILongPressGestureRecognizer!
+	
+	@IBOutlet weak var doneTableEditBtn: UIButton!
 	
 	// MARK: - life cycle
 	
@@ -57,9 +59,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 		
 		navigationItem.title = "Pi Volume"
-//		"⚙"
-//		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(performBackSegue))
-//		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(segueToSettings))
+
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
 	}
 	
@@ -97,18 +97,16 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	func segueToSettings() {
+		// called from right NavBarItem
 		performSegue(withIdentifier: "ToSettingsSegue", sender: self)
 	}
 	
 	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
-		print("unwindFromSettings")
-		
+		// called when we are transitioned back to from SettingsViewCon
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//		print("segue: \(segue)")
-//		print("sender: \(sender)")
-		
+		// called when we transition SettingsViewCon
 	}
 	
 	
@@ -153,14 +151,48 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			presetArray[idxPath.row] = volumeLabel.text!
 		} else {
 			//long press on row to reorder - toggle tv isEditing
-			let barBtnItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(tableViewStopEditing))
-			navigationItem.setRightBarButton(barBtnItem, animated: true)
-
 			tableView.setEditing(!tableView.isEditing, animated: true)
+			updateDoneTableEditBtn()
 		}
 		
 	}
 	
+	func updateDoneTableEditBtn() {
+		let visibileFrame = doneTableEditBtn.frame
+		let hiddenFrame = visibileFrame.offsetBy(dx: 10, dy: 0)
+		
+		var targetFrame = visibileFrame
+		var targetAlpha: CGFloat = 1;
+		
+		if presetTableView.isEditing {
+			// btn is hidden, frame set in IB = visibleFrame
+			doneTableEditBtn.frame = hiddenFrame
+			doneTableEditBtn.alpha = 0
+			targetAlpha = 1
+			targetFrame = visibileFrame
+			
+			// has to happen before animation
+			self.doneTableEditBtn.isHidden = false
+		} else {
+			// btn is visible
+			targetAlpha = 0
+			targetFrame = hiddenFrame
+		}
+		
+		UIView.transition(with: doneTableEditBtn,
+		                  duration: 0.3,
+		                  options: [],
+		                  animations: {
+							self.doneTableEditBtn.frame = targetFrame
+							self.doneTableEditBtn.alpha = targetAlpha
+		}) { (completed: Bool) in
+			if self.doneTableEditBtn.alpha == 0 {
+				// has to happen after animation
+				self.doneTableEditBtn.isHidden = true
+			}
+			self.doneTableEditBtn.frame = visibileFrame
+		}
+	}
 	
 	@IBAction func contentViewTap(_ tapRecog: UITapGestureRecognizer) {
 		// tap somewhere in the main contentView to get tableView out of edit mode
@@ -168,14 +200,15 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			return
 		}
 		if presetTableView.isEditing {
-			tableViewStopEditing()
+			tableViewEndEditing(self)
 		}
-	// NOTE we are getting into edit mode w/ left-swipe 'automatically'
+	// NOTE we are getting into edit mode w/ left-swipe (or long touch) 'automatically'
 	}
 	
-	func tableViewStopEditing() {
+	
+	@IBAction func tableViewEndEditing(_ sender: Any) {
 		presetTableView .setEditing(false, animated: true)
-		navigationItem.setRightBarButton(nil, animated: true)
+		updateDoneTableEditBtn()
 	}
 	
 	@IBAction func stepped(_ stepper: UIStepper) {
@@ -236,9 +269,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@IBAction func addPreset(_ plusBtn: Any) {
 		presetArray.append("Preset")
 		presetTableView.reloadData()
+		presetTableView.flashScrollIndicators()
 	}
 
-	
 	
 	// MARK: - table view delegate / datasource
 	
