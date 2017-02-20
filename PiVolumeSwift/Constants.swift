@@ -22,7 +22,8 @@ struct K {
 		static let VolChanged = "kNotif_VolumeChanged"
 		static let SliderMoved = "kNotif_SliderMoved"
 		static let ConfirmedVolume = "kNotif_ConfirmedVolume"
-		static let SshConnectionStatusChanged = "SshConnectionStatusChanged"
+		static let SshConnectionStatusChanged = "kSshConnectionStatusChanged"
+		static let AddTabBarItem = "kAddTabBarItem"
 	}
 	
 	struct Key {

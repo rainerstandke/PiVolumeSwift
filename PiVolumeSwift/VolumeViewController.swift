@@ -9,6 +9,10 @@
 import UIKit
 import CoreGraphics
 
+
+// TODO: needs tabbaritem
+
+
 class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
 {
 
@@ -61,6 +65,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		navigationItem.title = "Pi Volume"
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
+		
+		navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
 	}
 	
 	
@@ -90,6 +96,14 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	deinit
 	{
 		notifCtr.removeObserver(self)
+	}
+	
+	
+	func notifyAddTabItem() {
+		notifCtr.post(
+			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
+			object: self
+		)
 	}
 	
 	
@@ -319,38 +333,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 	
-}
-
-
-extension UIView {
-	@IBInspectable var cornerRadius: CGFloat {
-		get {
-			return layer.cornerRadius
-		}
-		set {
-			layer.cornerRadius = newValue
-			layer.masksToBounds = newValue > 0
-		}
-	}
-	
-	@IBInspectable var borderWidth: CGFloat {
-		get {
-			return layer.borderWidth
-		}
-		set {
-			layer.borderWidth = newValue
-			layer.masksToBounds = newValue > 0
-		}
-	}
-	
-	@IBInspectable var borderColor: UIColor {
-		get {
-			return UIColor.init(cgColor: layer.borderColor!)
-		}
-		set {
-			layer.borderColor = newValue.cgColor
-		}
-	}
 }
 
 

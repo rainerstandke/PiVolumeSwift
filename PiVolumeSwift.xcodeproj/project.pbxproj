@@ -16,6 +16,9 @@
 		D50B53301E4D00A3003FE794 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D50B532E1E4D00A3003FE794 /* LaunchScreen.storyboard */; };
 		D50B533B1E4D00A3003FE794 /* PiVolumeSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B533A1E4D00A3003FE794 /* PiVolumeSwiftTests.swift */; };
 		D50B53461E4D00A3003FE794 /* PiVolumeSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53451E4D00A3003FE794 /* PiVolumeSwiftUITests.swift */; };
+		D527E9E31E57EFFD00BBA788 /* OutlinedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */; };
+		D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */; };
+		D527E9E71E57F71C00BBA788 /* XM_NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */; };
 		D5916C531E4D10C70050458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C521E4D10C70050458B /* Constants.swift */; };
 		D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C541E4D62BE0050458B /* SSHManager.swift */; };
 		D5916C5B1E4E738B0050458B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5916C5A1E4E738B0050458B /* Info.plist */; };
@@ -60,6 +63,9 @@
 		D50B53411E4D00A3003FE794 /* PiVolumeSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PiVolumeSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D50B53451E4D00A3003FE794 /* PiVolumeSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiVolumeSwiftUITests.swift; sourceTree = "<group>"; };
 		D50B53471E4D00A3003FE794 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlinedButton.swift; sourceTree = "<group>"; };
+		D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShyTabBarController.swift; sourceTree = "<group>"; };
+		D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XM_NavigationController.swift; sourceTree = "<group>"; };
 		D5916C521E4D10C70050458B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D5916C541E4D62BE0050458B /* SSHManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHManager.swift; sourceTree = "<group>"; };
 		D5916C5A1E4E738B0050458B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -149,6 +155,9 @@
 				D50B53271E4D00A3003FE794 /* SettingsViewController.swift */,
 				D5916C541E4D62BE0050458B /* SSHManager.swift */,
 				D50B53291E4D00A3003FE794 /* Main.storyboard */,
+				D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */,
+				D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */,
+				D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */,
 				D5916C521E4D10C70050458B /* Constants.swift */,
 				D50B532C1E4D00A3003FE794 /* Assets.xcassets */,
 				D5916C5A1E4E738B0050458B /* Info.plist */,
@@ -461,11 +470,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D527E9E71E57F71C00BBA788 /* XM_NavigationController.swift in Sources */,
 				D50B53281E4D00A3003FE794 /* SettingsViewController.swift in Sources */,
 				D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */,
+				D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */,
 				D5AC2D141E52467900E6E5C2 /* VolumeViewController.swift in Sources */,
 				D50B53241E4D00A3003FE794 /* AppDelegate.swift in Sources */,
 				D5916C531E4D10C70050458B /* Constants.swift in Sources */,
+				D527E9E31E57EFFD00BBA788 /* OutlinedButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
