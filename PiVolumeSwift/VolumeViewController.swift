@@ -34,6 +34,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	@IBOutlet weak var doneTableEditBtn: UIButton!
 	
+	@IBOutlet weak var tableViewBottomToSuperViewConstraint: NSLayoutConstraint!
+	
+	
+	
 	// MARK: - life cycle
 	
 	override func awakeFromNib() {
@@ -62,11 +66,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 		}
 		
-		navigationItem.title = "Pi Volume"
+		
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
 		
-		navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
+		
 	}
 	
 	
@@ -80,12 +84,50 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
 		self.automaticallyAdjustsScrollViewInsets = false
+		
+		
+//		print("tableViewBottomToSuperViewConstraint: \(tableViewBottomToSuperViewConstraint)")
+		
+	}
+	
+	
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		guard let tabBarCon = tabBarController as? ShyTabBarController else { return }
+		
+		guard let tabBarVuCons = tabBarCon.viewControllers else { return }
+		
+		let count = tabBarVuCons.count
+		
+		guard let idx = tabBarVuCons.index(of: (self.parent! as UIViewController)) else { return }
+		
+		
+		
+		if idx > 0 && idx == count - 1 {
+			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
+		} else {
+			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
+		}
+		
+		// TODO set title
+		let suffix = " (\(idx + 1) of \(count))"
+		navigationItem.title = "Pi Volume" + (count > 1 ? suffix : "")
+		
+		print("tableViewBottomToSuperViewConstraint: \(tableViewBottomToSuperViewConstraint)")
+		
+		tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
+		
 	}
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
+		
 		super.viewDidAppear(animated)
 		self.presetTableView.flashScrollIndicators()
+		
+		print("self.presetTableView.frame: \(self.presetTableView.frame)")
+		
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -103,6 +145,13 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		notifCtr.post(
 			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
 			object: self
+		)
+	}
+
+	func notifyDeleteTabItem() {
+		notifCtr.post(
+			name: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
+			object: self.parent // b/c we're in NavBarCon
 		)
 	}
 	
@@ -346,3 +395,16 @@ extension UIView {
 		return superview as? T ?? superview.flatMap { $0.superview(of: T.self) }
 	}
 }
+
+
+extension UIViewController {
+	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
+	
+	
+	// ???: explain this better - why does it stop recursing, why does it only return one, and is it the first of type?
+	
+	func ancestorViewController<T>(of type: T.Type) -> T? {
+		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }
+	}
+}
+
