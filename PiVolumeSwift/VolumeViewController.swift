@@ -43,6 +43,25 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
+		
+		
+
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
+		
+		
+	}
+	
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		volumeLabel.text = UserDefaults.standard.string(forKey: K.UserDef.LastUIVolumeStr)
+		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+		
+		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
+		
+		presetTableView.allowsMultipleSelectionDuringEditing = false
+		
 		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.VolChanged)"),
 		                     object: nil,
 		                     queue: OperationQueue.main) { notif in
@@ -65,28 +84,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								// runs when SSHMan decides not to send a redundant value to pi
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 		}
-		
-		
-
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
-		
-		
-	}
-	
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		volumeLabel.text = UserDefaults.standard.string(forKey: K.UserDef.LastUIVolumeStr)
-		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-		
-		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
-		
-		presetTableView.allowsMultipleSelectionDuringEditing = false
-		self.automaticallyAdjustsScrollViewInsets = false
-		
-		
-//		print("tableViewBottomToSuperViewConstraint: \(tableViewBottomToSuperViewConstraint)")
 		
 	}
 	
@@ -114,10 +111,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		let suffix = " (\(idx + 1) of \(count))"
 		navigationItem.title = "Pi Volume" + (count > 1 ? suffix : "")
 		
-		print("tableViewBottomToSuperViewConstraint: \(tableViewBottomToSuperViewConstraint)")
-		
 		tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
-		
+
+		print("WILL self.presetTableView.frame: \(self.presetTableView.frame)")
 	}
 	
 	
@@ -126,7 +122,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.viewDidAppear(animated)
 		self.presetTableView.flashScrollIndicators()
 		
-		print("self.presetTableView.frame: \(self.presetTableView.frame)")
+		print("DID self.presetTableView.frame: \(self.presetTableView.frame)")
 		
 	}
 	
@@ -400,8 +396,6 @@ extension UIView {
 extension UIViewController {
 	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
 	
-	
-	// ???: explain this better - why does it stop recursing, why does it only return one, and is it the first of type?
 	
 	func ancestorViewController<T>(of type: T.Type) -> T? {
 		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }
