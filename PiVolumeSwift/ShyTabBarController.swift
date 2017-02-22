@@ -54,23 +54,12 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		let newNavCon = storyBoard.instantiateViewController(withIdentifier: "NavCon")
 		
 		if let newVolCon = newNavCon.childViewControllers.first as? VolumeViewController {
-			print("newVolCon: \(newVolCon)")
 			newVolCon.presetIndex = (self.viewControllers?.count)! // ??? better syntax?
-			
 		}
-		
-		
 		
 		var vuCons = viewControllers! // ???: this array is a COPY, right?
 		
 		vuCons.append(newNavCon)
-		
-		
-		/*******
-
-		???: added vuCon snap into place - why? -> new NavCon?
-		
-		*******/
 		
 		if tabBar.items?.count == 1 {
 			// need to move tabBar in from bottom
@@ -85,7 +74,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 					if let currVuCon = self.selectedViewController as? UINavigationController,
 						let currVolumeVuCon = currVuCon.childViewControllers.first as? VolumeViewController {
 						// tableView bottomConstraint
-						print("self.bottomEdge before: \(self.bottomEdge)")
 						
 						currVolumeVuCon.tableViewBottomToSuperViewConstraint.constant = self.bottomEdge
 						currVolumeVuCon.view.setNeedsUpdateConstraints()

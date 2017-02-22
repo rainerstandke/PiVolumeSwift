@@ -118,9 +118,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		// for the new, incoming one:
 		tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
-
-		print("WILL self.presetTableView.frame: \(self.presetTableView.frame)")
-	}
+}
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -130,8 +128,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		SSHManager.sharedInstance.getVolumeFromRemote()
 		
 		self.presetTableView.flashScrollIndicators()
-		
-		print("DID self.presetTableView.frame: \(self.presetTableView.frame)")
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {

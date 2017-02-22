@@ -54,10 +54,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 	
-	func application(_ application: UIApplication, willChangeStatusBarFrame newStatusBarFrame: CGRect) {
-		print("application: \(application)")
-		print("newStatusBarFrame: \(newStatusBarFrame)")
-		
-	}
+//	func application(_ application: UIApplication, willChangeStatusBarFrame newStatusBarFrame: CGRect) {
+//		print("application: \(application)")
+//		print("newStatusBarFrame: \(newStatusBarFrame)")
+//		
+//	}
 }
 
