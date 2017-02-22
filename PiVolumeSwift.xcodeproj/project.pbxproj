@@ -19,6 +19,7 @@
 		D527E9E31E57EFFD00BBA788 /* OutlinedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */; };
 		D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */; };
 		D527E9E71E57F71C00BBA788 /* XM_NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */; };
+		D578E7211E5E3AC500B8F902 /* NavCon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D578E7201E5E3AC500B8F902 /* NavCon.swift */; };
 		D5916C531E4D10C70050458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C521E4D10C70050458B /* Constants.swift */; };
 		D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C541E4D62BE0050458B /* SSHManager.swift */; };
 		D5916C5B1E4E738B0050458B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5916C5A1E4E738B0050458B /* Info.plist */; };
@@ -67,6 +68,7 @@
 		D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlinedButton.swift; sourceTree = "<group>"; };
 		D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShyTabBarController.swift; sourceTree = "<group>"; };
 		D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XM_NavigationController.swift; sourceTree = "<group>"; };
+		D578E7201E5E3AC500B8F902 /* NavCon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavCon.swift; sourceTree = "<group>"; };
 		D5916C521E4D10C70050458B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D5916C541E4D62BE0050458B /* SSHManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHManager.swift; sourceTree = "<group>"; };
 		D5916C5A1E4E738B0050458B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 			children = (
 				D50B53231E4D00A3003FE794 /* AppDelegate.swift */,
 				D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */,
+				D578E7201E5E3AC500B8F902 /* NavCon.swift */,
 				D5AC2D131E52467900E6E5C2 /* VolumeViewController.swift */,
 				D5CBC60C1E5D023900C5E872 /* Settings.swift */,
 				D50B53271E4D00A3003FE794 /* SettingsViewController.swift */,
@@ -479,6 +482,7 @@
 				D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */,
 				D5CBC60D1E5D023900C5E872 /* Settings.swift in Sources */,
 				D5AC2D141E52467900E6E5C2 /* VolumeViewController.swift in Sources */,
+				D578E7211E5E3AC500B8F902 /* NavCon.swift in Sources */,
 				D50B53241E4D00A3003FE794 /* AppDelegate.swift in Sources */,
 				D5916C531E4D10C70050458B /* Constants.swift in Sources */,
 				D527E9E31E57EFFD00BBA788 /* OutlinedButton.swift in Sources */,
