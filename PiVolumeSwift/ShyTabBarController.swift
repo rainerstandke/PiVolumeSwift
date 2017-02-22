@@ -92,10 +92,9 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 						
 						currVolumeVuCon.view.layoutIfNeeded()
 					}
+					self.selectedIndex = vuCons.count - 1 // show new
 			},
 				completion: { (completed) in
-					self.selectedIndex = vuCons.count - 1 // show new
-					// NOTE: showing after animation is complete prevents the jump in NavBar position
 			})
 			
 		} else {
