@@ -53,6 +53,14 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		let storyBoard = UIStoryboard(name: "Main", bundle: nil)
 		let newNavCon = storyBoard.instantiateViewController(withIdentifier: "NavCon")
 		
+		if let newVolCon = newNavCon.childViewControllers.first as? VolumeViewController {
+			print("newVolCon: \(newVolCon)")
+			newVolCon.presetIndex = (self.viewControllers?.count)! // ??? better syntax?
+			
+		}
+		
+		
+		
 		var vuCons = viewControllers! // ???: this array is a COPY, right?
 		
 		vuCons.append(newNavCon)

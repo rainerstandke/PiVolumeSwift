@@ -16,6 +16,8 @@ struct K {
 		
 		static let LastUIVolumeStr = "kUsDef_LastUIVolumeStr"
 		static let PresetStrArray = "kPresetStrArray"
+		
+		static let PresetDicts = "kPresetDicts"
 	}
 	
 	struct Notif {
@@ -70,6 +72,7 @@ struct K {
 			UserDef.Password : "??",
 			UserDef.LastUIVolumeStr : "??",
 			UserDef.PresetStrArray : [String](),
+			UserDef.PresetDicts: [Dictionary<Int, Any>]()
 		] as [String : Any]
 		defaults.register(defaults: defaultValues)
 		defaults.synchronize()

@@ -26,6 +26,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 	
+	var presetIndex: Int = 0
+	var settings = Settings()
+		
+	
+	
 	@IBOutlet weak var presetTableView: UITableView!
 
 	@IBOutlet weak var volumeLabel: UILabel!
@@ -37,18 +42,12 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@IBOutlet weak var tableViewBottomToSuperViewConstraint: NSLayoutConstraint!
 	
 	
-	
 	// MARK: - life cycle
 	
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
-		
-		
-
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
-		
-		
 	}
 	
 	
@@ -61,6 +60,21 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
+		
+//		print("presetIndex: \(presetIndex)")
+		
+		settings.settingsIndex = presetIndex
+//		print("settings: \(settings)")
+		
+		settings.presetStrings = presetArray
+		
+//		settings.writeToUserDefs()
+		
+	}
+	
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		
 		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.VolChanged)"),
 		                     object: nil,
@@ -85,21 +99,12 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 		}
 		
-	}
-	
-	
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+
 		guard let tabBarCon = tabBarController as? ShyTabBarController else { return }
-		
 		guard let tabBarVuCons = tabBarCon.viewControllers else { return }
 		
 		let count = tabBarVuCons.count
-		
 		guard let idx = tabBarVuCons.index(of: (self.parent! as UIViewController)) else { return }
-		
-		
 		
 		if idx > 0 && idx == count - 1 {
 			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
@@ -111,6 +116,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		let suffix = " (\(idx + 1) of \(count))"
 		navigationItem.title = "Pi Volume" + (count > 1 ? suffix : "")
 		
+		// for the new, incoming one:
 		tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
 
 		print("WILL self.presetTableView.frame: \(self.presetTableView.frame)")
@@ -118,25 +124,23 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
-		
 		super.viewDidAppear(animated)
+		
+		// read actual volume from wire
+		SSHManager.sharedInstance.getVolumeFromRemote()
+		
 		self.presetTableView.flashScrollIndicators()
 		
 		print("DID self.presetTableView.frame: \(self.presetTableView.frame)")
-		
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		UserDefaults.standard.set(presetArray, forKey:K.UserDef.PresetStrArray)
-	}
-
-	deinit
-	{
+		
 		notifCtr.removeObserver(self)
 	}
-	
-	
+
 	func notifyAddTabItem() {
 		notifCtr.post(
 			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
@@ -154,18 +158,19 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	// MARK: -
 	
-	
 	func segueToSettings() {
-		// called from right NavBarItem
+		// called from right NavBarItem to trigger segue to SettingsCon
 		performSegue(withIdentifier: "ToSettingsSegue", sender: self)
 	}
 	
-	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
-		// called when we are transitioned back to from SettingsViewCon
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// called when we transition (to?) SettingsViewCon
+//		print("segue: \(segue)")
+		// NEXT: grab destination from segue, set settings obj
 	}
 	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// called when we transition SettingsViewCon
+	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
+		// called when we transition back to here from SettingsViewCon
 	}
 	
 	
@@ -401,4 +406,8 @@ extension UIViewController {
 		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }
 	}
 }
+
+
+
+
 
