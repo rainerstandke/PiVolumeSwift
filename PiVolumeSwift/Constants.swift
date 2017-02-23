@@ -8,6 +8,10 @@
 
 import Foundation
 
+// see: http://www.luby.info/2015/02/15/swift-constants-files.html - using structures with constant type properties
+// type props are like class props in ObjC (if those existed) - static makes them global, let makes them constant
+// type props are accessible without an instance
+
 struct K {
 	struct UserDef {
 		static let IpAddress = "kUsDef_IpAdress"
@@ -53,18 +57,18 @@ struct K {
 	}
 	
 	
-	
-	
-//	// ???: How about an enum in here? - wasn't recognized when used
+//	???: How about an enum in here? - wasn't recognized when used
+// see https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/NestedTypes.html ???
 //	enum UIElementTag: Int {
 //		case IpAddress = 1234
 //		case UserName = 1235
 //		case Password = 1236
 //	}
 	
-	// ???: this construct a good idea? (i.e. init in a struct)
 	init()
 	{
+		// runs once, called from appDel.
+		
 		let defaults = UserDefaults.standard
 		let defaultValues = [
 			UserDef.IpAddress : "??",
@@ -77,7 +81,6 @@ struct K {
 		defaults.register(defaults: defaultValues)
 		defaults.synchronize()
 	}
-	
 }
 
 

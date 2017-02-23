@@ -161,7 +161,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		// called when we transition (to?) SettingsViewCon
-//		print("segue: \(segue)")
+		print("segue: \(segue)")
 		// NEXT: grab destination from segue, set settings obj
 	}
 	

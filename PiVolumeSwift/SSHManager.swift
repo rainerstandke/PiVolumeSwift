@@ -35,7 +35,8 @@ class SSHManager: NSObject {
 		}
 	}
 	
-	// ???: construct OK for singleton?
+	// sharedInstance is a property on type SSHMan
+	// block below runs once during first access, not afterwards - ???: why not?
 	static let sharedInstance: SSHManager = {
 		let instance = SSHManager()
 		

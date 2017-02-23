@@ -57,8 +57,9 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 			newVolCon.presetIndex = (self.viewControllers?.count)! // ??? better syntax?
 		}
 		
-		var vuCons = viewControllers! // ???: this array is a COPY, right?
-		
+		// vuCons is ref to an existing object - vuCons and viewControllers! share a memory address
+		// but without creating vuCons, and accessing viewCons! directly, the new tab never shows - ???: why not?
+		var vuCons = viewControllers!
 		vuCons.append(newNavCon)
 		
 		if tabBar.items?.count == 1 {
@@ -91,8 +92,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 			self.selectedIndex = vuCons.count - 1 // show new
 		}
 		
-		// TODO: figure out why crash when shown before notif arrives - or so
-		
 		// TODO: make title bar + L/R items appear, give name (ending IP address)
 		// copy presets from last visible into new
 	}
@@ -111,6 +110,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		if tabBar.items?.count == 2 {
 			// need to move tabBar in from bottom
 			
+			self.selectedIndex = vuCons.count - 1 // show only one
+		
 			UIView.animate(
 				withDuration: TimeInterval(K.Misc.TransitionDuration),
 				animations: {
@@ -129,7 +130,9 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 					vuCons.remove(at: idx)
 					self.setViewControllers(vuCons, animated: false)
 			})
+			
 		} else if (tabBar.items?.count)! > 2 {
+			self.selectedIndex = vuCons.count - 2 // show the one that will be the last one
 			vuCons.remove(at: idx)
 			self.setViewControllers(vuCons, animated: true)
 		}
