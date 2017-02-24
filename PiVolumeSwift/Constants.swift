@@ -49,14 +49,15 @@ struct K {
 	
 	
 	
-//	// ???: How about an enum in here? - wasn't recognized when used
-//	enum UIElementTag: Int {
-//		case IpAddress = 1234
-//		case UserName = 1235
-//		case Password = 1236
-//	}
+	//	// ???: How about an enum in here? - wasn't recognized when used
+	//	enum UIElementTag: Int {
+	//		case IpAddress = 1234
+	//		case UserName = 1235
+	//		case Password = 1236
+	//	}
 	
-	// ???: this construct a good idea? (i.e. init in a struct)
+	//	???: How about an enum in here? - wasn't recognized when used
+	// see https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/NestedTypes.html ???
 	init()
 	{
 		let defaults = UserDefaults.standard
@@ -66,7 +67,7 @@ struct K {
 			UserDef.Password : "??",
 			UserDef.LastUIVolumeStr : "??",
 			UserDef.PresetStrArray : [String](),
-		] as [String : Any]
+			] as [String : Any]
 		defaults.register(defaults: defaultValues)
 		defaults.synchronize()
 	}
