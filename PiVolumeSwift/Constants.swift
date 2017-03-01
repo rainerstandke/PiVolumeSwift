@@ -44,7 +44,9 @@ struct K {
 	
 	struct Misc {
 		static let TimerInterval = 2 // TODO: make 30 again
-	}
+		static let ShortTimerInterval = 2 // TODO: make 30 again
+		static let LongTimerInterval = 30
+}
 	
 	
 	

@@ -172,7 +172,13 @@ class TransmitVolumeOperation : Operation
 		
 		DispatchQueue.main.async {
 			self.sshMan.timer?.invalidate()
-			self.sshMan.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(K.Misc.TimerInterval), repeats: false, block: { (timer: Timer) in
+			
+			
+			var ti = Double(K.Misc.ShortTimerInterval)
+			if self.mode == .Push {
+				ti = Double(K.Misc.LongTimerInterval)
+			}
+			self.sshMan.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(ti), repeats: false, block: { (timer: Timer) in
 				self.sshMan.serialQueue.async {
 					print("push timer fired")
 					self.sshMan.session?.disconnect()
