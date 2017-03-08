@@ -28,7 +28,7 @@ struct K {
 		static let VolChanged = "kNotif_VolumeChanged"
 		static let SliderMoved = "kNotif_SliderMoved"
 		static let ConfirmedVolume = "kNotif_ConfirmedVolume"
-		static let SshConnectionStatusChanged = "kSshConnectionStatusChanged"
+		static let SshConnectionStatusChanged: NSNotification.Name = "kSshConnectionStatusChanged"
 		static let AddTabBarItem = "kAddTabBarItem"
 		static let DeleteTabBarItem = "kDeleteTabBarItem"
 	}

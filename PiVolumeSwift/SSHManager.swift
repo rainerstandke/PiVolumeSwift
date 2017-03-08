@@ -29,7 +29,7 @@ class SSHManager: NSObject {
 		didSet {
 			print("SSHMan connectionStatus: \(connectionStatus)")
 			// ???: alternative syntax? Complicated, long...
-			NotificationCenter.default.post(name:NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
+			NotificationCenter.default.post(name:K.Notif.SshConnectionStatusChanged,
 			                                object:self,
 			                                userInfo:[K.Key.ConnectionStatus : connectionStatus])
 		}
@@ -168,6 +168,7 @@ class TransmitVolumeOperation : Operation
 		if commandStr == nil { sshMan.connectionStatus = .Failed; return }
 		
 		/* ???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
+//		do... catch
 		guard let response = try? localSession.channel.execute(commandStr) else { sshMan.connectionStatus = .Failed; return }
 		
 		DispatchQueue.main.async {
