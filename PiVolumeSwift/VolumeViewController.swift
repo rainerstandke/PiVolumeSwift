@@ -386,8 +386,6 @@ extension UIView {
 	// from: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
 	// returns either superview if of type T, or recursively superView's superViews
 	
-	// ???: explain this better - why does it stop recursing, why does it only return one, and is it the first of type?
-	
 	func superview<T>(of type: T.Type) -> T? {
 		return superview as? T ?? superview.flatMap { $0.superview(of: T.self) }
 	}

@@ -59,6 +59,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		
 		// vuCons is ref to an existing object - vuCons and viewControllers! share a memory address
 		// but without creating vuCons, and accessing viewCons! directly, the new tab never shows - ???: why not?
+		// Josh: see if they share memory address after changing vuCons
 		var vuCons = viewControllers!
 		vuCons.append(newNavCon)
 		
