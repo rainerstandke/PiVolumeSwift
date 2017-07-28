@@ -9,6 +9,10 @@
 import UIKit
 import CoreGraphics
 
+
+// TODO: needs tabbaritem
+
+
 class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
 {
 
@@ -22,6 +26,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 	
+	var presetIndex: Int = 0
+	var settings = Settings()
+		
+	
+	
 	@IBOutlet weak var presetTableView: UITableView!
 
 	@IBOutlet weak var volumeLabel: UILabel!
@@ -30,10 +39,42 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	@IBOutlet weak var doneTableEditBtn: UIButton!
 	
+	@IBOutlet weak var tableViewBottomToSuperViewConstraint: NSLayoutConstraint!
+	
+	
 	// MARK: - life cycle
 	
 	override func awakeFromNib() {
 		super.awakeFromNib()
+		
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
+	}
+	
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		volumeLabel.text = UserDefaults.standard.string(forKey: K.UserDef.LastUIVolumeStr)
+		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+		
+		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
+		
+		presetTableView.allowsMultipleSelectionDuringEditing = false
+		
+//		print("presetIndex: \(presetIndex)")
+		
+		settings.settingsIndex = presetIndex
+//		print("settings: \(settings)")
+		
+		settings.presetStrings = presetArray
+		
+//		settings.writeToUserDefs()
+		
+	}
+	
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		
 		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.VolChanged)"),
 		                     object: nil,
@@ -58,55 +99,74 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 		}
 		
-		navigationItem.title = "Pi Volume"
 
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
-	}
-	
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
+		guard let tabBarCon = tabBarController as? ShyTabBarController else { return }
+		guard let tabBarVuCons = tabBarCon.viewControllers else { return }
 		
-		volumeLabel.text = UserDefaults.standard.string(forKey: K.UserDef.LastUIVolumeStr)
-		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+		let count = tabBarVuCons.count
+		guard let idx = tabBarVuCons.index(of: (self.parent! as UIViewController)) else { return }
 		
-		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
+		if idx > 0 && idx == count - 1 {
+			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
+		} else {
+			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
+		}
 		
-		presetTableView.allowsMultipleSelectionDuringEditing = false
-		self.automaticallyAdjustsScrollViewInsets = false
-	}
+		// TODO set title
+		let suffix = " (\(idx + 1) of \(count))"
+		navigationItem.title = "Pi Volume" + (count > 1 ? suffix : "")
+		
+		// for the new, incoming one:
+		tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
+}
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		
+		// read actual volume from wire
+		SSHManager.sharedInstance.getVolumeFromRemote()
+		
 		self.presetTableView.flashScrollIndicators()
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		UserDefaults.standard.set(presetArray, forKey:K.UserDef.PresetStrArray)
+		
+		notifCtr.removeObserver(self)
 	}
 
-	deinit
-	{
-		notifCtr.removeObserver(self)
+	func notifyAddTabItem() {
+		notifCtr.post(
+			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
+			object: self
+		)
+	}
+
+	func notifyDeleteTabItem() {
+		notifCtr.post(
+			name: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
+			object: self.parent // b/c we're in NavBarCon
+		)
 	}
 	
 	
 	// MARK: -
 	
-	
 	func segueToSettings() {
-		// called from right NavBarItem
+		// called from right NavBarItem to trigger segue to SettingsCon
 		performSegue(withIdentifier: "ToSettingsSegue", sender: self)
 	}
 	
-	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
-		// called when we are transitioned back to from SettingsViewCon
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// called when we transition (to?) SettingsViewCon
+		print("segue: \(segue)")
+		// NEXT: grab destination from segue, set settings obj
 	}
 	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// called when we transition SettingsViewCon
+	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
+		// called when we transition back to here from SettingsViewCon
 	}
 	
 	
@@ -323,44 +383,25 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 
 
 extension UIView {
-	@IBInspectable var cornerRadius: CGFloat {
-		get {
-			return layer.cornerRadius
-		}
-		set {
-			layer.cornerRadius = newValue
-			layer.masksToBounds = newValue > 0
-		}
-	}
-	
-	@IBInspectable var borderWidth: CGFloat {
-		get {
-			return layer.borderWidth
-		}
-		set {
-			layer.borderWidth = newValue
-			layer.masksToBounds = newValue > 0
-		}
-	}
-	
-	@IBInspectable var borderColor: UIColor {
-		get {
-			return UIColor.init(cgColor: layer.borderColor!)
-		}
-		set {
-			layer.borderColor = newValue.cgColor
-		}
-	}
-}
-
-
-extension UIView {
 	// from: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
 	// returns either superview if of type T, or recursively superView's superViews
-	
-	// ???: explain this better - why does it stop recursing, why does it only return one, and is it the first of type?
 	
 	func superview<T>(of type: T.Type) -> T? {
 		return superview as? T ?? superview.flatMap { $0.superview(of: T.self) }
 	}
 }
+
+
+extension UIViewController {
+	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
+	
+	
+	func ancestorViewController<T>(of type: T.Type) -> T? {
+		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }
+	}
+}
+
+
+
+
+

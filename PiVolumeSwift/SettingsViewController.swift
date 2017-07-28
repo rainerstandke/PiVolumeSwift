@@ -71,7 +71,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// called before we are transitioned to from VolumeViewCon
+		// called before we transition back to VolumeViewCon
+		print("prep settings")
 	}
 	
 	

@@ -29,7 +29,7 @@ class SSHManager: NSObject {
 		didSet {
 			print("SSHMan connectionStatus: \(connectionStatus)")
 			// ???: alternative syntax? Complicated, long...
-			NotificationCenter.default.post(name:NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
+			NotificationCenter.default.post(name:NSNotification.Name(rawValue: K.Notif.SshConnectionStatusChanged),
 			                                object:self,
 			                                userInfo:[K.Key.ConnectionStatus : connectionStatus])
 		}
@@ -168,11 +168,11 @@ class TransmitVolumeOperation : Operation
 		if commandStr == nil { sshMan.connectionStatus = .Failed; return }
 		
 		/* ???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
+//		do... catch
 		guard let response = try? localSession.channel.execute(commandStr) else { sshMan.connectionStatus = .Failed; return }
 		
 		DispatchQueue.main.async {
 			self.sshMan.timer?.invalidate()
-			
 			
 			var ti = Double(K.Misc.ShortTimerInterval)
 			if self.mode == .Push {
@@ -180,7 +180,7 @@ class TransmitVolumeOperation : Operation
 			}
 			self.sshMan.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(ti), repeats: false, block: { (timer: Timer) in
 				self.sshMan.serialQueue.async {
-					print("push timer fired")
+					print("timer fired")
 					self.sshMan.session?.disconnect()
 					self.sshMan.session = nil
 					// NOTE: no connectionStatus change
