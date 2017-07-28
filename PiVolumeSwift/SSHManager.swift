@@ -29,7 +29,7 @@ class SSHManager: NSObject {
 		didSet {
 			print("SSHMan connectionStatus: \(connectionStatus)")
 			// ???: alternative syntax? Complicated, long...
-			NotificationCenter.default.post(name:K.Notif.SshConnectionStatusChanged,
+			NotificationCenter.default.post(name:NSNotification.Name(rawValue: K.Notif.SshConnectionStatusChanged),
 			                                object:self,
 			                                userInfo:[K.Key.ConnectionStatus : connectionStatus])
 		}
