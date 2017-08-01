@@ -13,6 +13,27 @@ import NMSSH
 // TODO: have long timeout during normal ops, short when doing settings
 
 
+
+
+
+
+
+
+
+
+// NEXT: need to use settingsObject for connection parms - passin w/ notif • figure out when push is called w/o notif & why
+
+
+
+
+
+
+
+
+
+
+
+
 class SSHManager: NSObject {
 	
 	let notifCtr = NotificationCenter.default

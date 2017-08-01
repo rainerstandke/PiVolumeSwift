@@ -19,18 +19,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	let notifCtr = NotificationCenter.default
 	var firstVolumeUpdateSinceDidLoad = true
 	
-	var presetArray: Array <String> = [] {
-		didSet {
-			UserDefaults.standard.set(presetArray, forKey: K.UserDef.PresetStrArray)
-			UserDefaults.standard.synchronize()
-		}
-	}
-	
-	var presetIndex: Int = 0
+	var presetIndex: Int = 0 // OBSOLETE ??
 	var settingsProxy = SettingsProxy()
 		
-	
-	
 	@IBOutlet weak var presetTableView: UITableView!
 
 	@IBOutlet weak var volumeLabel: UILabel!
@@ -63,31 +54,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		volumeLabel.text = settingsProxy.lastUIVolumeStr
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 		
-		//		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
-		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
-		
-		
-		
-
-		
-		
-		
-		
-		presetArray = settingsProxy.presetStrings
-		print("presetArray: \(presetArray)")
-		
-		
-		
-//		print("presetIndex: \(presetIndex)")
-		
-//		settings.settingsIndex = presetIndex
-//		print("settings: \(settings)")
-		
-		settingsProxy.presetStrings = presetArray
-		
-//		settings.writeToUserDefs()
-		
+		print("settingsProxy.presetStrings: \(settingsProxy.presetStrings)")
 	}
 	
 	
@@ -102,7 +70,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								self.volumeLabel.text = String(describing: newVolInt)
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 								if	self.firstVolumeUpdateSinceDidLoad {
-									// move the slider if this is the first time we get an actial Vol value over the wire
+									// move the slider if this is the first time we get an actual Vol value over the wire
 									self.firstVolumeUpdateSinceDidLoad = false
 									UIView.animate(withDuration: 0.3,
 									               animations: {
@@ -184,7 +152,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-		UserDefaults.standard.set(presetArray, forKey:K.UserDef.PresetStrArray)
+//		UserDefaults.standard.set(presetArray, forKey:K.UserDef.PresetStrArray)
 		
 		notifCtr.removeObserver(self)
 	}
@@ -222,22 +190,22 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	// MARK: -
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
+		
+		
 		firstVolumeUpdateSinceDidLoad = false
+		
+		let newStr = String(Int(floor(sender.value)))
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-		
-		// TODO: settings object
-//		UserDefaults.standard.set(String(Int(floor(sender.value))), forKey: K.UserDef.LastUIVolumeStr)
-//		UserDefaults.standard.synchronize()
+		volumeLabel.text = newStr
 		
 		
-		settingsProxy.lastUIVolumeStr = String(Int(floor(sender.value)))
-		
+		settingsProxy.lastUIVolumeStr = newStr
+		print("settingsProxy.lastUIVolumeStr: \(settingsProxy.lastUIVolumeStr)")
 		
 		// this triggers SSHMan to talk to pi
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
 		              object: self,
-		              userInfo: [K.Key.PercentValue:
-						sender.value]
+		              userInfo: [K.Key.PercentValue: sender.value]
 		)
 	}
 	
@@ -263,7 +231,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let presetBtn = pressedView as! UIButton
 			presetBtn.setTitle(volumeLabel.text, for: .normal)
 
-			presetArray[idxPath.row] = volumeLabel.text!
+			settingsProxy.presetStrings[idxPath.row] = volumeLabel.text!
 		} else {
 			//long press on row to reorder - toggle tv isEditing
 			tableView.setEditing(!tableView.isEditing, animated: true)
@@ -364,7 +332,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let tvLocation = tv.convert(stepper.center, from: stepper.superview)
 			guard let idxPath = tv.indexPathForRow(at: tvLocation) else {
 				return }
-			presetArray[idxPath.row] = String(newPreset!)
+			settingsProxy.presetStrings[idxPath.row] = String(newPreset!)
 		}
 		
 	}
@@ -382,7 +350,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	@IBAction func addPreset(_ plusBtn: Any) {
-		presetArray.append("Preset")
+		settingsProxy.presetStrings.append("Preset")
 		presetTableView.reloadData()
 		presetTableView.flashScrollIndicators()
 	}
@@ -394,8 +362,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		let cell = tableView.dequeueReusableCell(withIdentifier: K.CellID.PresetTableViewCell)!
 		
 		if let presetBtn = cell.viewWithTag(K.UIElementTag.PresetButton) as? UIButton {
-			if presetArray.count >= indexPath.row + 1 {
-				presetBtn.setTitle(presetArray[indexPath.row] as String, for: .normal)
+			if settingsProxy.presetStrings.count >= indexPath.row + 1 {
+				presetBtn.setTitle(settingsProxy.presetStrings[indexPath.row] as String, for: .normal)
 			} else {
 				presetBtn.setTitle("Preset", for: .normal)
 			}
@@ -406,7 +374,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		updateViewConstraints()
-		return presetArray.count
+		return settingsProxy.presetStrings.count
 	}
 	
 	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -422,14 +390,14 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-		let removedStr = presetArray.remove(at: sourceIndexPath.row)
-		presetArray.insert(removedStr, at: destinationIndexPath.row)
+		let removedStr = settingsProxy.presetStrings.remove(at: sourceIndexPath.row)
+		settingsProxy.presetStrings.insert(removedStr, at: destinationIndexPath.row)
 		// seems like this method being here enables swipe-left to delete
 	}
 	
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-			presetArray.remove(at: indexPath.row)
+			settingsProxy.presetStrings.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		}
 	}

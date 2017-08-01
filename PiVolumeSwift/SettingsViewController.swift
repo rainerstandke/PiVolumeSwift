@@ -77,20 +77,20 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	}
 	
 	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// called before we transition out of here (back to VolumeVuCon)
-		print("leaving settingsVuCon")
-		
-		print("self.settingsProxy: \(self.settingsProxy)")
-		
-		if let volVuCon = segue.destination as? VolumeViewController {
-			// put settings back?
-			// TODO: volVuCon.setttings =
-			print("volVuCon: \(volVuCon)")
-		}
-		
-		
-	}
+//	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//		// called before we transition out of here (back to VolumeVuCon)
+//		print("leaving settingsVuCon")
+//		
+//		print("self.settingsProxy: \(self.settingsProxy)")
+//		
+//		if let volVuCon = segue.destination as? VolumeViewController {
+//			// put settings back?
+//			// TODO: volVuCon.setttings =
+//			print("volVuCon: \(volVuCon)")
+//		}
+//		
+//		
+//	}
 	
 	
 	func performBackSegue() {
