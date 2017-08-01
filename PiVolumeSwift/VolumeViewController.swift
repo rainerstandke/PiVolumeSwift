@@ -27,7 +27,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	var presetIndex: Int = 0
-	var settings = Settings()
+	var settingsProxy = SettingsProxy()
 		
 	
 	
@@ -54,19 +54,37 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		volumeLabel.text = UserDefaults.standard.string(forKey: K.UserDef.LastUIVolumeStr)
+		if let tabBarCon = self.tabBarController as? ShyTabBarController {
+			let idx = tabBarCon.indexOfDescendantVuCon(vuCon: self)
+			settingsProxy = SettingsManager.sharedInstance.settingsWithIndex(idx.index!)
+			print("settingsProxy: \(settingsProxy)")
+		}
+		
+		volumeLabel.text = settingsProxy.lastUIVolumeStr
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 		
-		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
+		//		presetArray = (UserDefaults.standard.stringArray(forKey: K.UserDef.PresetStrArray))!
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
 		
+		
+		
+
+		
+		
+		
+		
+		presetArray = settingsProxy.presetStrings
+		print("presetArray: \(presetArray)")
+		
+		
+		
 //		print("presetIndex: \(presetIndex)")
 		
-		settings.settingsIndex = presetIndex
+//		settings.settingsIndex = presetIndex
 //		print("settings: \(settings)")
 		
-		settings.presetStrings = presetArray
+		settingsProxy.presetStrings = presetArray
 		
 //		settings.writeToUserDefs()
 		
@@ -84,6 +102,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								self.volumeLabel.text = String(describing: newVolInt)
 								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 								if	self.firstVolumeUpdateSinceDidLoad {
+									// move the slider if this is the first time we get an actial Vol value over the wire
 									self.firstVolumeUpdateSinceDidLoad = false
 									UIView.animate(withDuration: 0.3,
 									               animations: {
@@ -100,26 +119,59 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 		
 
-		guard let tabBarCon = tabBarController as? ShyTabBarController else { return }
-		guard let tabBarVuCons = tabBarCon.viewControllers else { return }
-		
-		let count = tabBarVuCons.count
-		guard let idx = tabBarVuCons.index(of: (self.parent! as UIViewController)) else { return }
-		
-		if idx > 0 && idx == count - 1 {
-			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
-		} else {
-			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
+		if let tabBarCon = tabBarController as? ShyTabBarController {
+			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
+			
+			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
+				
+				// TODO: get settings obj here
+				// TODO: set navItem.title
+				
+				if isLast && index > 0 {
+					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
+				} else {
+					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
+				}
+			}
+			
+			// for the new, incoming one (huh??):
+			tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
 		}
 		
-		// TODO set title
-		let suffix = " (\(idx + 1) of \(count))"
-		navigationItem.title = "Pi Volume" + (count > 1 ? suffix : "")
+//		guard let tabBarCon = tabBarController as? ShyTabBarController else { return }
+//		guard let tabBarVuCons = tabBarCon.viewControllers else { return }
+//		
+//		let count = tabBarVuCons.count
+//		guard let idx = tabBarVuCons.index(of: (self.parent! as UIViewController)) else { return }
+//		
+//		if idx > 0 && idx == count - 1 {
+//			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
+//		} else {
+//			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
+//		}
 		
-		// for the new, incoming one:
-		tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
-}
+		// TODO set title for IP address or pi name
+//		let suffix = " (\(idx + 1) of \(count))"
+//		navigationItem.title = "Pi Volume" + (count > 1 ? suffix : "")
+		
+		
+	}
 	
+	func notifyAddTabItem() {
+		// runs when user adds a new vuCon by way of + button
+		notifCtr.post(
+			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
+			object: self
+		)
+	}
+	
+	func notifyDeleteTabItem() {
+		// runs when user deletes this vuCon by way of - button
+		notifCtr.post(
+			name: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
+			object: self.parent // b/c we're in NavBarCon
+		)
+	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
@@ -137,21 +189,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		notifCtr.removeObserver(self)
 	}
 
-	func notifyAddTabItem() {
-		notifCtr.post(
-			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
-			object: self
-		)
-	}
 
-	func notifyDeleteTabItem() {
-		notifCtr.post(
-			name: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
-			object: self.parent // b/c we're in NavBarCon
-		)
-	}
-	
-	
 	// MARK: -
 	
 	func segueToSettings() {
@@ -160,9 +198,20 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// called when we transition (to?) SettingsViewCon
+		// called when we transition to SettingsViewCon
 		print("segue: \(segue)")
-		// NEXT: grab destination from segue, set settings obj
+		
+		
+		if let settingsCon = segue.destination as? SettingsViewController {
+			settingsCon.settingsProxy = self.settingsProxy
+			print("settingsCon: \(settingsCon)")
+		}
+		
+		// (found) NEXT: grab destination from segue, set settings obj
+	
+	
+	
+	
 	}
 	
 	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
@@ -176,9 +225,15 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		firstVolumeUpdateSinceDidLoad = false
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 		
-		UserDefaults.standard.set(String(Int(floor(sender.value))), forKey: K.UserDef.LastUIVolumeStr)
-		UserDefaults.standard.synchronize()
+		// TODO: settings object
+//		UserDefaults.standard.set(String(Int(floor(sender.value))), forKey: K.UserDef.LastUIVolumeStr)
+//		UserDefaults.standard.synchronize()
 		
+		
+		settingsProxy.lastUIVolumeStr = String(Int(floor(sender.value)))
+		
+		
+		// this triggers SSHMan to talk to pi
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
 		              object: self,
 		              userInfo: [K.Key.PercentValue:

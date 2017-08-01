@@ -14,7 +14,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	var sshConnectionStatus: SshConnectionStatus = .Unknown {
 		didSet {
 			print("sshConnectionStatus: \(sshConnectionStatus)")
-			
 		}
 	}
 	
@@ -23,6 +22,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	@IBOutlet weak var passTextField: UITextField!
 	
 	@IBOutlet weak var statusLabel: UILabel!
+	
+	var settingsProxy = SettingsProxy()
 	
 	// MARK: -
 	
@@ -36,9 +37,15 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		ipTextField.text = userDefs.string(forKey: K.UserDef.IpAddress)
-		userTextField.text = userDefs.string(forKey: K.UserDef.UserName)
-		passTextField.text = userDefs.string(forKey: K.UserDef.Password)
+		// TODO: replace with settings obj, passed in during segue?
+		
+		ipTextField.text = self.settingsProxy.ipAddress
+		userTextField.text = self.settingsProxy.userName
+		passTextField.text = self.settingsProxy.password
+		
+//		ipTextField.text = userDefs.string(forKey: K.UserDef.IpAddress)
+//		userTextField.text = userDefs.string(forKey: K.UserDef.UserName)
+//		passTextField.text = userDefs.string(forKey: K.UserDef.Password)
 	}
 	
 	deinit {
@@ -71,8 +78,18 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// called before we transition back to VolumeViewCon
-		print("prep settings")
+		// called before we transition out of here (back to VolumeVuCon)
+		print("leaving settingsVuCon")
+		
+		print("self.settingsProxy: \(self.settingsProxy)")
+		
+		if let volVuCon = segue.destination as? VolumeViewController {
+			// put settings back?
+			// TODO: volVuCon.setttings =
+			print("volVuCon: \(volVuCon)")
+		}
+		
+		
 	}
 	
 	
@@ -92,6 +109,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		case .Unknown:
 			self.statusLabel.text = "??"
 		}
+		
+		// TODO: make enum?
 	}
 	
 
@@ -102,13 +121,21 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	
 	func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
 		
+		
+		// TODO: implement settings obj
+		// (could replace this mechanism with an IBAction - not much better & might fire upon each letter entered...)
+		// ??? TODO: ask SM Geeks how to 'bind' text value to settings obj
+		
 		switch textField.tag {
 		case K.UIElementTag.IpAddress:
-			userDefs.set(textField.text, forKey: K.UserDef.IpAddress)
+			settingsProxy.ipAddress = textField.text!
+//			userDefs.set(textField.text, forKey: K.UserDef.IpAddress)
 		case K.UIElementTag.UserName:
-			userDefs.set(textField.text, forKey: K.UserDef.UserName)
+			settingsProxy.userName = textField.text!
+//			userDefs.set(textField.text, forKey: K.UserDef.UserName)
 		case K.UIElementTag.Password:
-			userDefs.set(textField.text, forKey: K.UserDef.Password)
+			settingsProxy.password = textField.text!
+//			userDefs.set(textField.text, forKey: K.UserDef.Password)
 		default:
 			break
 		}

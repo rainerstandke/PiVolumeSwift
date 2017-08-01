@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		_ = K() // to force userDefs initial, non-nil values
 		
 		// force init
+		_ = SettingsManager.sharedInstance
 		_ = SSHManager.sharedInstance
 		NMSSHLogger.shared().isEnabled = false
 		
@@ -33,6 +34,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func applicationWillResignActive(_ application: UIApplication) {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+		
+		
+		if let tabBarCon = (self.window?.rootViewController) as? ShyTabBarController {
+			print("tabBarCon: \(tabBarCon)")
+			tabBarCon.makeVolumeVuConsSave()
+		}
+		
+		
+		
 	}
 
 	func applicationDidEnterBackground(_ application: UIApplication) {

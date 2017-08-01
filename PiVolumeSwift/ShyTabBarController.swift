@@ -48,6 +48,16 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 	}
 	
 	func addNewVolumeVuCon() {
+		
+		
+		
+		let xxx = self.descendantViewControllers(of: VolumeViewController.self)
+		print("xxx: \(xxx)")
+		
+		
+		
+		
+		
 		// really: adding volumeController wrapped in NavCon
 		
 		let storyBoard = UIStoryboard(name: "Main", bundle: nil)
@@ -156,6 +166,37 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		}
 	}
 	
+	func indexOfDescendantVuCon(vuCon: UIViewController) -> (index: Int?, isLast: Bool?) {
+		var resolvedVuCon: UIViewController
+		if (viewControllers?.contains(vuCon))! {
+			// vuCon is our child
+			resolvedVuCon = vuCon
+		} else {
+			if (viewControllers?.contains(vuCon.parent!))! {
+				// grandChild?
+				resolvedVuCon = vuCon.parent!
+			} else {
+				// neither child nor grandchild
+				return (nil, nil)
+			}
+		}
+		
+		let idx = viewControllers!.index(of: resolvedVuCon)
+		return (idx, idx == viewControllers!.count - 1)
+	}
+	
+	func makeVolumeVuConsSave() {
+		// called from appDel before termination / going to background
+		
+		let volVuCons = self.descendantViewControllers(of: VolumeViewController.self)
+		print("volVuCons: \(volVuCons)")
+		
+		SettingsManager.sharedInstance.writeToUserDefsForVulVuCons(volVuCons)
+		
+	}
+	
+	
+	
 	
 	// MARK: delegate
 	
@@ -178,5 +219,32 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		}
 	}
 }
+
+
+extension UIViewController {
+	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
+	
+	
+	func descendantViewControllers<T>(of type: T.Type) -> [T?] {
+		
+		var retArr = [T?]()
+		for vuCon in childViewControllers {
+			if let typed = vuCon as? T {
+				retArr.append(typed)
+			}
+			retArr.append(contentsOf: vuCon.descendantViewControllers(of: T.self))
+		}
+		return retArr.flatMap{ item in item }
+		
+		
+//		childViewCOntrollers.flatMap { UI }
+//		
+//		return childViewControllers.flatMap { $0.ancestorViewController(of: T.self) }
+		
+//		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }
+	}
+}
+
+
 
 
