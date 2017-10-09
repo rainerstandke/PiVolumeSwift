@@ -125,7 +125,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 	}
 	
-	func notifyAddTabItem() {
+	@objc func notifyAddTabItem() {
 		// runs when user adds a new vuCon by way of + button
 		notifCtr.post(
 			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
@@ -133,7 +133,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		)
 	}
 	
-	func notifyDeleteTabItem() {
+	@objc func notifyDeleteTabItem() {
 		// runs when user deletes this vuCon by way of - button
 		notifCtr.post(
 			name: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
@@ -160,7 +160,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 
 	// MARK: -
 	
-	func segueToSettings() {
+	@objc func segueToSettings() {
 		// called from right NavBarItem to trigger segue to SettingsCon
 		performSegue(withIdentifier: "ToSettingsSegue", sender: self)
 	}

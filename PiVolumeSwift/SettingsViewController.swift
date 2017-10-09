@@ -93,7 +93,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 //	}
 	
 	
-	func performBackSegue() {
+	@objc func performBackSegue() {
 		// called when we transition back to VolumeViewCon
 		performSegue(withIdentifier: "FromSettingsSegue", sender: self)
 	}
