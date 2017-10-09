@@ -22,6 +22,7 @@ import NMSSH
 
 
 // NEXT: need to use settingsObject for connection parms - passin w/ notif • figure out when push is called w/o notif & why
+// (deleayed til back home:) need access to pi - don't really understand when pushVolume is called w/ and w/o notifs. 2 possible avenues: could try to ALWAYS call with notif, and send volCon with notif, or possibly have one SSHMan for each volVuCon. GO WITH LATTER, make direct calls, ditch notifs
 
 
 
