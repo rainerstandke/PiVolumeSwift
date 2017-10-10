@@ -10,13 +10,14 @@ import UIKit
 
 class SettingsViewController: UIViewController, UITextFieldDelegate
 {
-	let userDefs = UserDefaults.standard
+	let userDefs = UserDefaults.standard // OBSOLETE??
 	var sshConnectionStatus: SshConnectionStatus = .Unknown {
 		didSet {
 			print("sshConnectionStatus: \(sshConnectionStatus)")
 		}
 	}
 	
+	@IBOutlet weak var deviceNameTextField: UITextField!
 	@IBOutlet weak var ipTextField: UITextField!
 	@IBOutlet weak var userTextField: UITextField!
 	@IBOutlet weak var passTextField: UITextField!
@@ -35,17 +36,14 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	}
 	
 	override func viewDidLoad() {
+		// called each time we appear - even if we've been on sreen before
+		// settingsProxy already set in segue
 		super.viewDidLoad()
 		
-		// TODO: replace with settings obj, passed in during segue?
-		
+		deviceNameTextField.text = self.settingsProxy.deviceName
 		ipTextField.text = self.settingsProxy.ipAddress
 		userTextField.text = self.settingsProxy.userName
 		passTextField.text = self.settingsProxy.password
-		
-//		ipTextField.text = userDefs.string(forKey: K.UserDef.IpAddress)
-//		userTextField.text = userDefs.string(forKey: K.UserDef.UserName)
-//		passTextField.text = userDefs.string(forKey: K.UserDef.Password)
 	}
 	
 	deinit {
@@ -126,21 +124,37 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		// (could replace this mechanism with an IBAction - not much better & might fire upon each letter entered...)
 		// ??? TODO: ask SM Geeks how to 'bind' text value to settings obj
 		
-		switch textField.tag {
-		case K.UIElementTag.IpAddress:
+		switch textField {
+		case deviceNameTextField:
+			settingsProxy.deviceName = textField.text!
+		case ipTextField:
 			settingsProxy.ipAddress = textField.text!
-//			userDefs.set(textField.text, forKey: K.UserDef.IpAddress)
-		case K.UIElementTag.UserName:
+		case userTextField:
 			settingsProxy.userName = textField.text!
-//			userDefs.set(textField.text, forKey: K.UserDef.UserName)
-		case K.UIElementTag.Password:
+		case passTextField:
 			settingsProxy.password = textField.text!
-//			userDefs.set(textField.text, forKey: K.UserDef.Password)
 		default:
-			break
+			_ = 42
 		}
-
-		userDefs.synchronize()
+		
+		
+		
+//		switch textField.tag {
+//		case K.UIElementTag.IpAddress:
+////			settingsProxy.ipAddress = textField.text!
+////			userDefs.set(textField.text, forKey: K.UserDef.IpAddress)
+//			_ = 42
+//		case K.UIElementTag.UserName:
+//			settingsProxy.userName = textField.text!
+////			userDefs.set(textField.text, forKey: K.UserDef.UserName)
+//		case K.UIElementTag.Password:
+//			settingsProxy.password = textField.text!
+////			userDefs.set(textField.text, forKey: K.UserDef.Password)
+//		default:
+//			break
+//		}
+//
+//		userDefs.synchronize()
 
 		textField.resignFirstResponder()
 		

@@ -20,7 +20,7 @@ class SettingsProxy: NSObject, Codable
 	var userName = ""
 	var password = ""
 	var lastUIVolumeStr = ""
-	var controllerName = ""
+	var deviceName = "" // the machine that we talk to, e.g. "AirPi"
 	
 	var presetStrings = [String]()
 	

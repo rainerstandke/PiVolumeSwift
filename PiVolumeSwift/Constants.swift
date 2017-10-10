@@ -38,7 +38,7 @@ struct K {
 		static let ConnectionStatus = "kConnectionStatus"
 	}
 	
-	struct UIElementTag {
+	struct UIElementTag { // OBSOLETE?
 		static let IpAddress = 1234
 		static let UserName = 1235
 		static let Password = 1236
