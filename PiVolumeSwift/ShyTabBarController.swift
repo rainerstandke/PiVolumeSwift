@@ -210,10 +210,12 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 	func makeVolumeVuConsSave() {
 		// called from appDel before termination / going to background
 		
+		// OBSOLETE - since we're saving when volCon disappears ??
+		
 		let volVuCons = self.descendantViewControllers(of: VolumeViewController.self)
 //		print("volVuCons: \(volVuCons)")
 		
-		SettingsManager.sharedInstance.writeToUserDefsForVulVuCons(volVuCons)
+//		SettingsManager.sharedInstance.writeToUserDefsForVulVuCons(volVuCons)
 		
 	}
 	

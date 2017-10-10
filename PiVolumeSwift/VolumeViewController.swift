@@ -20,7 +20,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	var firstVolumeUpdateSinceDidLoad = true
 	
 	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
-	var settingsProxy = SettingsProxy()
+	var settingsProxy = SettingsProxy() // this one is used if none can be gotten from userDefs
 		
 	@IBOutlet weak var presetTableView: UITableView!
 
@@ -164,7 +164,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			tabIndex = index
 			
 			settingsProxy.ipAddress = String(index + 30)
-			print("settingsProxy.ipAddress: \(settingsProxy.ipAddress)")
+			print("settingsProxy: \(settingsProxy)")
 			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
 		}
 		
