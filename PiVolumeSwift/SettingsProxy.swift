@@ -14,7 +14,7 @@ import Foundation
 
 
 
-class SettingsProxy: NSObject
+class SettingsProxy: NSObject, Codable
 {
 	var ipAddress = ""
 	var userName = ""

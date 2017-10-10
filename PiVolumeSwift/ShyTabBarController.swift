@@ -47,6 +47,12 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		NotificationCenter.default.removeObserver(self)
 	}
 	
+	static func viewController(withRestorationIdentifierPath identifierComponents: [Any],
+	                           coder: NSCoder) -> UIViewController?
+	{
+		return nil
+	}
+	
 	func addNewVolumeVuCon() {
 		
 		
@@ -189,7 +195,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		// called from appDel before termination / going to background
 		
 		let volVuCons = self.descendantViewControllers(of: VolumeViewController.self)
-		print("volVuCons: \(volVuCons)")
+//		print("volVuCons: \(volVuCons)")
 		
 		SettingsManager.sharedInstance.writeToUserDefsForVulVuCons(volVuCons)
 		

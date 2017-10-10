@@ -26,7 +26,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 
 	@IBOutlet weak var volumeLabel: UILabel!
 	@IBOutlet weak var volumeSlider: UISlider!
-	@IBOutlet weak var longPressGR: UILongPressGestureRecognizer!
+	@IBOutlet weak var longPressGestRec: UILongPressGestureRecognizer!
 	
 	@IBOutlet weak var doneTableEditBtn: UIButton!
 	
@@ -41,6 +41,30 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
 	}
 	
+	override func decodeRestorableState(with coder: NSCoder) {
+		// runs after viewDidLoad
+		print("de-code")
+		super.decodeRestorableState(with: coder)
+		
+		let index = coder.decodeInteger(forKey: "index")
+		print("index: \(index)")
+		
+		if let data = UserDefaults.standard.value(forKey: String(index)) as? Data {
+			let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data)
+			print("settings: \(settings)")
+		}
+		
+		
+	}
+	
+	override func encodeRestorableState(with coder: NSCoder) {
+		print("en-code")
+		if let index = tabBarController?.viewControllers?.index(of: navigationController!) {
+//			coder.encode(index, forKey: "index")
+			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
+		}
+		super.encodeRestorableState(with: coder)
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()

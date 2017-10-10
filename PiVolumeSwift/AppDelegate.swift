@@ -67,8 +67,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
+//	func application(_ application: UIApplication,
+//	                 viewControllerWithRestorationIdentifierPath identifierComponents: [Any],
+//	                 coder: NSCoder) -> UIViewController? {
+//		print("identifierComponents: \(identifierComponents)")
+//		return nil
+//	}
+	func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [Any], coder: NSCoder) -> UIViewController? {
+		print("identifierComponents: \(identifierComponents)")
+		return nil
+	}
+	func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+		return true
+	}
 
+	func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
+		print("did it")
+	}
+	func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+		return true
+	}
 	
+	
+	func applicationFinishedRestoringState() {
+	
+		print("done restoring")
+	}
 //	func application(_ application: UIApplication, willChangeStatusBarFrame newStatusBarFrame: CGRect) {
 //		print("application: \(application)")
 //		print("newStatusBarFrame: \(newStatusBarFrame)")

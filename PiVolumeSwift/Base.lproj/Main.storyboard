@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="wVo-TL-8Cu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="wVo-TL-8Cu">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,7 @@
         <!--VolumeViewCon-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController storyboardIdentifier="VolumeViewCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="9pv-A4-QxB" userLabel="VolumeViewCon" customClass="VolumeViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VolumeViewCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9pv-A4-QxB" userLabel="VolumeViewCon" customClass="VolumeViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
@@ -109,7 +109,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F70-tz-Agf">
-                                <rect key="frame" x="28" y="172" width="60" height="44"/>
+                                <rect key="frame" x="28" y="171.5" width="60" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="PtV-3C-isn"/>
                                     <constraint firstAttribute="width" constant="60" id="iNY-TG-769"/>
@@ -144,7 +144,7 @@
                     <navigationItem key="navigationItem" id="15f-ZX-LhB"/>
                     <connections>
                         <outlet property="doneTableEditBtn" destination="F70-tz-Agf" id="r8L-M1-6mM"/>
-                        <outlet property="longPressGR" destination="60V-tf-MOK" id="pfl-zJ-gyf"/>
+                        <outlet property="longPressGestRec" destination="60V-tf-MOK" id="pfl-zJ-gyf"/>
                         <outlet property="presetTableView" destination="zIr-63-VUd" id="F6U-AP-vLW"/>
                         <outlet property="tableViewBottomToSuperViewConstraint" destination="1rg-ex-FZh" id="y2t-7V-pk2"/>
                         <outlet property="volumeLabel" destination="9cn-dV-GrP" id="nvT-JR-qBH"/>
@@ -169,7 +169,7 @@
         <!--SettingsViewCon-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
-                <viewController id="8rJ-Kc-sve" userLabel="SettingsViewCon" customClass="SettingsViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsVuCon" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8rJ-Kc-sve" userLabel="SettingsViewCon" customClass="SettingsViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="L7p-HK-0SC"/>
                         <viewControllerLayoutGuide type="bottom" id="Djb-ko-YwX"/>
@@ -279,7 +279,7 @@
         <!--TabBarCon-->
         <scene sceneID="Qy4-fJ-pVz">
             <objects>
-                <tabBarController storyboardIdentifier="Shy Tab Bar Con" title="TabBarCon" extendedLayoutIncludesOpaqueBars="YES" id="wVo-TL-8Cu" customClass="ShyTabBarController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="ShyTabBarCon" title="TabBarCon" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wVo-TL-8Cu" customClass="ShyTabBarController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="6HY-yj-X6B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -297,16 +297,15 @@
         <!--NavCon-->
         <scene sceneID="ngK-jY-VM7">
             <objects>
-                <navigationController storyboardIdentifier="NavCon" title="NavCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="2jF-o8-R9z" customClass="NavCon" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavCon" title="NavCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2jF-o8-R9z" customClass="NavCon" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="first" id="RMK-ht-jCJ"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KWh-u8-Eu3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="nYL-nR-lHV">
-                        <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>

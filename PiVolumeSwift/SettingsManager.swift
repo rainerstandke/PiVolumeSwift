@@ -42,7 +42,7 @@ class SettingsManager
 	
 	func writeToUserDefsForVulVuCons(_ volVuCons: [VolumeViewController?]) {
 		let allSettingsDicts = volVuCons.map{ $0?.settingsProxy.dictionaryRepresentation() }
-		print("saving allSettingsDicts: \(allSettingsDicts)")
+//		print("saving allSettingsDicts: \(allSettingsDicts)")
 		userDefs.set(allSettingsDicts, forKey:K.UserDef.PresetDicts)
 	}
 
