@@ -27,10 +27,10 @@ class NavCon: UINavigationController
 		// TODO: this seems BAD, to have literal offset value
 	}
 	
-	override func viewWillLayoutSubviews() {
-		print("WILL navigationBar.frame: \(navigationBar.frame)")
-		
-	}
+//	override func viewWillLayoutSubviews() {
+//		print("WILL navigationBar.frame: \(navigationBar.frame)")
+//		
+//	}
 	
 	override func viewDidLayoutSubviews() {
 //		print("DID navigationBar.frame: \(navigationBar.frame)")

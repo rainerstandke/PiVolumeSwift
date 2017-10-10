@@ -49,7 +49,7 @@ class SSHManager: NSObject {
 	var timer: Timer?
 	var connectionStatus: SshConnectionStatus = .Unknown {
 		didSet {
-			print("SSHMan connectionStatus: \(connectionStatus)")
+//			print("SSHMan connectionStatus: \(connectionStatus)")
 			// ???: alternative syntax? Complicated, long...
 			NotificationCenter.default.post(name:NSNotification.Name(rawValue: K.Notif.SshConnectionStatusChanged),
 			                                object:self,
@@ -101,7 +101,7 @@ class SSHManager: NSObject {
 		
 		if let inComingVolume = notif?.userInfo?[K.Key.PercentValue] as? Float {
 			lastInComingVolume = floor(inComingVolume)
-			print("lastInComingVolume: \(lastInComingVolume!)")
+//			print("lastInComingVolume: \(lastInComingVolume!)")
 		} else { return }
 		
 		if opQueue.operationCount > 0 {
@@ -202,7 +202,7 @@ class TransmitVolumeOperation : Operation
 			}
 			self.sshMan.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(ti), repeats: false, block: { (timer: Timer) in
 				self.sshMan.serialQueue.async {
-					print("timer fired")
+//					print("timer fired")
 					self.sshMan.session?.disconnect()
 					self.sshMan.session = nil
 					// NOTE: no connectionStatus change
@@ -211,7 +211,7 @@ class TransmitVolumeOperation : Operation
 		}
 		
 		guard let resVol = volumeFromRemote(outputStr: response) else { sshMan.connectionStatus = .Failed; return }
-		print("push resVol: \(resVol)")
+//		print("push resVol: \(resVol)")
 		
 		sshMan.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: sshMan, userInfo: [K.Key.PercentValue: resVol])
 		

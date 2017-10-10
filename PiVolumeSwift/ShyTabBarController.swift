@@ -47,18 +47,32 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		NotificationCenter.default.removeObserver(self)
 	}
 	
-	static func viewController(withRestorationIdentifierPath identifierComponents: [Any],
-	                           coder: NSCoder) -> UIViewController?
-	{
-		return nil
+	override func decodeRestorableState(with coder: NSCoder) {
+		// runs after viewDidLoad
+		super.decodeRestorableState(with: coder)
+		
+		if let previousChildCount = coder.decodeObject(forKey: "childCount") as? Int {
+			// add child vuCons, but not the first one
+			for _: Int in 1..<previousChildCount {
+				addNewVolumeVuCon()
+			}
+		}
 	}
+	
+	override func encodeRestorableState(with coder: NSCoder) {
+		// just add current child vuCon count
+		coder.encode(viewControllers?.count, forKey: "childCount")
+		super.encodeRestorableState(with: coder)
+	}
+	
+	
 	
 	func addNewVolumeVuCon() {
 		
 		
 		
-		let xxx = self.descendantViewControllers(of: VolumeViewController.self)
-		print("xxx: \(xxx)")
+//		let xxx = self.descendantViewControllers(of: VolumeViewController.self)
+//		print("xxx: \(xxx)")
 		
 		
 		
@@ -70,7 +84,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		let newNavCon = storyBoard.instantiateViewController(withIdentifier: "NavCon")
 		
 		if let newVolCon = newNavCon.childViewControllers.first as? VolumeViewController {
-			newVolCon.presetIndex = (self.viewControllers?.count)! // ??? better syntax?
+			print("self.viewControllers?.count: \(self.viewControllers?.count)")
+//			newVolCon.presetIndex = (self.viewControllers?.count)! // ??? better syntax?
 		}
 		
 		// vuCons is ref to an existing object - vuCons and viewControllers! share a memory address
@@ -78,6 +93,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		// Josh: see if they share memory address after changing vuCons
 		var vuCons = viewControllers!
 		vuCons.append(newNavCon)
+		
 		
 		if tabBar.items?.count == 1 {
 			// need to move tabBar in from bottom
@@ -89,15 +105,15 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 					self.tabBar.frame = self.tabBar.frame.offsetBy(dx: 0, dy: -(self.tabBar.frame.size.height))
 					self.setViewControllers(vuCons, animated: false)
 					
-					if let currVuCon = self.selectedViewController as? UINavigationController,
-						let currVolumeVuCon = currVuCon.childViewControllers.first as? VolumeViewController {
-						// tableView bottomConstraint
-						
-						currVolumeVuCon.tableViewBottomToSuperViewConstraint.constant = self.bottomEdge
-						currVolumeVuCon.view.setNeedsUpdateConstraints()
-						
-						currVolumeVuCon.view.layoutIfNeeded()
-					}
+//					if let currVuCon = self.selectedViewController as? UINavigationController,
+//						let currVolumeVuCon = currVuCon.childViewControllers.first as? VolumeViewController {
+//						// tableView bottomConstraint
+//						
+//						currVolumeVuCon.tableViewBottomToSuperViewConstraint.constant = self.bottomEdge
+//						currVolumeVuCon.view.setNeedsUpdateConstraints()
+//						
+//						currVolumeVuCon.view.layoutIfNeeded()
+//					}
 					self.selectedIndex = vuCons.count - 1 // show new
 			},
 				completion: { (completed) in

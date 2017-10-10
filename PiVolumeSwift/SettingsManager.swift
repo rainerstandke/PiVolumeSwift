@@ -59,7 +59,7 @@ class SettingsManager
 		} else {
 			masterArray = [SettingsProxy]()
 		}
-		print("masterArray: \(masterArray)")
+//		print("masterArray: \(masterArray)")
 	}
 	
 }

@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		_ = K() // to force userDefs initial, non-nil values
 		
 		// force init
-		_ = SettingsManager.sharedInstance
+//		_ = SettingsManager.sharedInstance
 		_ = SSHManager.sharedInstance
 		NMSSHLogger.shared().isEnabled = false
 		
@@ -73,10 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		print("identifierComponents: \(identifierComponents)")
 //		return nil
 //	}
-	func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [Any], coder: NSCoder) -> UIViewController? {
-		print("identifierComponents: \(identifierComponents)")
-		return nil
-	}
+	
 	func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
 		return true
 	}

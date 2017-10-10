@@ -19,7 +19,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	let notifCtr = NotificationCenter.default
 	var firstVolumeUpdateSinceDidLoad = true
 	
-	var presetIndex: Int = 0 // OBSOLETE ??
+	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
 	var settingsProxy = SettingsProxy()
 		
 	@IBOutlet weak var presetTableView: UITableView!
@@ -41,47 +41,30 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
 	}
 	
-	override func decodeRestorableState(with coder: NSCoder) {
-		// runs after viewDidLoad
-		print("de-code")
-		super.decodeRestorableState(with: coder)
-		
-		let index = coder.decodeInteger(forKey: "index")
-		print("index: \(index)")
-		
-		if let data = UserDefaults.standard.value(forKey: String(index)) as? Data {
-			let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data)
-			print("settings: \(settings)")
-		}
-		
-		
-	}
-	
-	override func encodeRestorableState(with coder: NSCoder) {
-		print("en-code")
-		if let index = tabBarController?.viewControllers?.index(of: navigationController!) {
-//			coder.encode(index, forKey: "index")
-			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
-		}
-		super.encodeRestorableState(with: coder)
-	}
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		if let tabBarCon = self.tabBarController as? ShyTabBarController {
-			let idx = tabBarCon.indexOfDescendantVuCon(vuCon: self)
-			settingsProxy = SettingsManager.sharedInstance.settingsWithIndex(idx.index!)
-			print("settingsProxy: \(settingsProxy)")
+		
+		// load settings based on our position in tabBarCon's childVuCons array
+		if let index = indexInTabBarCon() {
+			// record index so that we can write our settings into userDefs when we disappear
+			tabIndex = index
+			
+			// try to load settings from userDefs
+			if let data = UserDefaults.standard.value(forKey: String(index)) as? Data {
+				if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
+//					print("settings: \(settings)")
+					settingsProxy = settings
+				}
+			}
 		}
 		
 		volumeLabel.text = settingsProxy.lastUIVolumeStr
 		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
-		print("settingsProxy.presetStrings: \(settingsProxy.presetStrings)")
 	}
-	
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -174,14 +157,32 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		self.presetTableView.flashScrollIndicators()
 	}
 	
+	override func viewWillDisappear(_ animated: Bool) {
+		// store our settings object in userDefs, using our index in 
+		if let index = indexInTabBarCon() {
+			// store our index as we leave screen - just in case we get re-ordered -- OBSOLETE?
+			tabIndex = index
+			
+			settingsProxy.ipAddress = String(index + 30)
+			print("settingsProxy.ipAddress: \(settingsProxy.ipAddress)")
+			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
+		}
+		
+		super.viewWillDisappear(animated)
+	}
+	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-//		UserDefaults.standard.set(presetArray, forKey:K.UserDef.PresetStrArray)
-		
 		notifCtr.removeObserver(self)
 	}
 
 
+	func indexInTabBarCon() -> Int? {
+		// in short: our position in tabBarCon's childVuCons array
+		// this assumes we are in a NavigationCon which is inside a TabBarCon
+		return tabBarController?.viewControllers?.index(of: navigationController!)
+	}
+	
 	// MARK: -
 	
 	@objc func segueToSettings() {
