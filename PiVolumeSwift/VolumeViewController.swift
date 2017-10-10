@@ -21,7 +21,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
 	var settingsProxy = SettingsProxy() // this one is used if none can be gotten from userDefs
-		
+	
+	let tentativeColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+	let confirmedColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+	
 	@IBOutlet weak var presetTableView: UITableView!
 
 	@IBOutlet weak var volumeLabel: UILabel!
@@ -54,14 +57,15 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			// try to load settings from userDefs
 			if let data = UserDefaults.standard.value(forKey: String(index)) as? Data {
 				if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
-//					print("settings: \(settings)")
+					print("settings: \(settings)")
+					self.title = settings.deviceName
 					settingsProxy = settings
 				}
 			}
 		}
 		
 		volumeLabel.text = settingsProxy.lastUIVolumeStr
-		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+		volumeLabel.textColor = tentativeColor
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
 	}
@@ -75,7 +79,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 								
 								let newVolInt = notif.userInfo![K.Key.PercentValue]! as! Int
 								self.volumeLabel.text = String(describing: newVolInt)
-								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+								self.volumeLabel.textColor = self.confirmedColor
 								if	self.firstVolumeUpdateSinceDidLoad {
 									// move the slider if this is the first time we get an actual Vol value over the wire
 									self.firstVolumeUpdateSinceDidLoad = false
@@ -90,18 +94,14 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		                     object: nil,
 		                     queue: OperationQueue.main) { notif in
 								// runs when SSHMan decides not to send a redundant value to pi
-								self.volumeLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+								self.volumeLabel.textColor = self.confirmedColor
 		}
 		
-
+		// add back item in UL
 		if let tabBarCon = tabBarController as? ShyTabBarController {
-			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
 			
+			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
 			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
-				
-				// TODO: get settings obj here
-				// TODO: set navItem.title
-				
 				if isLast && index > 0 {
 					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
 				} else {
@@ -192,23 +192,17 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		// called when we transition to SettingsViewCon
-		print("segue: \(segue)")
-		
-		
+		// pass settingPr to SettingsCon
 		if let settingsCon = segue.destination as? SettingsViewController {
 			settingsCon.settingsProxy = self.settingsProxy
-			print("settingsCon: \(settingsCon)")
 		}
-		
-		// (found) NEXT: grab destination from segue, set settings obj
-	
-	
-	
-	
 	}
 	
 	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
 		// called when we transition back to here from SettingsViewCon
+		// our settingsPr was passsed by ref to SettingsCon
+		// deviceName might be changed -> just in case update
+		self.title = settingsProxy.deviceName
 	}
 	
 	
@@ -220,7 +214,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		firstVolumeUpdateSinceDidLoad = false
 		
 		let newStr = String(Int(floor(sender.value)))
-		volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+		volumeLabel.textColor = tentativeColor
 		volumeLabel.text = newStr
 		
 		
@@ -344,7 +338,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		UIView.animate(withDuration: 0.3,
 		               animations: {
 						self.volumeSlider.setValue(Float(newPreset!), animated: true)
-						self.volumeLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+						self.volumeLabel.textColor = tentativeColor
 		})
 		
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
