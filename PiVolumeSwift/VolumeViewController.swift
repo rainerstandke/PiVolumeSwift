@@ -17,13 +17,12 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 {
 	let sshMan = SSHManager()
 	
-	let notifCtr = NotificationCenter.default
-//	var firstVolumeUpdateSinceDidLoad = true
+	let notifCtr = NotificationCenter.default // OBSOLETE?
 	
 	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
 	var settingsProxy = SettingsProxy() // this one is used if none can be gotten from userDefs
 	
-	let tentativeColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+	let pushedColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 	let confirmedColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 	
 	var confirmedVolumeObservation: NSKeyValueObservation?
@@ -43,7 +42,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙", style: .plain, target: self, action: #selector(segueToSettings))
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙",
+		                                                    style: .plain,
+		                                                    target: self,
+		                                                    action: #selector(segueToSettings))
 	}
 	
 
@@ -72,52 +74,27 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		} else if settingsProxy.pushVolume != nil {
 			volumeLabel.text = settingsProxy.pushVolume
 		} else {
-			volumeLabel.text = "?"
+			volumeLabel.text = "??"
 		}
-		volumeLabel.textColor = tentativeColor
+		volumeLabel.textColor = pushedColor
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
 		
-		
+		// observe volume confirmation -> update UI
 		confirmedVolumeObservation = settingsProxy.observe(\.confirmedVolume) { (setPr, change) in
 			DispatchQueue.main.async {
-				self.volumeLabel.text = setPr.confirmedVolume // TODO: loose this?
+				self.volumeLabel.text = setPr.confirmedVolume // possibly redundant
 				self.volumeLabel.textColor = self.confirmedColor
-				// TODO: set slider if not yet moved since load
+				
+				if setPr.confirmedVolume != setPr.pushVolume {
+					self.updateSlider()
+				}
 			}
 		}
-		
-		
-		
-		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		
-//		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.VolChanged)"),
-//		                     object: nil,
-//		                     queue: OperationQueue.main) { notif in
-//								
-//								let newVolInt = notif.userInfo![K.Key.PercentValue]! as! Int
-//								self.volumeLabel.text = String(describing: newVolInt)
-//								self.volumeLabel.textColor = self.confirmedColor
-//								if	self.firstVolumeUpdateSinceDidLoad {
-//									// move the slider if this is the first time we get an actual Vol value over the wire
-//									self.firstVolumeUpdateSinceDidLoad = false
-//									UIView.animate(withDuration: 0.3,
-//									               animations: {
-//													self.volumeSlider.setValue(Float(newVolInt), animated: true)
-//									})
-//								}
-//		}
-//		
-//		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
-//		                     object: nil,
-//		                     queue: OperationQueue.main) { notif in
-//								// runs when SSHMan decides not to send a redundant value to pi
-//								self.volumeLabel.textColor = self.confirmedColor
-//		}
 		
 		// add back item in UL
 		if let tabBarCon = tabBarController as? ShyTabBarController {
@@ -134,24 +111,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			// for the new, incoming one (huh??):
 			tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
 		}
-		
-//		guard let tabBarCon = tabBarController as? ShyTabBarController else { return }
-//		guard let tabBarVuCons = tabBarCon.viewControllers else { return }
-//		
-//		let count = tabBarVuCons.count
-//		guard let idx = tabBarVuCons.index(of: (self.parent! as UIViewController)) else { return }
-//		
-//		if idx > 0 && idx == count - 1 {
-//			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
-//		} else {
-//			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
-//		}
-		
-		// TODO set title for IP address or pi name
-//		let suffix = " (\(idx + 1) of \(count))"
-//		navigationItem.title = "Pi Volume" + (count > 1 ? suffix : "")
-		
-		
 	}
 	
 	@objc func notifyAddTabItem() {
@@ -173,27 +132,17 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		
-		if let floatVal = Float(volumeLabel.text!){
-			UIView.animate(withDuration: 0.3,
-			               animations: {self.volumeSlider.setValue(floatVal, animated: true)})
-		}
+		// update UI
+		updateSlider()
 		
 		// read actual volume from wire
-		// TODO: SSHManager.sharedInstance.getVolumeFromRemote()
+		sshMan.getVolumeFromRemote()
 		
 		self.presetTableView.flashScrollIndicators()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
-		// store our settings object in userDefs, using our index in 
-		if let index = indexInTabBarCon() {
-			// store our index as we leave screen - just in case we get re-ordered -- OBSOLETE?
-			tabIndex = index
-			
-			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
-		}
-		
+		saveSettings()
 		super.viewWillDisappear(animated)
 	}
 	
@@ -208,6 +157,25 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		// this assumes we are in a NavigationCon which is inside a TabBarCon
 		return tabBarController?.viewControllers?.index(of: navigationController!)
 	}
+	
+	func saveSettings() {
+		// store our settings object in userDefs, using our index in tabBarCon as key
+		if let index = indexInTabBarCon() {
+			// store our index as we leave screen - just in case we get re-ordered -- OBSOLETE?
+			tabIndex = index
+			
+			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
+		}
+	}
+	
+	func updateSlider() {
+		// if there is a value in the UI animate the slider
+		if let floatVal = Float(volumeLabel.text!){
+			UIView.animate(withDuration: 0.3,
+			               animations: {self.volumeSlider.setValue(floatVal, animated: true)})
+		}
+	}
+	
 	
 	// MARK: -
 	
@@ -235,11 +203,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	// MARK: -
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
-		// called from slider in ui
+		// action method for slider: called directly from ui
 		
 		// make String, omitting post-comma digits
 		let newStr = String(Int(floor(sender.value)))
-		volumeLabel.textColor = tentativeColor
+		volumeLabel.textColor = pushedColor
 		volumeLabel.text = newStr
 		
 		// set on settingsPr for sshMan to find & push
@@ -358,7 +326,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		UIView.animate(withDuration: 0.3,
 		               animations: {
 						self.volumeSlider.setValue(Float(newPreset!), animated: true)
-						self.volumeLabel.textColor = self.tentativeColor
+						self.volumeLabel.textColor = self.pushedColor
 		})
 		
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),

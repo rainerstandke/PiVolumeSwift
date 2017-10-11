@@ -8,12 +8,6 @@
 
 import Foundation
 
-
-
-
-
-
-
 class SettingsProxy: NSObject, Codable
 {
 	var ipAddress = ""
@@ -23,40 +17,8 @@ class SettingsProxy: NSObject, Codable
 	
 	var presetStrings = [String]()
 
-//	var lastUIVolumeStr = ""
-	
 	@objc dynamic var pushVolume: String?
 	@objc dynamic var confirmedVolume: String?
-	
-//	var index: Int = NSNotFound // OBSOLETE
-	
-	
-//	convenience init(_ dictRep: [String:Any]) {
-//		self.init()
-//		ipAddress = dictRep["ipAddress"] as! String
-//		userName = dictRep["userName"] as! String
-//		password = dictRep["password"] as! String
-//		lastUIVolumeStr = dictRep["lastUIVolumeStr"] as! String
-//		controllerName = dictRep["controllerName"] as! String
-//		
-//		presetStrings = dictRep["presetStrings"] as! [String]
-//		index = dictRep["index"] as! Int
-//	}
-//	
-//	
-//	func dictionaryRepresentation() -> [String:Any] {
-//		var dict = [String:Any]()
-//		dict["ipAddress"] = ipAddress
-//		dict["userName"] = userName
-//		dict["password"] = password
-//		dict["lastUIVolumeStr"] = lastUIVolumeStr
-//		dict["presetStrings"] = presetStrings
-//		
-//		dict["controllerName"] = controllerName
-//		dict["index"] = index
-//		
-//		return dict
-//	}
 	
 	override var description: String {
 		let encoder = JSONEncoder()
@@ -64,5 +26,4 @@ class SettingsProxy: NSObject, Codable
 		let jsonData = try? encoder.encode(self)
 		return String(data: jsonData!, encoding: .utf8)!
 	}
-	
 }
