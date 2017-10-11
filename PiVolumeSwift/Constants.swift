@@ -52,22 +52,12 @@ struct K {
 	
 	struct Misc {
 
-		static let ShortTimerInterval: Double = 2 // TODO: make 30 again
-		static let LongTimerInterval: Double = 30
+		static let TimerInterval: Double = 5 // TODO: make 30 again
 		static let TransitionDuration = 1 // TODO: make 0.3
 	}
 	
 	
-//	???: How about an enum in here? - wasn't recognized when used
-// see https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/NestedTypes.html ???
-//	enum UIElementTag: Int {
-//		case IpAddress = 1234
-//		case UserName = 1235
-//		case Password = 1236
-//	}
-	
-	init()
-	{
+	init() {
 		// runs once, called from appDel.
 		
 		let defaults = UserDefaults.standard
@@ -85,11 +75,11 @@ struct K {
 }
 
 
-enum SshConnectionStatus: Int {
-	case Succeded = 7845
-	case Failed
-	case InProgress
-	case Unknown
+enum SshConnectionStatus: String {
+	case Succeded = "ok"
+	case Failed = "failed"
+	case InProgress = "…"
+	case Unknown = "??"
 }
 
 

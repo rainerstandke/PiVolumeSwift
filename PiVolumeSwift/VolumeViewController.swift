@@ -20,7 +20,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	let notifCtr = NotificationCenter.default // OBSOLETE?
 	
 	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
-	var settingsProxy = SettingsProxy() // this one is used if none can be gotten from userDefs
+	var settingsPr = SettingsProxy() // this one is used if none can be gotten from userDefs
 	
 	let pushedColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 	let confirmedColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -52,7 +52,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		
 		// load settings based on our position in tabBarCon's childVuCons array
 		if let index = indexInTabBarCon() {
 			// record index so that we can write our settings into userDefs when we disappear
@@ -61,18 +60,17 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			// try to load settings from userDefs
 			if let data = UserDefaults.standard.value(forKey: String(index)) as? Data {
 				if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
-					print("settings: \(settings)")
 					self.title = settings.deviceName
 					sshMan.settingsPr = settings
-					settingsProxy = settings
+					settingsPr = settings
 				}
 			}
 		}
 		
-		if settingsProxy.confirmedVolume != nil {
-			volumeLabel.text = settingsProxy.confirmedVolume
-		} else if settingsProxy.pushVolume != nil {
-			volumeLabel.text = settingsProxy.pushVolume
+		if settingsPr.confirmedVolume != nil {
+			volumeLabel.text = settingsPr.confirmedVolume
+		} else if settingsPr.pushVolume != nil {
+			volumeLabel.text = settingsPr.pushVolume
 		} else {
 			volumeLabel.text = "??"
 		}
@@ -81,14 +79,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		presetTableView.allowsMultipleSelectionDuringEditing = false
 		
 		// observe volume confirmation -> update UI
-		confirmedVolumeObservation = settingsProxy.observe(\.confirmedVolume) { (setPr, change) in
+		confirmedVolumeObservation = settingsPr.observe(\.confirmedVolume) { (setPr, change) in
 			DispatchQueue.main.async {
 				self.volumeLabel.text = setPr.confirmedVolume // possibly redundant
 				self.volumeLabel.textColor = self.confirmedColor
-				
-				if setPr.confirmedVolume != setPr.pushVolume {
-					self.updateSlider()
-				}
 			}
 		}
 	}
@@ -164,7 +158,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			// store our index as we leave screen - just in case we get re-ordered -- OBSOLETE?
 			tabIndex = index
 			
-			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
+			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsPr), forKey:String(index))
 		}
 	}
 	
@@ -188,15 +182,19 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		// called when we transition to SettingsViewCon
 		// pass settingPr to SettingsCon
 		if let settingsCon = segue.destination as? SettingsViewController {
-			settingsCon.settingsProxy = self.settingsProxy
+			settingsCon.settingsPr = settingsPr
+			settingsCon.sshMan = sshMan
 		}
 	}
 	
+	// TODO: why is this an IBAction?
 	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
 		// called when we transition back to here from SettingsViewCon
 		// our settingsPr was passsed by ref to SettingsCon
 		// deviceName might be changed -> just in case update
-		self.title = settingsProxy.deviceName
+		self.title = settingsPr.deviceName
+		
+		saveSettings()
 	}
 	
 	
@@ -211,7 +209,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		volumeLabel.text = newStr
 		
 		// set on settingsPr for sshMan to find & push
-		settingsProxy.pushVolume = newStr
+		settingsPr.pushVolume = newStr
 
 		sshMan.pushVolumeToRemote()
 	}
@@ -238,7 +236,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let presetBtn = pressedView as! UIButton
 			presetBtn.setTitle(volumeLabel.text, for: .normal)
 
-			settingsProxy.presetStrings[idxPath.row] = volumeLabel.text!
+			settingsPr.presetStrings[idxPath.row] = volumeLabel.text!
 		} else {
 			//long press on row to reorder - toggle tv isEditing
 			tableView.setEditing(!tableView.isEditing, animated: true)
@@ -339,7 +337,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let tvLocation = tv.convert(stepper.center, from: stepper.superview)
 			guard let idxPath = tv.indexPathForRow(at: tvLocation) else {
 				return }
-			settingsProxy.presetStrings[idxPath.row] = String(newPreset!)
+			settingsPr.presetStrings[idxPath.row] = String(newPreset!)
 		}
 		
 	}
@@ -357,7 +355,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	@IBAction func addPreset(_ plusBtn: Any) {
-		settingsProxy.presetStrings.append("Preset")
+		settingsPr.presetStrings.append("Preset")
 		presetTableView.reloadData()
 		presetTableView.flashScrollIndicators()
 	}
@@ -369,8 +367,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		let cell = tableView.dequeueReusableCell(withIdentifier: K.CellID.PresetTableViewCell)!
 		
 		if let presetBtn = cell.viewWithTag(K.UIElementTag.PresetButton) as? UIButton {
-			if settingsProxy.presetStrings.count >= indexPath.row + 1 {
-				presetBtn.setTitle(settingsProxy.presetStrings[indexPath.row] as String, for: .normal)
+			if settingsPr.presetStrings.count >= indexPath.row + 1 {
+				presetBtn.setTitle(settingsPr.presetStrings[indexPath.row] as String, for: .normal)
 			} else {
 				presetBtn.setTitle("Preset", for: .normal)
 			}
@@ -381,7 +379,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		updateViewConstraints()
-		return settingsProxy.presetStrings.count
+		return settingsPr.presetStrings.count
 	}
 	
 	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -397,14 +395,14 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-		let removedStr = settingsProxy.presetStrings.remove(at: sourceIndexPath.row)
-		settingsProxy.presetStrings.insert(removedStr, at: destinationIndexPath.row)
+		let removedStr = settingsPr.presetStrings.remove(at: sourceIndexPath.row)
+		settingsPr.presetStrings.insert(removedStr, at: destinationIndexPath.row)
 		// seems like this method being here enables swipe-left to delete
 	}
 	
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-			settingsProxy.presetStrings.remove(at: indexPath.row)
+			settingsPr.presetStrings.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		}
 	}

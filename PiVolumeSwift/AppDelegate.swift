@@ -14,10 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
-//	func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-//		<#code#>
-//	}
-	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
 		_ = K() // to force userDefs initial, non-nil values
@@ -32,16 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 		
-		
-		if let tabBarCon = (self.window?.rootViewController) as? ShyTabBarController {
-			print("tabBarCon: \(tabBarCon)")
-			tabBarCon.makeVolumeVuConsSave()
-		}
-		
-		
-		
+		triggerAllSettingsSave()
 	}
-
+		
 	func applicationDidEnterBackground(_ application: UIApplication) {
 		triggerAllSettingsSave()
 	}
@@ -58,29 +47,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 	
-//	func application(_ application: UIApplication,
-//	                 viewControllerWithRestorationIdentifierPath identifierComponents: [Any],
-//	                 coder: NSCoder) -> UIViewController? {
-//		print("identifierComponents: \(identifierComponents)")
-//		return nil
-//	}
-	
 	func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
 		return true
 	}
 
-	func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
-		print("did it")
-	}
 	func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
 		return true
 	}
 	
 	
-	func applicationFinishedRestoringState() {
 	
-		print("done restoring")
-	}
 //	func application(_ application: UIApplication, willChangeStatusBarFrame newStatusBarFrame: CGRect) {
 //		print("application: \(application)")
 //		print("newStatusBarFrame: \(newStatusBarFrame)")

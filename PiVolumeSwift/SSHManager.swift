@@ -24,23 +24,33 @@ class SSHManager: NSObject {
 		opQueue.maxConcurrentOperationCount = 1
 	}
 	
-	var settingsPr = SettingsProxy()
+	var settingsPr = SettingsProxy() {
+		didSet {
+			opsCountObservation =  opQueue.observe(\.operationCount, options: [.new]) { (opQ, change) in
+				// if all ops are done and the slide has been moved beyond the last actually pushed volume, then just push the last know volume
+				if change.newValue == 0 {
+					if self.settingsPr.pushVolume != self.lastInComingVolume {
+						self.pushVolumeToRemote()
+					}
+				}
+			}
+		}
+	}
 	
 	let opQueue: OperationQueue
+	var opsCountObservation: NSKeyValueObservation?
 	
 	var session: NMSSHSession?
 	var lastInComingVolume: String?
 	var timer: Timer?
 	var connectionStatus: SshConnectionStatus = .Unknown {
+		// whenevr the status changes send notif - SettingsVuCon is listening
 		didSet {
-//			print("SSHMan connectionStatus: \(connectionStatus)")
-			// ???: alternative syntax? Complicated, long...
 			NotificationCenter.default.post(name:NSNotification.Name(rawValue: K.Notif.SshConnectionStatusChanged),
 			                                object:self,
 			                                userInfo:[K.Key.ConnectionStatus : connectionStatus])
 		}
 	}
-	
 	
 	deinit {
 		timer?.invalidate()
@@ -81,7 +91,6 @@ class SSHManager: NSObject {
 			self.timer?.invalidate()
 			
 			self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: false, block: { (timer: Timer) in
-				print("connection timeout fired")
 				self.session?.disconnect()
 				self.session = nil
 			})
@@ -154,15 +163,7 @@ class TransmitVolumeOperation : Operation
 		DispatchQueue.main.async {
 			self.sshMan.timer?.invalidate()
 			
-			var ti: Double
-			switch self.mode {
-			case .Push:
-				ti = K.Misc.ShortTimerInterval
-			case .Pull:
-				ti = K.Misc.ShortTimerInterval
-			}
-			
-			self.sshMan.resetConnectionTimeOut(ti)
+			self.sshMan.resetConnectionTimeOut(K.Misc.TimerInterval)
 		}
 		
 		/* ???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
@@ -170,7 +171,6 @@ class TransmitVolumeOperation : Operation
 		guard let responseStr = try? localSession.channel.execute(commandStr) else { sshMan.connectionStatus = .Failed; return }
 		
 		guard let resVolStr = volumeFromRemote(outputStr: responseStr) else { sshMan.connectionStatus = .Failed; return }
-		print("push resVol: \(resVolStr)")
 		
 		// this will trigger observation in VolVuCon -> ui update
 		sshMan.settingsPr.confirmedVolume = resVolStr
