@@ -37,15 +37,36 @@ import NMSSH
 
 class SSHManager: NSObject {
 	
+	@objc override init() {
+		
+		opQueue = OperationQueue()
+		serialQueue = DispatchQueue(label: "biz.xmil.ssh_submission.serialQ", qos: .userInteractive)
+		
+		super.init()
+		
+		opQueue.addObserver(self, forKeyPath: "operationCount", options: NSKeyValueObservingOptions.new, context: nil)
+		opQueue.qualityOfService = .userInteractive
+		opQueue.maxConcurrentOperationCount = 1
+		
+		
+		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.SliderMoved)"), object: nil, queue: OperationQueue.main, using: { [unowned self] (notif) in
+			self.pushVolumeToRemote(notif: notif)
+		})
+		
+		getVolumeFromRemote() // to populate label
+	}
+	
+	var settingsPr = SettingsProxy()
+	
 	let notifCtr = NotificationCenter.default
 	let userDefs = UserDefaults.standard
 	
-	let serialQueue = DispatchQueue(label: "biz.xmil.ssh_submission.serialQ", qos: .userInteractive)
-	let opQueue = OperationQueue()
+	let serialQueue: DispatchQueue
+	let opQueue: OperationQueue
 	
 	var session: NMSSHSession?
 	var lastInComingVolume: Float?
-	var lastProcessedVolume: Float?
+	var lastConfirmedVolume: Float?
 	var timer: Timer?
 	var connectionStatus: SshConnectionStatus = .Unknown {
 		didSet {
@@ -59,23 +80,23 @@ class SSHManager: NSObject {
 	
 	// sharedInstance is a property on type SSHMan
 	// block below runs once during first access, not afterwards - ???: why not?
-	static let sharedInstance: SSHManager = {
-		let instance = SSHManager()
-		
-		instance.opQueue.underlyingQueue = instance.serialQueue
-		instance.opQueue.qualityOfService = .userInteractive
-		instance.opQueue.maxConcurrentOperationCount = 1
-		
-		instance.opQueue.addObserver(instance, forKeyPath: "operationCount", options: NSKeyValueObservingOptions.new, context: nil)
-		
-		instance.notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.SliderMoved)"), object: nil, queue: OperationQueue.main, using: { [unowned instance] (notif) in
-			instance.pushVolumeToRemote(notif: notif)
-		})
-	
-		instance.getVolumeFromRemote() // to populate label
-		
-		return instance
-	}()
+//	static let sharedInstance: SSHManager = {
+//		let instance = SSHManager()
+//		
+//		instance.opQueue.underlyingQueue = instance.serialQueue
+//		instance.opQueue.qualityOfService = .userInteractive
+//		instance.opQueue.maxConcurrentOperationCount = 1
+//		
+//		instance.opQueue.addObserver(instance, forKeyPath: "operationCount", options: NSKeyValueObservingOptions.new, context: nil)
+//		
+//		instance.notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.SliderMoved)"), object: nil, queue: OperationQueue.main, using: { [unowned instance] (notif) in
+//			instance.pushVolumeToRemote(notif: notif)
+//		})
+//	
+//		instance.getVolumeFromRemote() // to populate label
+//		
+//		return instance
+//	}()
 	
 	
 	deinit {
@@ -104,16 +125,21 @@ class SSHManager: NSObject {
 //			print("lastInComingVolume: \(lastInComingVolume!)")
 		} else { return }
 		
+		
+		
+	}
+	
+	func pushVolumeToRemote() {
 		if opQueue.operationCount > 0 {
 			// throttle
 			return
 		}
 		
-		if lastInComingVolume == lastProcessedVolume {
-			// would be redundant, but confirm - turn black - whatever value is currently displayed in UI
-			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.ConfirmedVolume)"), object: self, userInfo: nil)
-			return
-		}
+//		if lastInComingVolume == lastConfirmedVolume {
+//			// would be redundant, but confirm - turn black - whatever value is currently displayed in UI
+//			self.notifCtr.post(name: NSNotification.Name("\(K.Notif.ConfirmedVolume)"), object: self, userInfo: nil)
+//			return
+//		}
 		
 		
 		let transmitOp = TransmitVolumeOperation(mode: .Push, sshMan: self)
@@ -146,11 +172,14 @@ class TransmitVolumeOperation : Operation
 	let userDefs = UserDefaults.standard
 	
 	override func main() {
-		sshMan.lastProcessedVolume = sshMan.lastInComingVolume
+//		sshMan.lastConfirmedVolume = sshMan.lastInComingVolume
 		
 		if	sshMan.session == nil {
-			sshMan.session = NMSSHSession.connect(toHost: self.userDefs.string(forKey: K.UserDef.IpAddress),
-			                                    withUsername: self.userDefs.string(forKey: K.UserDef.UserName))
+			let ipAdress = sshMan.settingsPr.ipAddress
+			let userName = sshMan.settingsPr.userName
+			
+			sshMan.session = NMSSHSession.connect(toHost: ipAdress,
+			                                      withUsername: userName)
 		}
 		
 		// ??: good construct? - 'local' function?
@@ -172,7 +201,8 @@ class TransmitVolumeOperation : Operation
 		}
 		
 		if !localSession.isAuthorized {
-			if !localSession.authenticate(byPassword: self.userDefs.string(forKey:K.UserDef.Password)) {
+			let passWord = sshMan.settingsPr.password
+			if !localSession.authenticate(byPassword: passWord) {
 				resetSession()
 				return
 			}
@@ -211,7 +241,7 @@ class TransmitVolumeOperation : Operation
 		}
 		
 		guard let resVol = volumeFromRemote(outputStr: response) else { sshMan.connectionStatus = .Failed; return }
-//		print("push resVol: \(resVol)")
+		print("push resVol: \(resVol)")
 		
 		sshMan.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: sshMan, userInfo: [K.Key.PercentValue: resVol])
 		

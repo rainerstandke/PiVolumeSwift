@@ -15,7 +15,8 @@ import CoreGraphics
 
 class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
 {
-
+	let sshMan = SSHManager()
+	
 	let notifCtr = NotificationCenter.default
 	var firstVolumeUpdateSinceDidLoad = true
 	
@@ -37,7 +38,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	// MARK: - life cycle
-	
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
@@ -59,6 +59,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 				if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
 					print("settings: \(settings)")
 					self.title = settings.deviceName
+					sshMan.settingsPr = settings
 					settingsProxy = settings
 				}
 			}
@@ -152,7 +153,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.viewDidAppear(animated)
 		
 		// read actual volume from wire
-		SSHManager.sharedInstance.getVolumeFromRemote()
+		// TODO: SSHManager.sharedInstance.getVolumeFromRemote()
 		
 		self.presetTableView.flashScrollIndicators()
 	}
@@ -163,8 +164,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			// store our index as we leave screen - just in case we get re-ordered -- OBSOLETE?
 			tabIndex = index
 			
-			settingsProxy.ipAddress = String(index + 30)
-			print("settingsProxy: \(settingsProxy)")
 			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsProxy), forKey:String(index))
 		}
 		
@@ -219,13 +218,20 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		
 		settingsProxy.lastUIVolumeStr = newStr
-		print("settingsProxy.lastUIVolumeStr: \(settingsProxy.lastUIVolumeStr)")
+//		print("settingsProxy.lastUIVolumeStr: \(settingsProxy.lastUIVolumeStr)")
 		
 		// this triggers SSHMan to talk to pi
-		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
-		              object: self,
-		              userInfo: [K.Key.PercentValue: sender.value]
-		)
+//		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
+//		              object: self,
+//		              userInfo: [K.Key.PercentValue: sender.value]
+//		)
+		
+		
+		
+		// NEXT: start here, follow through to operation
+		
+		
+		sshMan.pushVolumeToRemote()
 	}
 	
 	
@@ -338,7 +344,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		UIView.animate(withDuration: 0.3,
 		               animations: {
 						self.volumeSlider.setValue(Float(newPreset!), animated: true)
-						self.volumeLabel.textColor = tentativeColor
+						self.volumeLabel.textColor = self.tentativeColor
 		})
 		
 		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),

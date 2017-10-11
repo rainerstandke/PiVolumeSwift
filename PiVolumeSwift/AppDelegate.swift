@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		// force init
 //		_ = SettingsManager.sharedInstance
-		_ = SSHManager.sharedInstance
+//		_ = SSHManager.sharedInstance
 		NMSSHLogger.shared().isEnabled = false
 		
 		return true

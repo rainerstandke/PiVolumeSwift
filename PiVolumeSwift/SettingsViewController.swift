@@ -54,7 +54,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		updateStatusLabel(status: SSHManager.sharedInstance.connectionStatus)
+		//		TODO: updateStatusLabel(status: SSHManager.sharedInstance.connectionStatus)
 		
 		NotificationCenter.default.addObserver(forName: NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
 		                                       object: nil,
@@ -64,7 +64,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 												self?.updateStatusLabel(status: state)
 		})
 		
-		SSHManager.sharedInstance.getVolumeFromRemote() // force status update
+		// TODO: SSHManager.sharedInstance.getVolumeFromRemote() // force status update
 	}
 	
 	
@@ -150,7 +150,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 
 		textField.resignFirstResponder()
 		
-		SSHManager.sharedInstance.getVolumeFromRemote() // force status update
+		// TODO: SSHManager.sharedInstance.getVolumeFromRemote() // force status update
 		
 		return true
 	}
