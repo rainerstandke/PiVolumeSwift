@@ -40,28 +40,28 @@ class SSHManager: NSObject {
 	@objc override init() {
 		
 		opQueue = OperationQueue()
-		serialQueue = DispatchQueue(label: "biz.xmil.ssh_submission.serialQ", qos: .userInteractive)
+//		serialQueue = DispatchQueue(label: "biz.xmil.ssh_submission.serialQ", qos: .userInteractive)
 		
 		super.init()
 		
-		opQueue.addObserver(self, forKeyPath: "operationCount", options: NSKeyValueObservingOptions.new, context: nil)
+//		opQueue.addObserver(self, forKeyPath: "operationCount", options: NSKeyValueObservingOptions.new, context: nil)
 		opQueue.qualityOfService = .userInteractive
 		opQueue.maxConcurrentOperationCount = 1
 		
 		
-		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.SliderMoved)"), object: nil, queue: OperationQueue.main, using: { [unowned self] (notif) in
-			self.pushVolumeToRemote(notif: notif)
-		})
+//		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.SliderMoved)"), object: nil, queue: OperationQueue.main, using: { [unowned self] (notif) in
+//			self.pushVolumeToRemote(notif: notif)
+//		})
 		
 		getVolumeFromRemote() // to populate label
 	}
 	
 	var settingsPr = SettingsProxy()
 	
-	let notifCtr = NotificationCenter.default
+//	let notifCtr = NotificationCenter.default
 	let userDefs = UserDefaults.standard
 	
-	let serialQueue: DispatchQueue
+//	let serialQueue: DispatchQueue
 	let opQueue: OperationQueue
 	
 	var session: NMSSHSession?
@@ -100,38 +100,39 @@ class SSHManager: NSObject {
 	
 	
 	deinit {
-		notifCtr.removeObserver(self)
+//		notifCtr.removeObserver(self)
 		timer?.invalidate()
-		opQueue .removeObserver(self, forKeyPath: "operationCount")
+//		opQueue .removeObserver(self, forKeyPath: "operationCount")
 	}
 	
 	
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if change?[NSKeyValueChangeKey.newKey] as! Float == 0 {
-			pushVolumeToRemote(notif: nil)
-		}
-	}
+//	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+//		print("change: \(change)")
+//		if change?[NSKeyValueChangeKey.newKey] as! Float == 0 {
+//			pushVolumeToRemote(notif: nil)
+//		}
+//	}
 	
-	func pushVolumeToRemote(notif: Notification?)
-	{
-		// can be called with and w/o notif
-		// w/ notif - update lastIncoming, then work on authenticate
-		// w/o notif - just use lastIncoming as last scheduledTimer
-		// should only be called w/o after op ran at least once, so that lastIncoming was set fer sure
-		// NOTE: incoming volume is float, like:133.958 - given to alsa on pi the post comma part is ignored - slider in UI seems to do the same
-		
-		if let inComingVolume = notif?.userInfo?[K.Key.PercentValue] as? Float {
-			lastInComingVolume = floor(inComingVolume)
-//			print("lastInComingVolume: \(lastInComingVolume!)")
-		} else { return }
-		
-		
-		
-	}
+//	func pushVolumeToRemote(notif: Notification?)
+//	{
+//		// can be called with and w/o notif
+//		// w/ notif - update lastIncoming, then work on authenticate
+//		// w/o notif - just use lastIncoming as last scheduledTimer
+//		// should only be called w/o after op ran at least once, so that lastIncoming was set fer sure
+//		// NOTE: incoming volume is float, like:133.958 - given to alsa on pi the post comma part is ignored - slider in UI seems to do the same
+//
+//		if let inComingVolume = notif?.userInfo?[K.Key.PercentValue] as? Float {
+//			lastInComingVolume = floor(inComingVolume)
+////			print("lastInComingVolume: \(lastInComingVolume!)")
+//		} else { return }
+//
+//
+//
+//	}
 	
 	func pushVolumeToRemote() {
 		if opQueue.operationCount > 0 {
-			// throttle
+			// throttle - if any operation is already underway just drop this one
 			return
 		}
 		
@@ -150,12 +151,35 @@ class SSHManager: NSObject {
 	
 	func getVolumeFromRemote()
 	{
+		
+		return
+		
+		
+		
 		let transmitOp = TransmitVolumeOperation(mode: .Pull, sshMan: self)
 		opQueue.addOperation(transmitOp)
 		
 		self.connectionStatus = .InProgress;
 	}
-
+	
+	func resetConnectionTimeOut(_ interval: Double) {
+		DispatchQueue.main.async {
+			self.timer?.invalidate()
+			
+			//			var ti = Double(K.Misc.ShortTimerInterval)
+			//			if self.mode == .Push {
+			//				ti = Double(K.Misc.LongTimerInterval)
+			//			}
+			self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: false, block: { (timer: Timer) in
+				//				self.sshMan.serialQueue.async {
+				print("connection timeout fired")
+				self.session?.disconnect()
+				self.session = nil
+				// NOTE: no connectionStatus change // TODO?
+				//				}
+			})
+		}
+	}
 }
 
 
@@ -182,7 +206,6 @@ class TransmitVolumeOperation : Operation
 			                                      withUsername: userName)
 		}
 		
-		// ??: good construct? - 'local' function?
 		func resetSession() {
 			sshMan.session = nil // need to nil out
 			sshMan.connectionStatus = .Failed;
@@ -212,52 +235,57 @@ class TransmitVolumeOperation : Operation
 		var commandStr : String? = nil
 		switch mode {
 		case .Push:
-			commandStr = "amixer -c 0 cset numid=6 \(sshMan.lastInComingVolume!)"
+			if let volStr = sshMan.settingsPr.pushVolume {
+				commandStr = "amixer -c 0 cset numid=6 \(volStr)"
+			}
 		case.Pull:
 			commandStr = "amixer -c 0 cget numid=6"
 		}
 		
 		if commandStr == nil { sshMan.connectionStatus = .Failed; return }
 		
-		/* ???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
-//		do... catch
-		guard let response = try? localSession.channel.execute(commandStr) else { sshMan.connectionStatus = .Failed; return }
-		
+		// set connection timeout on sshMan
 		DispatchQueue.main.async {
 			self.sshMan.timer?.invalidate()
 			
-			var ti = Double(K.Misc.ShortTimerInterval)
-			if self.mode == .Push {
-				ti = Double(K.Misc.LongTimerInterval)
+			var ti: Double
+			switch self.mode {
+			case .Push:
+				ti = K.Misc.ShortTimerInterval
+			case .Pull:
+				ti = K.Misc.ShortTimerInterval
 			}
-			self.sshMan.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(ti), repeats: false, block: { (timer: Timer) in
-				self.sshMan.serialQueue.async {
-//					print("timer fired")
-					self.sshMan.session?.disconnect()
-					self.sshMan.session = nil
-					// NOTE: no connectionStatus change
-				}
-			})
+			
+			self.sshMan.resetConnectionTimeOut(ti)
 		}
 		
-		guard let resVol = volumeFromRemote(outputStr: response) else { sshMan.connectionStatus = .Failed; return }
-		print("push resVol: \(resVol)")
+		/* ???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
+//		do... catch
+		guard let responseStr = try? localSession.channel.execute(commandStr) else { sshMan.connectionStatus = .Failed; return }
+		print("responseStr: \(responseStr)")
 		
-		sshMan.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: sshMan, userInfo: [K.Key.PercentValue: resVol])
+		guard let resVolStr = volumeFromRemote(outputStr: responseStr) else { sshMan.connectionStatus = .Failed; return }
+		print("push resVol: \(resVolStr)")
+		
+		sshMan.settingsPr.confirmedVolume = resVolStr
+		
+//		sshMan.notifCtr.post(name: NSNotification.Name("\(K.Notif.VolChanged)"), object: sshMan, userInfo: [K.Key.PercentValue: resVolStr])
 		
 		sshMan.connectionStatus = .Succeded
 	}
 	
 	
-	func volumeFromRemote(outputStr: String) -> Int?
+	func volumeFromRemote(outputStr: String) -> String?
 	{
-		let volStr = regexMatch(inStr: outputStr, regexStr: "(?<=: values=)[0-9]{1,3}(?=,)")
+		return regexMatch(inStr: outputStr, regexStr: "(?<=: values=)[0-9]{1,3}(?=,)")
 		
-		if volStr == nil {
-			return nil
-		}
-		
-		return Int(volStr!)
+//		let volStr = regexMatch(inStr: outputStr, regexStr: "(?<=: values=)[0-9]{1,3}(?=,)")
+//
+//		if volStr == nil {
+//			return nil
+//		}
+//
+//		return Int(volStr!)
 	}
 	
 	

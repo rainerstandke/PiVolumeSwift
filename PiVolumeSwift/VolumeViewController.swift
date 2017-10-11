@@ -18,13 +18,15 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	let sshMan = SSHManager()
 	
 	let notifCtr = NotificationCenter.default
-	var firstVolumeUpdateSinceDidLoad = true
+//	var firstVolumeUpdateSinceDidLoad = true
 	
 	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
 	var settingsProxy = SettingsProxy() // this one is used if none can be gotten from userDefs
 	
 	let tentativeColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 	let confirmedColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+	
+	var confirmedVolumeObservation: NSKeyValueObservation?
 	
 	@IBOutlet weak var presetTableView: UITableView!
 
@@ -65,38 +67,57 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			}
 		}
 		
-		volumeLabel.text = settingsProxy.lastUIVolumeStr
+		if settingsProxy.confirmedVolume != nil {
+			volumeLabel.text = settingsProxy.confirmedVolume
+		} else if settingsProxy.pushVolume != nil {
+			volumeLabel.text = settingsProxy.pushVolume
+		} else {
+			volumeLabel.text = "?"
+		}
 		volumeLabel.textColor = tentativeColor
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
+		
+		
+		confirmedVolumeObservation = settingsProxy.observe(\.confirmedVolume) { (setPr, change) in
+			DispatchQueue.main.async {
+				self.volumeLabel.text = setPr.confirmedVolume // TODO: loose this?
+				self.volumeLabel.textColor = self.confirmedColor
+				// TODO: set slider if not yet moved since load
+			}
+		}
+		
+		
+		
+		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.VolChanged)"),
-		                     object: nil,
-		                     queue: OperationQueue.main) { notif in
-								
-								let newVolInt = notif.userInfo![K.Key.PercentValue]! as! Int
-								self.volumeLabel.text = String(describing: newVolInt)
-								self.volumeLabel.textColor = self.confirmedColor
-								if	self.firstVolumeUpdateSinceDidLoad {
-									// move the slider if this is the first time we get an actual Vol value over the wire
-									self.firstVolumeUpdateSinceDidLoad = false
-									UIView.animate(withDuration: 0.3,
-									               animations: {
-													self.volumeSlider.setValue(Float(newVolInt), animated: true)
-									})
-								}
-		}
-		
-		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
-		                     object: nil,
-		                     queue: OperationQueue.main) { notif in
-								// runs when SSHMan decides not to send a redundant value to pi
-								self.volumeLabel.textColor = self.confirmedColor
-		}
+//		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.VolChanged)"),
+//		                     object: nil,
+//		                     queue: OperationQueue.main) { notif in
+//								
+//								let newVolInt = notif.userInfo![K.Key.PercentValue]! as! Int
+//								self.volumeLabel.text = String(describing: newVolInt)
+//								self.volumeLabel.textColor = self.confirmedColor
+//								if	self.firstVolumeUpdateSinceDidLoad {
+//									// move the slider if this is the first time we get an actual Vol value over the wire
+//									self.firstVolumeUpdateSinceDidLoad = false
+//									UIView.animate(withDuration: 0.3,
+//									               animations: {
+//													self.volumeSlider.setValue(Float(newVolInt), animated: true)
+//									})
+//								}
+//		}
+//		
+//		notifCtr.addObserver(forName: NSNotification.Name("\(K.Notif.ConfirmedVolume)"),
+//		                     object: nil,
+//		                     queue: OperationQueue.main) { notif in
+//								// runs when SSHMan decides not to send a redundant value to pi
+//								self.volumeLabel.textColor = self.confirmedColor
+//		}
 		
 		// add back item in UL
 		if let tabBarCon = tabBarController as? ShyTabBarController {
@@ -151,6 +172,12 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		
+		
+		if let floatVal = Float(volumeLabel.text!){
+			UIView.animate(withDuration: 0.3,
+			               animations: {self.volumeSlider.setValue(floatVal, animated: true)})
+		}
 		
 		// read actual volume from wire
 		// TODO: SSHManager.sharedInstance.getVolumeFromRemote()
@@ -208,29 +235,16 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	// MARK: -
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
+		// called from slider in ui
 		
-		
-		firstVolumeUpdateSinceDidLoad = false
-		
+		// make String, omitting post-comma digits
 		let newStr = String(Int(floor(sender.value)))
 		volumeLabel.textColor = tentativeColor
 		volumeLabel.text = newStr
 		
-		
-		settingsProxy.lastUIVolumeStr = newStr
-//		print("settingsProxy.lastUIVolumeStr: \(settingsProxy.lastUIVolumeStr)")
-		
-		// this triggers SSHMan to talk to pi
-//		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
-//		              object: self,
-//		              userInfo: [K.Key.PercentValue: sender.value]
-//		)
-		
-		
-		
-		// NEXT: start here, follow through to operation
-		
-		
+		// set on settingsPr for sshMan to find & push
+		settingsProxy.pushVolume = newStr
+
 		sshMan.pushVolumeToRemote()
 	}
 	

@@ -19,12 +19,16 @@ class SettingsProxy: NSObject, Codable
 	var ipAddress = ""
 	var userName = ""
 	var password = ""
-	var lastUIVolumeStr = ""
 	var deviceName = "" // the machine that we talk to, e.g. "AirPi"
 	
 	var presetStrings = [String]()
+
+//	var lastUIVolumeStr = ""
 	
-	var index: Int = NSNotFound // OBSOLETE
+	@objc dynamic var pushVolume: String?
+	@objc dynamic var confirmedVolume: String?
+	
+//	var index: Int = NSNotFound // OBSOLETE
 	
 	
 //	convenience init(_ dictRep: [String:Any]) {
