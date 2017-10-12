@@ -10,16 +10,13 @@ import UIKit
 
 class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIViewControllerAnimatedTransitioning
 {
-	
-	
-	// TODO: split user defs into arrays
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		
 		self.delegate = self
 		
+		
+		// TODO: this needs to go into viewWillAppear, after state restoration
 		if (tabBar.items?.count)! < 2 {
 			// push tabBar out of bottom no need to animate, we're not on screen yet
 			putTabBarOffScreen()
@@ -57,36 +54,25 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 				addNewVolumeVuCon()
 			}
 		}
+		
+		// select the childViewCon at last index
+		selectedIndex = coder.decodeInteger(forKey: "selIndex")
 	}
 	
 	override func encodeRestorableState(with coder: NSCoder) {
-		// just add current child vuCon count
+		// just add current child vuCon count, selectedIndex
 		coder.encode(viewControllers?.count, forKey: "childCount")
+		coder.encode(selectedIndex as NSInteger, forKey: "selIndex")
+		
 		super.encodeRestorableState(with: coder)
 	}
 	
 	
-	
 	func addNewVolumeVuCon() {
-		
-		
-		
-//		let xxx = self.descendantViewControllers(of: VolumeViewController.self)
-//		print("xxx: \(xxx)")
-		
-		
-		
-		
-		
 		// really: adding volumeController wrapped in NavCon
 		
 		let storyBoard = UIStoryboard(name: "Main", bundle: nil)
 		let newNavCon = storyBoard.instantiateViewController(withIdentifier: "NavCon")
-		
-		if let newVolCon = newNavCon.childViewControllers.first as? VolumeViewController {
-			print("self.viewControllers?.count: \(self.viewControllers?.count)")
-//			newVolCon.presetIndex = (self.viewControllers?.count)! // ??? better syntax?
-		}
 		
 		// vuCons is ref to an existing object - vuCons and viewControllers! share a memory address
 		// but without creating vuCons, and accessing viewCons! directly, the new tab never shows - ???: why not?
@@ -124,9 +110,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 			self.setViewControllers(vuCons, animated: true)
 			self.selectedIndex = vuCons.count - 1 // show new
 		}
-		
-		// TODO: make title bar + L/R items appear, give name (ending IP address)
-		// copy presets from last visible into new
 	}
 
 	
@@ -134,9 +117,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		
 		
 		guard let idx = self.viewControllers?.index(of: navVuCon) else { return }
-		
-		// TODO: remove from user defs  arrays
-		
 		
 		var vuCons = viewControllers!
 		
