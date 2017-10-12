@@ -74,10 +74,10 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		// parm addOrRemoveTab is a block that will add or remove a tab
 		// parm resultingTabCount is the count after that change
 		
-		// the origin of the tabBaer (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or at the bottom
-		var newY_Origin = self.view.frame.size.height // regular setup, in view
+		// the origin of the tabBar (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or its frame is alligned with the bottom of the parent view
+		var newY_Origin = self.view.frame.size.height // just outside/under parent view
 		if resultingTabCount > 1 {
-			newY_Origin -= tabBar.frame.size.height // just under view
+			newY_Origin -= tabBar.frame.size.height // regular setup, in view
 		}
 
 		UIView.animate(withDuration: 0.3) {
@@ -87,6 +87,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		
 		// TODO: NEXT: look at constraining the contentView to the to of the tabBar -> bg color!
 		// play with fuller, scrolling! preset table!
+		// when removing tab, select last existing tab
 		
 	}
 
