@@ -187,9 +187,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 	
-	// TODO: why is this an IBAction?
 	@IBAction func unwindFromSettings(unwindSegue: UIStoryboardSegue){
 		// called when we transition back to here from SettingsViewCon
+		// set in IB menu on segue
 		// our settingsPr was passsed by ref to SettingsCon
 		// deviceName might be changed -> just in case update
 		self.title = settingsPr.deviceName
@@ -204,18 +204,33 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		// action method for slider: called directly from ui
 		
 		// make String, omitting post-comma digits
-		let newStr = String(Int(floor(sender.value)))
+		let newVal = Int(floor(sender.value))
+		
+		updateVolume(to: newVal)
+	}
+	
+	func updateVolume(to newVal: Int) {
+		let newStr = String(newVal)
 		volumeLabel.textColor = pushedColor
 		volumeLabel.text = newStr
 		
 		// set on settingsPr for sshMan to find & push
 		settingsPr.pushVolume = newStr
-
+		
 		sshMan.pushVolumeToRemote()
 	}
 	
 	
 	// MARK: - preset
+	
+	@IBAction func addPreset(_ plusBtn: Any) {
+		// called when + btn is pressed
+		settingsPr.presetStrings.append("Preset")
+		presetTableView.reloadData()
+		presetTableView.flashScrollIndicators()
+		saveSettings()
+	}
+	
 	
 	@IBAction func longPressRecognizer(_ lpGestRecog: UILongPressGestureRecognizer) {
 		// long press on tableView gets us into edit mode - i.e. moving rows, or set preset value
@@ -230,6 +245,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		guard let idxPath = tableView.indexPathForRow(at: lpLocation) else {return }
 		
 		guard let pressedView = lpGestRecog.view?.hitTest(lpLocation, with: nil) else {return }
+		print("pressedView: \(pressedView)")
 		
 		if pressedView.tag == K.UIElementTag.PresetButton {
 			// long touch on preset button to aquire new preset value
@@ -237,12 +253,13 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			presetBtn.setTitle(volumeLabel.text, for: .normal)
 
 			settingsPr.presetStrings[idxPath.row] = volumeLabel.text!
+			
+			saveSettings()
 		} else {
 			//long press on row to reorder - toggle tv isEditing
 			tableView.setEditing(!tableView.isEditing, animated: true)
 			updateDoneTableEditBtn()
 		}
-		
 	}
 	
 	func updateDoneTableEditBtn() {
@@ -280,11 +297,13 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			}
 			self.doneTableEditBtn.frame = visibileFrame
 		}
+		
+		saveSettings()
 	}
 	
 	@IBAction func contentViewTap(_ tapRecog: UITapGestureRecognizer) {
 		// tap somewhere in the main contentView to get tableView out of edit mode
-		if tapRecog.state != .ended || tapRecog.view != view {
+		if tapRecog.state != .ended || tapRecog.view != self.view {
 			return
 		}
 		if presetTableView.isEditing {
@@ -295,19 +314,21 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	@IBAction func tableViewEndEditing(_ sender: Any) {
+		// called from Done btn in tableView when editing of when tapped on main contentView
 		presetTableView .setEditing(false, animated: true)
 		updateDoneTableEditBtn()
 	}
 	
 	@IBAction func stepped(_ stepper: UIStepper) {
+		// stepper + or - was pressed
 		
 		let presetButton = stepper.superview!.subviews.first { siblingOrSelf -> Bool in
 			return siblingOrSelf.tag == K.UIElementTag.PresetButton
 		} as! UIButton
 		
-		var newPreset: Int?
+		var newPresetVal: Int
 		if let currPreset = Int((presetButton.titleLabel?.text)!) {
-			newPreset = currPreset + Int(stepper.value)
+			newPresetVal = currPreset + Int(stepper.value)
 		} else {
 			stepper.value = 0.0
 			return
@@ -315,51 +336,34 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		stepper.value = 0.0
 		
-		if newPreset! < 0 || newPreset! > 151 {
+		if newPresetVal < 0 || newPresetVal > 151 {
 			return
 		}
 		
-		presetButton.setTitle(String(newPreset!), for: .normal)
+		// update preset value in button
+		presetButton.setTitle(String(newPresetVal), for: .normal)
 		
-		UIView.animate(withDuration: 0.3,
-		               animations: {
-						self.volumeSlider.setValue(Float(newPreset!), animated: true)
-						self.volumeLabel.textColor = self.pushedColor
-		})
+		updateVolume(to: newPresetVal)
+		updateSlider()
 		
-		notifCtr.post(name: NSNotification.Name("\(K.Notif.SliderMoved)"),
-		              object: self,
-		              userInfo: [K.Key.PercentValue: Float(newPreset!)]
-		)
-		
-		
+		// update our preset in settings
 		if let tv = stepper.superview(of: UITableView.self) {
 			let tvLocation = tv.convert(stepper.center, from: stepper.superview)
 			guard let idxPath = tv.indexPathForRow(at: tvLocation) else {
 				return }
-			settingsPr.presetStrings[idxPath.row] = String(newPreset!)
+			settingsPr.presetStrings[idxPath.row] = String(newPresetVal)
 		}
 		
 	}
 	
 	
 	@IBAction func presetButtonTouched(_ thisPresetButton: UIButton) {
-		if let presetValStr = thisPresetButton.titleLabel?.text {
-			if let presetFloat = Float(presetValStr) {
-				volumeSlider.value = presetFloat
-				volumeLabel.text = presetValStr
-				sliderMoved(volumeSlider)
-			}
+		if let presetStr = thisPresetButton.titleLabel?.text, let presetInt = Int(presetStr) {
+				updateVolume(to: Int(presetInt))
+				updateSlider()
 		}
 	}
 	
-	
-	@IBAction func addPreset(_ plusBtn: Any) {
-		settingsPr.presetStrings.append("Preset")
-		presetTableView.reloadData()
-		presetTableView.flashScrollIndicators()
-	}
-
 	
 	// MARK: - table view delegate / datasource
 	

@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-63-VUd">
-                                <rect key="frame" x="0.0" y="215" width="320" height="353"/>
+                                <rect key="frame" x="0.0" y="255" width="320" height="313"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="kPresetTableViewCell" id="Qhd-yI-5Yc">
@@ -82,13 +82,13 @@
                                 </connections>
                             </tableView>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="76" minValue="0.0" maxValue="151" translatesAutoresizingMaskIntoConstraints="NO" id="KhZ-IX-3NK">
-                                <rect key="frame" x="14" y="116" width="292" height="31"/>
+                                <rect key="frame" x="14" y="156" width="292" height="31"/>
                                 <connections>
                                     <action selector="sliderMoved:" destination="9pv-A4-QxB" eventType="valueChanged" id="WBs-zT-BUA"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9cn-dV-GrP">
-                                <rect key="frame" x="130" y="84" width="60" height="24"/>
+                                <rect key="frame" x="130" y="124" width="60" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="Fyj-Vr-iI8"/>
                                 </constraints>
@@ -97,7 +97,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O73-Zg-0cZ">
-                                <rect key="frame" x="251" y="166" width="44" height="44"/>
+                                <rect key="frame" x="251" y="206" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="7gi-yc-fOP"/>
                                     <constraint firstAttribute="height" constant="44" id="rgZ-fC-vKl"/>
@@ -109,7 +109,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F70-tz-Agf">
-                                <rect key="frame" x="28" y="172" width="60" height="44"/>
+                                <rect key="frame" x="28" y="212" width="60" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="PtV-3C-isn"/>
                                     <constraint firstAttribute="width" constant="60" id="iNY-TG-769"/>

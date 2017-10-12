@@ -15,7 +15,7 @@ class SettingsProxy: NSObject, Codable
 	var password = ""
 	var deviceName = "" // the machine that we talk to, e.g. "AirPi"
 	
-	var presetStrings = [String]()
+	var presetStrings = [String]() // just the preset values as single strings in the order they appear on screen
 
 	@objc dynamic var pushVolume: String?
 	@objc dynamic var confirmedVolume: String?

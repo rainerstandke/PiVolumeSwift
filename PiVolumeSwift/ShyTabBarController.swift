@@ -210,13 +210,12 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 	func makeVolumeVuConsSave() {
 		// called from appDel before termination / going to background
 		
-		// OBSOLETE - since we're saving when volCon disappears ??
-		
 		let volVuCons = self.descendantViewControllers(of: VolumeViewController.self)
-//		print("volVuCons: \(volVuCons)")
+		print("volVuCons: \(volVuCons)")
 		
-//		SettingsManager.sharedInstance.writeToUserDefsForVulVuCons(volVuCons)
-		
+		for volVuCon in volVuCons {
+			volVuCon.saveSettings()
+		}
 	}
 	
 	
@@ -248,24 +247,15 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 extension UIViewController {
 	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
 	
-	
-	func descendantViewControllers<T>(of type: T.Type) -> [T?] {
-		
-		var retArr = [T?]()
+	func descendantViewControllers<T>(of type: T.Type) -> [T] {
+		var retArr = [T]()
 		for vuCon in childViewControllers {
-			if let typed = vuCon as? T {
-				retArr.append(typed)
+			if vuCon is T {
+				retArr.append(vuCon as! T)
 			}
 			retArr.append(contentsOf: vuCon.descendantViewControllers(of: T.self))
 		}
 		return retArr.flatMap{ item in item }
-		
-		
-//		childViewCOntrollers.flatMap { UI }
-//		
-//		return childViewControllers.flatMap { $0.ancestorViewController(of: T.self) }
-		
-//		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }
 	}
 }
 
