@@ -17,8 +17,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 {
 	let sshMan = SSHManager()
 	
-	let notifCtr = NotificationCenter.default // OBSOLETE?
-	
 	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
 	var settingsPr = SettingsProxy() // this one is used if none can be gotten from userDefs
 	
@@ -96,9 +94,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
 			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
 				if isLast && index > 0 {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(notifyDeleteTabItem))
+					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(deleteTab))
 				} else {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(notifyAddTabItem))
+					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addTabItem))
 				}
 			}
 			
@@ -107,20 +105,18 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 	
-	@objc func notifyAddTabItem() {
-		// runs when user adds a new vuCon by way of + button
-		notifCtr.post(
-			name: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
-			object: self
-		)
+	@objc func addTabItem() {
+		// runs when user adds a new vuCon by way of + leftBarButtonItem
+		if let tabBarCon = tabBarController as? ShyTabBarController {
+			tabBarCon.addNewVolumeVuCon()
+		}
 	}
 	
-	@objc func notifyDeleteTabItem() {
-		// runs when user deletes this vuCon by way of - button
-		notifCtr.post(
-			name: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
-			object: self.parent // b/c we're in NavBarCon
-		)
+	@objc func deleteTab() {
+		// runs when user deletes this vuCon by way of - leftBarButtonItem
+		if let tabBarCon = tabBarController as? ShyTabBarController {
+			tabBarCon.removeNavCon()
+		}
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -140,10 +136,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.viewWillDisappear(animated)
 	}
 	
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-		notifCtr.removeObserver(self)
-	}
+//	override func viewDidDisappear(_ animated: Bool) {
+//		super.viewDidDisappear(animated)
+//	}
 
 
 	func indexInTabBarCon() -> Int? {

@@ -22,21 +22,21 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 			putTabBarOffScreen()
 		}
 		
-		NotificationCenter.default.addObserver(
-			forName: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
-			object: nil,
-			queue: OperationQueue.main) { (notif) in
-				self.addNewVolumeVuCon()
-		}
-		
-		NotificationCenter.default.addObserver(
-			forName: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
-			object: nil,
-			queue: OperationQueue.main) { (notif) in
-				if let tbdNavVuCon = notif.object as? UINavigationController {
-					self.removeNavCon(navVuCon: tbdNavVuCon)
-				}
-		}
+//		NotificationCenter.default.addObserver(
+//			forName: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
+//			object: nil,
+//			queue: OperationQueue.main) { (notif) in
+//				self.addNewVolumeVuCon()
+//		}
+//
+//		NotificationCenter.default.addObserver(
+//			forName: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
+//			object: nil,
+//			queue: OperationQueue.main) { (notif) in
+//				if let tbdNavVuCon = notif.object as? UINavigationController {
+//					self.removeNavCon(navVuCon: tbdNavVuCon)
+//				}
+//		}
 	}
 	
 	deinit
@@ -68,7 +68,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 	}
 	
 	
-	func addNewVolumeVuCon() {
+	@objc func addNewVolumeVuCon() {
 		// really: adding volumeController wrapped in NavCon
 		
 		let storyBoard = UIStoryboard(name: "Main", bundle: nil)
@@ -113,8 +113,15 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 	}
 
 	
-	func removeNavCon(navVuCon: UINavigationController) {
+	@objc func removeNavCon() {
 		
+		viewControllers!.remove(at: selectedIndex)
+		
+		// TODO: animate & deal with show / hide tabBar
+	}
+	
+	@objc func removeNavCon(navVuCon: UINavigationController) {
+		// ALMOST OBSOLETE
 		
 		guard let idx = self.viewControllers?.index(of: navVuCon) else { return }
 		
@@ -124,7 +131,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 			// need to move tabBar in from bottom
 			
 			self.selectedIndex = vuCons.count - 1 // show only one
-		
+			
 			UIView.animate(
 				withDuration: TimeInterval(K.Misc.TransitionDuration),
 				animations: {
@@ -238,6 +245,8 @@ extension UIViewController {
 		return retArr.flatMap{ item in item }
 	}
 }
+
+
 
 
 
