@@ -21,22 +21,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 			// push tabBar out of bottom no need to animate, we're not on screen yet
 			putTabBarOffScreen()
 		}
-		
-//		NotificationCenter.default.addObserver(
-//			forName: NSNotification.Name("\(K.Notif.AddTabBarItem)"),
-//			object: nil,
-//			queue: OperationQueue.main) { (notif) in
-//				self.addNewVolumeVuCon()
-//		}
-//
-//		NotificationCenter.default.addObserver(
-//			forName: NSNotification.Name("\(K.Notif.DeleteTabBarItem)"),
-//			object: nil,
-//			queue: OperationQueue.main) { (notif) in
-//				if let tbdNavVuCon = notif.object as? UINavigationController {
-//					self.removeNavCon(navVuCon: tbdNavVuCon)
-//				}
-//		}
 	}
 	
 	deinit
@@ -80,83 +64,75 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		var vuCons = viewControllers!
 		vuCons.append(newNavCon)
 		
+		let newChildCOunt = viewControllers!.count + 1
+		showHideTabBar(addOrRemoveTab: {self.setViewControllers(vuCons, animated: false)}, resultingTabCount: newChildCOunt)
+
+	}
+	
+	
+	func showHideTabBar(addOrRemoveTab: @escaping () -> (), resultingTabCount: Int) {
+		// parm addOrRemoveTab is a block that will add or remove a tab
+		// parm resultingTabCount is the count after that change
 		
-		if tabBar.items?.count == 1 {
-			// need to move tabBar in from bottom
-			
-			UIView.animate(
-				withDuration: TimeInterval(K.Misc.TransitionDuration),
-				animations: {
-					// move tabBar
-					self.tabBar.frame = self.tabBar.frame.offsetBy(dx: 0, dy: -(self.tabBar.frame.size.height))
-					self.setViewControllers(vuCons, animated: false)
-					
-//					if let currVuCon = self.selectedViewController as? UINavigationController,
-//						let currVolumeVuCon = currVuCon.childViewControllers.first as? VolumeViewController {
-//						// tableView bottomConstraint
-//						
-//						currVolumeVuCon.tableViewBottomToSuperViewConstraint.constant = self.bottomEdge
-//						currVolumeVuCon.view.setNeedsUpdateConstraints()
-//						
-//						currVolumeVuCon.view.layoutIfNeeded()
-//					}
-					self.selectedIndex = vuCons.count - 1 // show new
-			},
-				completion: { (completed) in
-			})
-			
-		} else {
-			// tabBar already in place
-			self.setViewControllers(vuCons, animated: true)
-			self.selectedIndex = vuCons.count - 1 // show new
+		// the origin of the tabBaer (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or at the bottom
+		var newY_Origin = self.view.frame.size.height // regular setup, in view
+		if resultingTabCount > 1 {
+			newY_Origin -= tabBar.frame.size.height // just under view
 		}
+
+		UIView.animate(withDuration: 0.3) {
+			self.tabBar.frame.origin.y = newY_Origin
+			addOrRemoveTab()
+		}
+		
+		// TODO: NEXT: look at constraining the contentView to the to of the tabBar -> bg color!
+		// play with fuller, scrolling! preset table!
+		
 	}
 
 	
 	@objc func removeNavCon() {
-		
-		viewControllers!.remove(at: selectedIndex)
-		
-		// TODO: animate & deal with show / hide tabBar
+		let newChildCount = viewControllers!.count - 1
+		showHideTabBar( addOrRemoveTab: { self.viewControllers!.remove(at: self.selectedIndex) }, resultingTabCount: newChildCount)
 	}
 	
-	@objc func removeNavCon(navVuCon: UINavigationController) {
-		// ALMOST OBSOLETE
-		
-		guard let idx = self.viewControllers?.index(of: navVuCon) else { return }
-		
-		var vuCons = viewControllers!
-		
-		if tabBar.items?.count == 2 {
-			// need to move tabBar in from bottom
-			
-			self.selectedIndex = vuCons.count - 1 // show only one
-			
-			UIView.animate(
-				withDuration: TimeInterval(K.Misc.TransitionDuration),
-				animations: {
-					self.putTabBarOffScreen()
-					
-					if let currVuCon = self.selectedViewController as? UINavigationController,
-						let currVolumeVuCon = currVuCon.childViewControllers.first as? VolumeViewController {
-						// tableView bottomConstraint
-						currVolumeVuCon.tableViewBottomToSuperViewConstraint.constant = 0
-						currVolumeVuCon.view.setNeedsUpdateConstraints()
-						
-						currVolumeVuCon.view.layoutIfNeeded()
-					}
-			},
-				completion: { (completed) in
-					vuCons.remove(at: idx)
-					self.setViewControllers(vuCons, animated: false)
-			})
-			
-		} else if (tabBar.items?.count)! > 2 {
-			self.selectedIndex = vuCons.count - 2 // show the one that will be the last one
-			vuCons.remove(at: idx)
-			self.setViewControllers(vuCons, animated: true)
-		}
-	}
+//	@objc func removeNavCon(navVuCon: UINavigationController) {
+//		// ALMOST OBSOLETE
+//
+//		guard let idx = self.viewControllers?.index(of: navVuCon) else { return }
+//
+//		var vuCons = viewControllers!
+//
+//		if tabBar.items?.count == 2 {
+//			// need to move tabBar in from bottom
+//
+//			self.selectedIndex = vuCons.count - 1 // show only one
+//
+//			UIView.animate(
+//				withDuration: TimeInterval(K.Misc.TransitionDuration),
+//				animations: {
+//					self.putTabBarOffScreen()
+//
+//					if let currVuCon = self.selectedViewController as? UINavigationController,
+//						let currVolumeVuCon = currVuCon.childViewControllers.first as? VolumeViewController {
+//						// tableView bottomConstraint
+//						currVolumeVuCon.tableViewBottomToSuperViewConstraint.constant = 0
+//						currVolumeVuCon.view.setNeedsUpdateConstraints()
+//
+//						currVolumeVuCon.view.layoutIfNeeded()
+//					}
+//			},
+//				completion: { (completed) in
+//					vuCons.remove(at: idx)
+//					self.setViewControllers(vuCons, animated: false)
+//			})
+//
+//		} else if (tabBar.items?.count)! > 2 {
+//			self.selectedIndex = vuCons.count - 2 // show the one that will be the last one
+//			vuCons.remove(at: idx)
+//			self.setViewControllers(vuCons, animated: true)
+//		}
+//	}
 	
 	func putTabBarOffScreen() {
 		let tabBarOriginY = self.view.frame.size.height
@@ -248,6 +224,71 @@ extension UIViewController {
 
 
 
-
+extension UITabBarController { // OBSOLETE
+	
+	//	see: https://stackoverflow.com/questions/20935228/how-to-hide-tab-bar-with-animation-in-ios
+	
+	private struct AssociatedKeys {
+		// Declare a global var to produce a unique address as the assoc object handle
+		static var orgFrameView:     UInt8 = 0
+		static var movedFrameView:   UInt8 = 1
+	}
+	
+	var orgFrameView:CGRect? {
+		get { return objc_getAssociatedObject(self, &AssociatedKeys.orgFrameView) as? CGRect }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.orgFrameView, newValue, .OBJC_ASSOCIATION_COPY) }
+	}
+	
+	var movedFrameView:CGRect? {
+		get { return objc_getAssociatedObject(self, &AssociatedKeys.movedFrameView) as? CGRect }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.movedFrameView, newValue, .OBJC_ASSOCIATION_COPY) }
+	}
+	
+	override open func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		if let movedFrameView = movedFrameView {
+			view.frame = movedFrameView
+		}
+	}
+	
+	func setTabBarVisible(visible:Bool, animated:Bool) {
+		// bail if the current state matches the desired state
+		if (tabBarIsVisible() == visible) { return }
+		
+		//we should show it
+		if visible {
+			tabBar.isHidden = false
+			UIView.animate(withDuration: animated ? 0.3 : 0.0) {
+				//restore form or frames
+				self.view.frame = self.orgFrameView!
+				//errase the stored locations so that...
+				self.orgFrameView = nil
+				self.movedFrameView = nil
+				//...the layoutIfNeeded() does not move them again!
+				self.view.layoutIfNeeded()
+			}
+		}
+			//we should hide it
+		else {
+			//safe org positions
+			orgFrameView   = view.frame
+			// get a frame calculation ready
+			let offsetY = self.tabBar.frame.size.height
+			movedFrameView = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height + offsetY)
+			//animate
+			UIView.animate(withDuration: animated ? 0.3 : 0.0, animations: {
+				self.view.frame = self.movedFrameView!
+				self.view.layoutIfNeeded()
+			}) {
+				(_) in
+				self.tabBar.isHidden = true
+			}
+		}
+	}
+	
+	func tabBarIsVisible() ->Bool {
+		return orgFrameView == nil
+	}
+}
 
 
