@@ -19,7 +19,7 @@ class NavCon: UINavigationController
 		super.viewDidLoad()
 //		print("LOAD navigationBar.frame: \(navigationBar.frame)")
 		// NOTE: this DOES make a difference in navBar jump
-		navigationBar.frame = navigationBar.frame.offsetBy(dx: 0, dy: 20)
+//		navigationBar.frame = navigationBar.frame.offsetBy(dx: 0, dy: 20)
 //		print("LOAD 2 navigationBar.frame: \(navigationBar.frame)")
 		
 		

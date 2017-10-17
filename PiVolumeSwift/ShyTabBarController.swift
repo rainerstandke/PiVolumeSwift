@@ -15,7 +15,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		
 		self.delegate = self
 		
-		
 		// TODO: this needs to go into viewWillAppear, after state restoration
 		if (tabBar.items?.count)! < 2 {
 			// push tabBar out of bottom no need to animate, we're not on screen yet
@@ -70,16 +69,17 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 	}
 	
 	
+	@objc func removeNavCon() {
+		let newChildCount = viewControllers!.count - 1
+		showHideTabBar( addOrRemoveTab: { self.viewControllers!.remove(at: self.selectedIndex) }, resultingTabCount: newChildCount)
+	}
+	
 	func showHideTabBar(addOrRemoveTab: @escaping () -> (), resultingTabCount: Int) {
 		// parm addOrRemoveTab is a block that will add or remove a tab
 		// parm resultingTabCount is the count after that change
 		
-		// the origin of the tabBar (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or its frame is alligned with the bottom of the parent view
-		var newY_Origin = self.view.frame.size.height // just outside/under parent view
-		if resultingTabCount > 1 {
-			newY_Origin -= tabBar.frame.size.height // regular setup, in view
-		}
-
+		let newY_Origin = tabBarOriginY(with: resultingTabCount)
+		
 		UIView.animate(withDuration: 0.3) {
 			self.tabBar.frame.origin.y = newY_Origin
 			addOrRemoveTab()
@@ -88,15 +88,22 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		// TODO: NEXT: look at constraining the contentView to the to of the tabBar -> bg color!
 		// play with fuller, scrolling! preset table!
 		// when removing tab, select last existing tab
-		
+	}
+	
+	
+	func tabBarOriginY(with childCount: Int) -> CGFloat {
+		// the origin of the tabBar (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or its frame's bottom is alligned with the bottom of the parent view
+		var newY_Origin = self.view.frame.size.height // just outside/under parent view
+		if childCount > 1 {
+			newY_Origin -= tabBar.frame.size.height // regular setup, in view
+		}
+		return newY_Origin
 	}
 
-	
-	@objc func removeNavCon() {
-		let newChildCount = viewControllers!.count - 1
-		showHideTabBar( addOrRemoveTab: { self.viewControllers!.remove(at: self.selectedIndex) }, resultingTabCount: newChildCount)
+	override func viewWillTransition(to size: CGSize,
+	                        with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
 	}
-	
 //	@objc func removeNavCon(navVuCon: UINavigationController) {
 //		// ALMOST OBSOLETE
 //
@@ -140,10 +147,10 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		tabBar.frame.origin.y = tabBarOriginY
 	}
 	
-	func putTabBarOnScreen() {
-		let tabBarOriginY = self.view.frame.size.height - tabBar.frame.size.height
-		tabBar.frame.origin.y = tabBarOriginY
-	}
+//	func putTabBarOnScreen() {
+//		let tabBarOriginY = self.view.frame.size.height - tabBar.frame.size.height
+//		tabBar.frame.origin.y = tabBarOriginY
+//	}
 	
 	var bottomEdge : CGFloat {
 		// i.e. distance between bottom of window and upper edge of tabBar
