@@ -19,16 +19,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-63-VUd">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-63-VUd">
                                 <rect key="frame" x="0.0" y="215" width="320" height="353"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="0.090472996629999997" blue="0.10045697100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="kPresetTableViewCell" id="Qhd-yI-5Yc">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" semanticContentAttribute="spatial" selectionStyle="blue" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="kPresetTableViewCell" id="Qhd-yI-5Yc">
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Qhd-yI-5Yc" id="Q1I-xr-cj2">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" semanticContentAttribute="spatial" tableViewCell="Qhd-yI-5Yc" id="Q1I-xr-cj2">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="39" translatesAutoresizingMaskIntoConstraints="NO" id="vY3-rI-nq4">
                                                     <rect key="frame" x="46.5" y="8" width="227" height="28"/>
@@ -69,6 +69,7 @@
                                                 <constraint firstAttribute="bottomMargin" secondItem="vY3-rI-nq4" secondAttribute="bottom" id="LLA-n6-HmD"/>
                                                 <constraint firstAttribute="topMargin" secondItem="vY3-rI-nq4" secondAttribute="top" id="qhO-0m-ePn"/>
                                             </constraints>
+                                            <viewLayoutGuide key="safeArea" id="VwA-RH-pT8"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
@@ -120,13 +121,13 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="zIr-63-VUd" secondAttribute="bottom" priority="900" id="1rg-ex-FZh"/>
-                            <constraint firstItem="KhZ-IX-3NK" firstAttribute="centerX" secondItem="zIr-63-VUd" secondAttribute="centerX" id="6JL-1N-pfq"/>
+                            <constraint firstItem="zIr-63-VUd" firstAttribute="bottom" secondItem="tsR-hK-woN" secondAttribute="bottom" priority="900" id="1rg-ex-FZh"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="top" secondItem="9cn-dV-GrP" secondAttribute="bottom" constant="8" symbolic="YES" id="DfG-cY-LsH"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="centerX" secondItem="9cn-dV-GrP" secondAttribute="centerX" id="KuZ-xP-FBd"/>
                             <constraint firstAttribute="leadingMargin" secondItem="KhZ-IX-3NK" secondAttribute="leading" id="MPk-Ak-CHO"/>
                             <constraint firstItem="zIr-63-VUd" firstAttribute="leading" secondItem="h6R-Aj-fSB" secondAttribute="leading" id="RCU-bk-Ieq"/>
                             <constraint firstItem="O73-Zg-0cZ" firstAttribute="top" secondItem="KhZ-IX-3NK" secondAttribute="bottom" constant="20" id="S1L-Bs-9yg"/>
+                            <constraint firstItem="zIr-63-VUd" firstAttribute="trailing" secondItem="h6R-Aj-fSB" secondAttribute="trailing" id="bns-rR-ZQV"/>
                             <constraint firstAttribute="trailingMargin" secondItem="O73-Zg-0cZ" secondAttribute="trailing" constant="9" id="ijf-Em-ElW"/>
                             <constraint firstItem="F70-tz-Agf" firstAttribute="baseline" secondItem="O73-Zg-0cZ" secondAttribute="baseline" id="ouS-dq-Vrp"/>
                             <constraint firstItem="zIr-63-VUd" firstAttribute="top" secondItem="O73-Zg-0cZ" secondAttribute="bottom" constant="5" id="pfr-4B-AAU"/>
@@ -144,7 +145,6 @@
                         <outlet property="doneTableEditBtn" destination="F70-tz-Agf" id="r8L-M1-6mM"/>
                         <outlet property="longPressGestRec" destination="60V-tf-MOK" id="pfl-zJ-gyf"/>
                         <outlet property="presetTableView" destination="zIr-63-VUd" id="F6U-AP-vLW"/>
-                        <outlet property="tableViewBottomToSuperViewConstraint" destination="1rg-ex-FZh" id="y2t-7V-pk2"/>
                         <outlet property="volumeLabel" destination="9cn-dV-GrP" id="nvT-JR-qBH"/>
                         <outlet property="volumeSlider" destination="KhZ-IX-3NK" id="rav-HX-f7B"/>
                         <segue destination="8rJ-Kc-sve" kind="show" identifier="ToSettingsSegue" id="El0-Gu-Ko4"/>
@@ -301,7 +301,8 @@
         <scene sceneID="Qy4-fJ-pVz">
             <objects>
                 <tabBarController storyboardIdentifier="ShyTabBarCon" title="TabBarCon" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wVo-TL-8Cu" customClass="ShyTabBarController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="6HY-yj-X6B">
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="6HY-yj-X6B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

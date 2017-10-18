@@ -8,24 +8,27 @@
 
 import UIKit
 
-class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIViewControllerAnimatedTransitioning
+class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UIViewControllerAnimatedTransitioning
 {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		self.delegate = self
-		
-		// TODO: this needs to go into viewWillAppear, after state restoration
-		if (tabBar.items?.count)! < 2 {
-			// push tabBar out of bottom no need to animate, we're not on screen yet
-			putTabBarOffScreen()
-		}
 	}
 	
 	deinit
 	{
 		NotificationCenter.default.removeObserver(self)
 	}
+	
+	
+	override func viewDidAppear(_ animated: Bool) {
+		// position according to number of childVuCons
+		// oddly, in viewWILLAppear this seems to have no effect
+		tabBar.frame.origin.y = tabBarOriginY()
+		super.viewDidAppear(animated)
+	}
+	
 	
 	override func decodeRestorableState(with coder: NSCoder) {
 		// runs after viewDidLoad
@@ -48,6 +51,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		coder.encode(selectedIndex as NSInteger, forKey: "selIndex")
 		
 		super.encodeRestorableState(with: coder)
+		
+		// TODO: add selcted tab to restore
 	}
 	
 	
@@ -56,16 +61,9 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		
 		let storyBoard = UIStoryboard(name: "Main", bundle: nil)
 		let newNavCon = storyBoard.instantiateViewController(withIdentifier: "NavCon")
+		let newChildCount = viewControllers!.count + 1
 		
-		// vuCons is ref to an existing object - vuCons and viewControllers! share a memory address
-		// but without creating vuCons, and accessing viewCons! directly, the new tab never shows - ???: why not?
-		// Josh: see if they share memory address after changing vuCons
-		var vuCons = viewControllers!
-		vuCons.append(newNavCon)
-		
-		let newChildCOunt = viewControllers!.count + 1
-		showHideTabBar(addOrRemoveTab: {self.setViewControllers(vuCons, animated: false)}, resultingTabCount: newChildCOunt)
-
+		showHideTabBar(addOrRemoveTab: { self.viewControllers!.append(newNavCon) }, resultingTabCount: newChildCount)
 	}
 	
 	
@@ -79,11 +77,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		// parm resultingTabCount is the count after that change
 		
 		let newY_Origin = tabBarOriginY(with: resultingTabCount)
-		
-		UIView.animate(withDuration: 0.3) {
-			self.tabBar.frame.origin.y = newY_Origin
-			addOrRemoveTab()
-		}
+		self.tabBar.frame.origin.y = newY_Origin
+		addOrRemoveTab()
 		
 		// TODO: NEXT: look at constraining the contentView to the to of the tabBar -> bg color!
 		// play with fuller, scrolling! preset table!
@@ -99,58 +94,18 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 		}
 		return newY_Origin
 	}
+	
+	
+	func tabBarOriginY() -> CGFloat {
+		// for current number of childVuCons
+		return tabBarOriginY(with: childViewControllers.count)
+	}
 
 	override func viewWillTransition(to size: CGSize,
 	                        with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 	}
-//	@objc func removeNavCon(navVuCon: UINavigationController) {
-//		// ALMOST OBSOLETE
-//
-//		guard let idx = self.viewControllers?.index(of: navVuCon) else { return }
-//
-//		var vuCons = viewControllers!
-//
-//		if tabBar.items?.count == 2 {
-//			// need to move tabBar in from bottom
-//
-//			self.selectedIndex = vuCons.count - 1 // show only one
-//
-//			UIView.animate(
-//				withDuration: TimeInterval(K.Misc.TransitionDuration),
-//				animations: {
-//					self.putTabBarOffScreen()
-//
-//					if let currVuCon = self.selectedViewController as? UINavigationController,
-//						let currVolumeVuCon = currVuCon.childViewControllers.first as? VolumeViewController {
-//						// tableView bottomConstraint
-//						currVolumeVuCon.tableViewBottomToSuperViewConstraint.constant = 0
-//						currVolumeVuCon.view.setNeedsUpdateConstraints()
-//
-//						currVolumeVuCon.view.layoutIfNeeded()
-//					}
-//			},
-//				completion: { (completed) in
-//					vuCons.remove(at: idx)
-//					self.setViewControllers(vuCons, animated: false)
-//			})
-//
-//		} else if (tabBar.items?.count)! > 2 {
-//			self.selectedIndex = vuCons.count - 2 // show the one that will be the last one
-//			vuCons.remove(at: idx)
-//			self.setViewControllers(vuCons, animated: true)
-//		}
-//	}
-	
-	func putTabBarOffScreen() {
-		let tabBarOriginY = self.view.frame.size.height
-		tabBar.frame.origin.y = tabBarOriginY
-	}
-	
-//	func putTabBarOnScreen() {
-//		let tabBarOriginY = self.view.frame.size.height - tabBar.frame.size.height
-//		tabBar.frame.origin.y = tabBarOriginY
-//	}
+
 	
 	var bottomEdge : CGFloat {
 		// i.e. distance between bottom of window and upper edge of tabBar
@@ -194,24 +149,24 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate, UIVi
 	
 	// MARK: delegate
 	
-	func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return self
-	}
+//	func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//		return self
+//	}
 	
 	
-	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return TimeInterval(K.Misc.TransitionDuration)
-	}
+//	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+//		return TimeInterval(K.Misc.TransitionDuration)
+//	}
 	
 	
-	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-		let fromView: UIView = transitionContext.view(forKey: .from)!
-		let toView  : UIView = transitionContext.view(forKey: .to)!
-
-		UIView.transition(from: fromView, to: toView, duration: 1, options: UIViewAnimationOptions.transitionCrossDissolve) { (finished:Bool) in
-			transitionContext.completeTransition(finished)
-		}
-	}
+//	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+//		let fromView: UIView = transitionContext.view(forKey: .from)!
+//		let toView  : UIView = transitionContext.view(forKey: .to)!
+//
+//		UIView.transition(from: fromView, to: toView, duration: 1, options: UIViewAnimationOptions.transitionCrossDissolve) { (finished:Bool) in
+//			transitionContext.completeTransition(finished)
+//		}
+//	}
 }
 
 

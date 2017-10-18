@@ -33,8 +33,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	@IBOutlet weak var doneTableEditBtn: UIButton!
 	
-	@IBOutlet weak var tableViewBottomToSuperViewConstraint: NSLayoutConstraint!
-	
 	
 	// MARK: - life cycle
 	override func awakeFromNib() {
@@ -99,9 +97,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addTabItem))
 				}
 			}
-			
-			// for the new, incoming one (huh??):
-			tableViewBottomToSuperViewConstraint.constant = tabBarCon.bottomEdge
 		}
 	}
 	
@@ -136,11 +131,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.viewWillDisappear(animated)
 	}
 	
-//	override func viewDidDisappear(_ animated: Bool) {
-//		super.viewDidDisappear(animated)
-//	}
-
-
 	func indexInTabBarCon() -> Int? {
 		// in short: our position in tabBarCon's childVuCons array
 		// this assumes we are in a NavigationCon which is inside a TabBarCon
