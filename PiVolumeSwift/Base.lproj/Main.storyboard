@@ -20,8 +20,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-63-VUd">
-                                <rect key="frame" x="0.0" y="215" width="320" height="353"/>
+                                <rect key="frame" x="0.0" y="215" width="320" height="352"/>
                                 <color key="backgroundColor" red="1" green="0.090472996629999997" blue="0.10045697100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="352" id="Fh2-Yr-fg4"/>
+                                </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" semanticContentAttribute="spatial" selectionStyle="blue" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="kPresetTableViewCell" id="Qhd-yI-5Yc">
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
@@ -121,7 +124,7 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="zIr-63-VUd" firstAttribute="bottom" secondItem="tsR-hK-woN" secondAttribute="bottom" priority="900" id="1rg-ex-FZh"/>
+                            <constraint firstItem="zIr-63-VUd" firstAttribute="bottom" secondItem="tsR-hK-woN" secondAttribute="bottom" priority="900" placeholder="YES" id="1rg-ex-FZh"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="top" secondItem="9cn-dV-GrP" secondAttribute="bottom" constant="8" symbolic="YES" id="DfG-cY-LsH"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="centerX" secondItem="9cn-dV-GrP" secondAttribute="centerX" id="KuZ-xP-FBd"/>
                             <constraint firstAttribute="leadingMargin" secondItem="KhZ-IX-3NK" secondAttribute="leading" id="MPk-Ak-CHO"/>
@@ -136,6 +139,11 @@
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="trailing" secondItem="tsR-hK-woN" secondAttribute="trailingMargin" id="zAj-rJ-N6d"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="h6R-Aj-fSB"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="1rg-ex-FZh"/>
+                            </mask>
+                        </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="UZo-ah-8Fj" appends="YES" id="KWd-3X-Hzv"/>
                         </connections>
@@ -145,6 +153,7 @@
                         <outlet property="doneTableEditBtn" destination="F70-tz-Agf" id="r8L-M1-6mM"/>
                         <outlet property="longPressGestRec" destination="60V-tf-MOK" id="pfl-zJ-gyf"/>
                         <outlet property="presetTableView" destination="zIr-63-VUd" id="F6U-AP-vLW"/>
+                        <outlet property="tableVuHeightConstraint" destination="Fh2-Yr-fg4" id="c7i-qE-ntr"/>
                         <outlet property="volumeLabel" destination="9cn-dV-GrP" id="nvT-JR-qBH"/>
                         <outlet property="volumeSlider" destination="KhZ-IX-3NK" id="rav-HX-f7B"/>
                         <segue destination="8rJ-Kc-sve" kind="show" identifier="ToSettingsSegue" id="El0-Gu-Ko4"/>

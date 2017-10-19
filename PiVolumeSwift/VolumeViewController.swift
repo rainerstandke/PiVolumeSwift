@@ -13,7 +13,7 @@ import CoreGraphics
 // TODO: needs tabbaritem
 
 
-class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
+class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate
 {
 	let sshMan = SSHManager()
 	
@@ -26,7 +26,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	var confirmedVolumeObservation: NSKeyValueObservation?
 	
 	@IBOutlet weak var presetTableView: UITableView!
-
+	@IBOutlet weak var tableVuHeightConstraint: NSLayoutConstraint!
+	
 	@IBOutlet weak var volumeLabel: UILabel!
 	@IBOutlet weak var volumeSlider: UISlider!
 	@IBOutlet weak var longPressGestRec: UILongPressGestureRecognizer!
@@ -81,6 +82,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 				self.volumeLabel.textColor = self.confirmedColor
 			}
 		}
+		
+		presetTableView.delegate = self
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -131,6 +134,53 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.viewWillDisappear(animated)
 	}
 	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		print("size: \(size)")
+		
+	}
+	
+	
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		
+		
+		// set the height constraint on presetTableVu to a whole multiple of its row height
+		let rowHt = presetTableView.rowHeight
+		let availableHeight = view.bounds.size.height - presetTableView.frame.origin.y
+		
+		let rowCount = Int(availableHeight / rowHt)
+		tableVuHeightConstraint.constant = (CGFloat(rowCount) * rowHt)
+	}
+	
+	func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+		// snap scroll position to table rows (at the top of the table)
+		let rowHeight = presetTableView.rowHeight
+		
+		let contentOffsetForLastRow = (CGFloat(presetTableView.numberOfRows(inSection: 0)) * rowHeight) - presetTableView.bounds.size.height
+		
+		if targetContentOffset.pointee.y > contentOffsetForLastRow {
+			// showing bit of blank tv after last row
+			// make sure to go as far down as possible, all the way to the bottom
+			targetContentOffset.pointee.y += presetTableView.rowHeight
+		} else {
+			// make sure targetOffset is a whole multiple of rowHeight
+			let divided = targetContentOffset.pointee.y / rowHeight
+			let rounded = divided.rounded(.toNearestOrAwayFromZero)
+			let newTargetY = rounded * rowHeight
+			targetContentOffset.pointee.y = newTargetY
+		}
+	}
+	
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		print("scrollView.contentOffset: \(scrollView.contentOffset)")
+		
+		// NEXT: try haptic feedback here for each call calc the index of the row at the top and compare with prev stored - know when changed
+		
+	}
+	
+	// MARK: -
+	
 	func indexInTabBarCon() -> Int? {
 		// in short: our position in tabBarCon's childVuCons array
 		// this assumes we are in a NavigationCon which is inside a TabBarCon
@@ -156,7 +206,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	
-	// MARK: -
+	// MARK: - segue
 	
 	@objc func segueToSettings() {
 		// called from right NavBarItem to trigger segue to SettingsCon
