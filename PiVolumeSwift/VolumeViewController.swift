@@ -139,21 +139,26 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
-		print("size: \(size)")
+		print("viewWillTransition to size: \(size)")
 		
 	}
 	
-	
-	override func viewWillLayoutSubviews() {
-		super.viewWillLayoutSubviews()
-		
-		// set the height constraint on presetTableVu to a whole multiple of its row height
-		let rowHt = presetTableView.rowHeight
-		let availableHeight = tabBarController!.tabBar.frame.origin.y - presetTableView.frame.origin.y
-		
-		let rowCount = Int(availableHeight / rowHt)
-		tableVuHeightConstraint.constant = (CGFloat(rowCount) * rowHt)
+	override func viewSafeAreaInsetsDidChange() {
+		if #available(iOS 11.0, *) {
+			// set the height constraint on presetTableVu to a whole multiple of its row height
+			let rowHt = presetTableView.rowHeight
+			let availableHeight = view.bounds.size.height - view.safeAreaInsets.bottom - presetTableView.frame.origin.y
+			let rowCount = Int(availableHeight / rowHt)
+			tableVuHeightConstraint.constant = (CGFloat(rowCount) * rowHt)
+		} else {
+			// Fallback on earlier versions
+			
+			// use topLayoutGuide on vuCon, with manual trigger
+		}
 	}
+
+	
+	// MARK: - scroll snap
 	
 	func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
 		// snap scroll position to table rows (at the top of the table)
@@ -457,7 +462,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		}
 	}
-	
 }
 
 
@@ -471,9 +475,9 @@ extension UIView {
 }
 
 
+// UNUSED
 extension UIViewController {
 	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
-	
 	
 	func ancestorViewController<T>(of type: T.Type) -> T? {
 		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }

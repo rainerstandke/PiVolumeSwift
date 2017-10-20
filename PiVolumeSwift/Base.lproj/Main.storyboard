@@ -72,7 +72,6 @@
                                                 <constraint firstAttribute="bottomMargin" secondItem="vY3-rI-nq4" secondAttribute="bottom" id="LLA-n6-HmD"/>
                                                 <constraint firstAttribute="topMargin" secondItem="vY3-rI-nq4" secondAttribute="top" id="qhO-0m-ePn"/>
                                             </constraints>
-                                            <viewLayoutGuide key="safeArea" id="VwA-RH-pT8"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
@@ -129,17 +128,17 @@
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="top" secondItem="9cn-dV-GrP" secondAttribute="bottom" constant="8" symbolic="YES" id="DfG-cY-LsH"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="centerX" secondItem="9cn-dV-GrP" secondAttribute="centerX" id="KuZ-xP-FBd"/>
                             <constraint firstAttribute="leadingMargin" secondItem="KhZ-IX-3NK" secondAttribute="leading" id="MPk-Ak-CHO"/>
-                            <constraint firstItem="zIr-63-VUd" firstAttribute="leading" secondItem="h6R-Aj-fSB" secondAttribute="leading" id="RCU-bk-Ieq"/>
+                            <constraint firstItem="zIr-63-VUd" firstAttribute="leading" secondItem="Naz-G2-F9V" secondAttribute="leading" id="RCU-bk-Ieq"/>
                             <constraint firstItem="O73-Zg-0cZ" firstAttribute="top" secondItem="KhZ-IX-3NK" secondAttribute="bottom" constant="20" id="S1L-Bs-9yg"/>
-                            <constraint firstItem="zIr-63-VUd" firstAttribute="trailing" secondItem="h6R-Aj-fSB" secondAttribute="trailing" id="bns-rR-ZQV"/>
+                            <constraint firstItem="zIr-63-VUd" firstAttribute="trailing" secondItem="Naz-G2-F9V" secondAttribute="trailing" id="bns-rR-ZQV"/>
                             <constraint firstAttribute="trailingMargin" secondItem="O73-Zg-0cZ" secondAttribute="trailing" constant="9" id="ijf-Em-ElW"/>
                             <constraint firstItem="F70-tz-Agf" firstAttribute="baseline" secondItem="O73-Zg-0cZ" secondAttribute="baseline" id="ouS-dq-Vrp"/>
                             <constraint firstItem="zIr-63-VUd" firstAttribute="top" secondItem="O73-Zg-0cZ" secondAttribute="bottom" constant="5" id="pfr-4B-AAU"/>
-                            <constraint firstItem="9cn-dV-GrP" firstAttribute="top" secondItem="h6R-Aj-fSB" secondAttribute="top" constant="20" id="vWb-1h-oWz"/>
+                            <constraint firstItem="9cn-dV-GrP" firstAttribute="top" secondItem="Naz-G2-F9V" secondAttribute="top" constant="20" id="vWb-1h-oWz"/>
                             <constraint firstItem="F70-tz-Agf" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" constant="12" id="vhk-TM-5qC"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="trailing" secondItem="tsR-hK-woN" secondAttribute="trailingMargin" id="zAj-rJ-N6d"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="h6R-Aj-fSB"/>
+                        <viewLayoutGuide key="safeArea" id="Naz-G2-F9V"/>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="1rg-ex-FZh"/>
@@ -273,7 +272,7 @@
                         <constraints>
                             <constraint firstItem="F3k-O9-fOk" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="0e2-OH-Lge"/>
                             <constraint firstItem="oGL-Ea-msO" firstAttribute="top" secondItem="VKl-id-vN3" secondAttribute="bottom" constant="12" id="AS8-lJ-2rq"/>
-                            <constraint firstItem="NNk-Vn-rAM" firstAttribute="top" secondItem="6r4-3B-iIY" secondAttribute="top" constant="8" symbolic="YES" id="EiX-hu-njD"/>
+                            <constraint firstItem="NNk-Vn-rAM" firstAttribute="top" secondItem="lKZ-AC-IEc" secondAttribute="top" constant="8" symbolic="YES" id="EiX-hu-njD"/>
                             <constraint firstItem="FQ7-f7-VTP" firstAttribute="leading" secondItem="cZZ-cS-GXY" secondAttribute="leading" id="J2A-Pr-kHC"/>
                             <constraint firstItem="Qud-js-Rut" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" constant="1" id="M8B-hm-GEy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Qud-js-Rut" secondAttribute="trailing" id="NQJ-rb-c7w"/>
@@ -290,7 +289,7 @@
                             <constraint firstItem="NNk-Vn-rAM" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="uMf-5N-0k1"/>
                             <constraint firstItem="Qud-js-Rut" firstAttribute="top" secondItem="l6S-bK-Xbk" secondAttribute="bottom" constant="8" id="yfA-0R-uNO"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6r4-3B-iIY"/>
+                        <viewLayoutGuide key="safeArea" id="lKZ-AC-IEc"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Second" image="second" id="cPa-gy-q4n"/>
                     <connections>
