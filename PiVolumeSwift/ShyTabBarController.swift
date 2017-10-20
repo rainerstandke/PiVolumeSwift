@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
+class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UIViewControllerAnimatedTransitioning
 {
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -146,8 +146,9 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 			volVuCon.saveSettings()
 		}
 	}
+}
 	
-
+	
 extension UIViewController {
 	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
 	
@@ -162,4 +163,5 @@ extension UIViewController {
 		return retArr.flatMap{ item in item }
 	}
 }
+
 
