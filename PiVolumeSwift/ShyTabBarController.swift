@@ -52,7 +52,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 		
 		super.encodeRestorableState(with: coder)
 		
-		// TODO: add selcted tab to restore
+		// TODO: add selected tab to restore
 	}
 	
 	
@@ -64,12 +64,15 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 		let newChildCount = viewControllers!.count + 1
 		
 		showHideTabBar(addOrRemoveTab: { self.viewControllers!.append(newNavCon) }, resultingTabCount: newChildCount)
+		
+		selectedViewController = newNavCon
 	}
 	
 	
 	@objc func removeNavCon() {
 		let newChildCount = viewControllers!.count - 1
 		showHideTabBar( addOrRemoveTab: { self.viewControllers!.remove(at: self.selectedIndex) }, resultingTabCount: newChildCount)
+		selectedIndex = viewControllers!.count - 1
 	}
 	
 	func showHideTabBar(addOrRemoveTab: @escaping () -> (), resultingTabCount: Int) {
@@ -79,10 +82,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 		let newY_Origin = tabBarOriginY(with: resultingTabCount)
 		self.tabBar.frame.origin.y = newY_Origin
 		addOrRemoveTab()
-		
-		// TODO: NEXT: look at constraining the contentView to the to of the tabBar -> bg color!
-		// play with fuller, scrolling! preset table!
-		// when removing tab, select last existing tab
 	}
 	
 	

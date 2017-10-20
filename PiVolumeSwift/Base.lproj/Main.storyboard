@@ -14,7 +14,7 @@
         <!--VolumeViewCon-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController storyboardIdentifier="VolumeViewCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="9pv-A4-QxB" userLabel="VolumeViewCon" customClass="VolumeViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VolumeViewCon" extendedLayoutIncludesOpaqueBars="YES" id="9pv-A4-QxB" userLabel="VolumeViewCon" customClass="VolumeViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -74,6 +74,7 @@
                                             </constraints>
                                             <viewLayoutGuide key="safeArea" id="VwA-RH-pT8"/>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>

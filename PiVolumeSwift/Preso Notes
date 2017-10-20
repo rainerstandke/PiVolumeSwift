@@ -1,0 +1,4 @@
+
+show breakpoint with applescript say "...", continue
+
+graphic with scroll view, showing math with rowHeights
