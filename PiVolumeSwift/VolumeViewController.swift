@@ -42,10 +42,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙",
-		                                                    style: .plain,
-		                                                    target: self,
-		                                                    action: #selector(segueToSettings))
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear"), style: .plain, target: self, action: #selector(segueToSettings))
+//		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙",
+//		                                                    style: .plain,
+//		                                                    target: self,
+//		                                                    action: #selector(segueToSettings))
 	}
 	
 
@@ -98,9 +99,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
 			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
 				if isLast && index > 0 {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(deleteTab))
+					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"), style: .plain, target: self, action: #selector(deleteTab))
+//					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "- π", style: .plain, target: self, action: #selector(deleteTab))
 				} else {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addTabItem))
+					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "+Pi"), style: .plain, target: self, action: #selector(addTabItem))
+//					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+ π", style: .plain, target: self, action: #selector(addTabItem))
 				}
 			}
 		}

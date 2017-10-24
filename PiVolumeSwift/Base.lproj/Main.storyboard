@@ -91,7 +91,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9cn-dV-GrP">
                                 <rect key="frame" x="130" y="84" width="60" height="24"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="Fyj-Vr-iI8"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Fyj-Vr-iI8"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
@@ -113,7 +113,7 @@
                                 <rect key="frame" x="28" y="171.5" width="60" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="PtV-3C-isn"/>
-                                    <constraint firstAttribute="width" constant="60" id="iNY-TG-769"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="iNY-TG-769"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <state key="normal" title="Done"/>
@@ -127,6 +127,7 @@
                             <constraint firstItem="zIr-63-VUd" firstAttribute="bottom" secondItem="tsR-hK-woN" secondAttribute="bottom" priority="900" placeholder="YES" id="1rg-ex-FZh"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="top" secondItem="9cn-dV-GrP" secondAttribute="bottom" constant="8" symbolic="YES" id="DfG-cY-LsH"/>
                             <constraint firstItem="KhZ-IX-3NK" firstAttribute="centerX" secondItem="9cn-dV-GrP" secondAttribute="centerX" id="KuZ-xP-FBd"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="F70-tz-Agf" secondAttribute="trailingMargin" id="M6v-f3-dWr"/>
                             <constraint firstAttribute="leadingMargin" secondItem="KhZ-IX-3NK" secondAttribute="leading" id="MPk-Ak-CHO"/>
                             <constraint firstItem="zIr-63-VUd" firstAttribute="leading" secondItem="Naz-G2-F9V" secondAttribute="leading" id="RCU-bk-Ieq"/>
                             <constraint firstItem="O73-Zg-0cZ" firstAttribute="top" secondItem="KhZ-IX-3NK" secondAttribute="bottom" constant="20" id="S1L-Bs-9yg"/>
@@ -148,7 +149,11 @@
                             <outletCollection property="gestureRecognizers" destination="UZo-ah-8Fj" appends="YES" id="KWd-3X-Hzv"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" id="15f-ZX-LhB"/>
+                    <navigationItem key="navigationItem" id="15f-ZX-LhB">
+                        <barButtonItem key="rightBarButtonItem" image="gear" id="djP-eA-kGi">
+                            <inset key="imageInsets" minX="0.0" minY="3" maxX="-20" maxY="-3"/>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="doneTableEditBtn" destination="F70-tz-Agf" id="r8L-M1-6mM"/>
                         <outlet property="longPressGestRec" destination="60V-tf-MOK" id="pfl-zJ-gyf"/>
@@ -182,7 +187,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="NNk-Vn-rAM">
-                                <rect key="frame" x="16" y="64" width="288" height="30"/>
+                                <rect key="frame" x="16" y="72" width="288" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDX-ac-U0o">
                                         <rect key="frame" x="0.0" y="0.0" width="106.5" height="30"/>
@@ -194,7 +199,7 @@
                                         <rect key="frame" x="116.5" y="0.0" width="171.5" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
                                         <connections>
                                             <outlet property="delegate" destination="8rJ-Kc-sve" id="tpc-sx-VB8"/>
                                         </connections>
@@ -202,7 +207,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="F3k-O9-fOk">
-                                <rect key="frame" x="16" y="102" width="288" height="30"/>
+                                <rect key="frame" x="16" y="110" width="288" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="IP Adress:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPc-Z3-cXV">
                                         <rect key="frame" x="0.0" y="0.0" width="106.5" height="30"/>
@@ -222,7 +227,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="l6S-bK-Xbk">
-                                <rect key="frame" x="17" y="140" width="287" height="30"/>
+                                <rect key="frame" x="17" y="148" width="287" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ODJ-Jd-y40">
                                         <rect key="frame" x="0.0" y="0.0" width="105.5" height="30"/>
@@ -242,7 +247,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Qud-js-Rut">
-                                <rect key="frame" x="17" y="178" width="287" height="30"/>
+                                <rect key="frame" x="17" y="186" width="287" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4SJ-Dl-TbS">
                                         <rect key="frame" x="0.0" y="0.0" width="105.5" height="30"/>
@@ -262,7 +267,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="??" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oGL-Ea-msO">
-                                <rect key="frame" x="279" y="220" width="17" height="20.5"/>
+                                <rect key="frame" x="279" y="228" width="17" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -272,7 +277,6 @@
                         <constraints>
                             <constraint firstItem="F3k-O9-fOk" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="0e2-OH-Lge"/>
                             <constraint firstItem="oGL-Ea-msO" firstAttribute="top" secondItem="VKl-id-vN3" secondAttribute="bottom" constant="12" id="AS8-lJ-2rq"/>
-                            <constraint firstItem="NNk-Vn-rAM" firstAttribute="top" secondItem="lKZ-AC-IEc" secondAttribute="top" constant="8" symbolic="YES" id="EiX-hu-njD"/>
                             <constraint firstItem="FQ7-f7-VTP" firstAttribute="leading" secondItem="cZZ-cS-GXY" secondAttribute="leading" id="J2A-Pr-kHC"/>
                             <constraint firstItem="Qud-js-Rut" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" constant="1" id="M8B-hm-GEy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Qud-js-Rut" secondAttribute="trailing" id="NQJ-rb-c7w"/>
@@ -284,6 +288,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="F3k-O9-fOk" secondAttribute="trailing" id="dnq-0A-NDT"/>
                             <constraint firstItem="oGL-Ea-msO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="fre-c4-UgJ"/>
                             <constraint firstItem="F3k-O9-fOk" firstAttribute="top" secondItem="NNk-Vn-rAM" secondAttribute="bottom" constant="8" id="inP-iD-706"/>
+                            <constraint firstItem="NNk-Vn-rAM" firstAttribute="top" secondItem="lKZ-AC-IEc" secondAttribute="top" constant="8" id="qhC-6E-ZD3"/>
                             <constraint firstItem="VKl-id-vN3" firstAttribute="leading" secondItem="FQ7-f7-VTP" secondAttribute="leading" id="sDm-Jf-72U"/>
                             <constraint firstAttribute="trailingMargin" secondItem="l6S-bK-Xbk" secondAttribute="trailing" id="tL0-Mf-AFq"/>
                             <constraint firstItem="NNk-Vn-rAM" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="uMf-5N-0k1"/>
@@ -329,7 +334,7 @@
         <scene sceneID="ngK-jY-VM7">
             <objects>
                 <navigationController storyboardIdentifier="NavCon" title="NavCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="2jF-o8-R9z" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="first" id="RMK-ht-jCJ"/>
+                    <tabBarItem key="tabBarItem" title="" image="RPi_Solid" id="RMK-ht-jCJ"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KWh-u8-Eu3">
                         <rect key="frame" x="0.0" y="20" width="320" height="44"/>
@@ -349,7 +354,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="first" width="30" height="30"/>
+        <image name="RPi_Solid" width="75" height="75"/>
+        <image name="gear" width="57" height="57"/>
         <image name="second" width="30" height="30"/>
     </resources>
 </document>

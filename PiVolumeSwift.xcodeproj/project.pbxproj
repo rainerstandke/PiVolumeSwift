@@ -75,6 +75,8 @@
 		D5916C541E4D62BE0050458B /* SSHManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHManager.swift; sourceTree = "<group>"; };
 		D5916C5A1E4E738B0050458B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5AC2D131E52467900E6E5C2 /* VolumeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = VolumeViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D5C80FCA1F9FC33D008C66F3 /* PiVolume.pub */ = {isa = PBXFileReference; lastKnownFileType = text; path = PiVolume.pub; sourceTree = "<group>"; };
+		D5C80FCB1F9FC33D008C66F3 /* PiVolume */ = {isa = PBXFileReference; lastKnownFileType = text; path = PiVolume; sourceTree = "<group>"; };
 		D5CBC60C1E5D023900C5E872 /* SettingsProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsProxy.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DF01F718CA154B072E787851 /* Pods-PiVolumeSwiftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PiVolumeSwiftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PiVolumeSwiftTests/Pods-PiVolumeSwiftTests.release.xcconfig"; sourceTree = "<group>"; };
 		E88A76A88DF116194C40FD0C /* Pods-PiVolumeSwiftUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PiVolumeSwiftUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PiVolumeSwiftUITests/Pods-PiVolumeSwiftUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -171,6 +173,8 @@
 				D5916C5A1E4E738B0050458B /* Info.plist */,
 				D50B532E1E4D00A3003FE794 /* LaunchScreen.storyboard */,
 				D52BB68F1F98FF7600BC9585 /* Preso Notes */,
+				D5C80FCB1F9FC33D008C66F3 /* PiVolume */,
+				D5C80FCA1F9FC33D008C66F3 /* PiVolume.pub */,
 			);
 			path = PiVolumeSwift;
 			sourceTree = "<group>";
