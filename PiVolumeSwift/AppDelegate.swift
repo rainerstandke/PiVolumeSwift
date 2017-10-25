@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		_ = K() // to force userDefs initial, non-nil values
 		
 		// force init
-		NMSSHLogger.shared().isEnabled = false
+		NMSSHLogger.shared().isEnabled = true
 		
 		return true
 	}

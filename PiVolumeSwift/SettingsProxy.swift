@@ -10,10 +10,12 @@ import Foundation
 
 class SettingsProxy: NSObject, Codable
 {
+	var deviceName = "" // the machine that we talk to, e.g. "AirPi"
 	var ipAddress = ""
 	var userName = ""
+	var publicKey = ""
+	var privateKey = ""
 	var password = ""
-	var deviceName = "" // the machine that we talk to, e.g. "AirPi"
 	
 	var presetStrings = [String]() // just the preset values as single strings in the order they appear on screen
 

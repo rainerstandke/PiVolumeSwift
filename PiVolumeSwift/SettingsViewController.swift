@@ -12,7 +12,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 {
 	@IBOutlet weak var deviceNameTextField: UITextField!
 	@IBOutlet weak var ipTextField: UITextField!
-	@IBOutlet weak var userTextField: UITextField!
+	@IBOutlet weak var userNameTextField: UITextField!
+	@IBOutlet weak var pubKeyTextField: UITextField!
+	@IBOutlet weak var privKeyTextField: UITextField!
 	@IBOutlet weak var passTextField: UITextField!
 	
 	@IBOutlet weak var statusLabel: UILabel!
@@ -38,7 +40,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		
 		deviceNameTextField.text = settingsPr!.deviceName
 		ipTextField.text = settingsPr!.ipAddress
-		userTextField.text = settingsPr!.userName
+		userNameTextField.text = settingsPr!.userName
+		pubKeyTextField.text = settingsPr!.publicKey
+		privKeyTextField.text = settingsPr!.privateKey
 		passTextField.text = settingsPr!.password
 		
 		// show whatever sshMan has as current
@@ -98,8 +102,12 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 			settingsPr!.deviceName = textField.text!
 		case ipTextField:
 			settingsPr!.ipAddress = textField.text!
-		case userTextField:
+		case userNameTextField:
 			settingsPr!.userName = textField.text!
+		case pubKeyTextField:
+			settingsPr!.publicKey = textField.text!
+		case privKeyTextField:
+			settingsPr!.privateKey = textField.text!
 		case passTextField:
 			settingsPr!.password = textField.text!
 		default:

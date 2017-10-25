@@ -114,11 +114,14 @@ class TransmitVolumeOperation : Operation
 	override func main() {
 
 		if	sshMan.session == nil {
-			let ipAdress = sshMan.settingsPr.ipAddress
-			let userName = sshMan.settingsPr.userName
+//			let ipAdress = sshMan.settingsPr.ipAddress
+//			let userName = sshMan.settingsPr.userName
+//			let publicKey = sshMan.settingsPr.publicKey
+//			let privateKey = sshMan.settingsPr.privateKey
+//			let password = sshMan.settingsPr.password
 			
-			sshMan.session = NMSSHSession.connect(toHost: ipAdress,
-			                                      withUsername: userName)
+			sshMan.session = NMSSHSession.connect(toHost: sshMan.settingsPr.ipAddress,
+			                                      withUsername: sshMan.settingsPr.userName)
 		}
 		
 		func resetSession() {
@@ -139,11 +142,57 @@ class TransmitVolumeOperation : Operation
 		}
 		
 		if !localSession.isAuthorized {
-			let passWord = sshMan.settingsPr.password
-			if !localSession.authenticate(byPassword: passWord) {
+			
+			
+			if let pubKeyURL = Bundle.main.url(forResource: "PiVolume", withExtension: "pub"), let privateKeyURL = Bundle.main.url(forResource: "PiVolume", withExtension: "") {
+				let pubKey = try! String.init(contentsOf: pubKeyURL)
+				print("pubKey: \(pubKey)")
+				print("sshMan.settingsPr.publicKey: \(sshMan.settingsPr.publicKey)")
+				let privateKey = try! String.init(contentsOf: privateKeyURL)
+//				print("privateKey: \(privateKey)")
+//				print("privateKey == sshMan.settingsPr.privateKey: \(privateKey == sshMan.settingsPr.privateKey)")
+				print("pubKey == sshMan.settingsPr.publicKey: \(pubKey == sshMan.settingsPr.publicKey)")
+				
+				let difference = zip(pubKey, sshMan.settingsPr.publicKey).enumerated().filter({  (input: (offset: Int, element: (String.Element, String.Element))) -> Bool in
+					return input.element.0 != input.element.1
+				})
+				print("pubKey difference: \(difference)")
+				let difference2 = zip(privateKey, sshMan.settingsPr.privateKey).enumerated().filter({  (input: (offset: Int, element: (String.Element, String.Element))) -> Bool in
+					return input.element.0 != input.element.1
+				})
+				print("privateKey difference2: \(difference2)")
+				//				if !localSession.authenticateBy(inMemoryPublicKey: pubKey, privateKey: privateKey, andPassword: "") {
+//					//					if !localSession.authenticate(byPublicKey: pubKey, privateKey: privateKey, andPassword: "") {
+//					resetSession()
+//					return
+//				}
+			}
+
+			
+			
+			print("sshMan.settingsPr.publicKey: \(sshMan.settingsPr.publicKey)")
+			print("sshMan.settingsPr.privateKey: \(sshMan.settingsPr.privateKey)")
+			print("sshMan.settingsPr.password: \(sshMan.settingsPr.password)")
+			if !localSession.authenticateBy(inMemoryPublicKey: sshMan.settingsPr.publicKey,
+			                                privateKey: sshMan.settingsPr.privateKey,
+			                                andPassword: sshMan.settingsPr.password) {
 				resetSession()
 				return
 			}
+			
+			
+			
+//			if let pubKeyURL = Bundle.main.url(forResource: "PiVolume", withExtension: "pub"), let privateKeyURL = Bundle.main.url(forResource: "PiVolume", withExtension: "") {
+//				let pubKey = try! String.init(contentsOf: pubKeyURL)
+//				print("pubKey: \(pubKey)")
+//				let privateKey = try! String.init(contentsOf: privateKeyURL)
+//				print("privateKey: \(privateKey)")
+//				if !localSession.authenticateBy(inMemoryPublicKey: pubKey, privateKey: privateKey, andPassword: "") {
+////					if !localSession.authenticate(byPublicKey: pubKey, privateKey: privateKey, andPassword: "") {
+//						resetSession()
+//					return
+//				}
+//			}
 		}
 		
 
