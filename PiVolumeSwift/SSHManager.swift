@@ -27,7 +27,7 @@ class SSHManager: NSObject {
 	var settingsPr = SettingsProxy() {
 		didSet {
 			opsCountObservation =  opQueue.observe(\.operationCount, options: [.new]) { (opQ, change) in
-				// if all ops are done and the slide has been moved beyond the last actually pushed volume, then just push the last know volume
+				// if all ops are done and the slider has been moved beyond the last actually pushed volume, then just push the last know volume
 				if change.newValue == 0 {
 					if self.settingsPr.pushVolume != self.lastInComingVolume {
 						self.pushVolumeToRemote()
@@ -44,7 +44,7 @@ class SSHManager: NSObject {
 	var lastInComingVolume: String?
 	var timer: Timer?
 	var connectionStatus: SshConnectionStatus = .Unknown {
-		// whenever the status changes send notif - SettingsVuCon is listening
+		// whenever the status changes send notif - SettingsVuCon could be listening
 		didSet {
 			NotificationCenter.default.post(name:NSNotification.Name(rawValue: K.Notif.SshConnectionStatusChanged),
 			                                object:self,
@@ -65,6 +65,8 @@ class SSHManager: NSObject {
 		
 		if settingsPr.pushVolume == lastInComingVolume {
 			// new value is no change vs confirmed value
+			// since the slider can move and not produce a new *Int* value (from a *different* float value), and the slider is turned grey even then, we need to turn it black here
+			settingsPr.confirmedVolume = lastInComingVolume
 			return
 		}
 		

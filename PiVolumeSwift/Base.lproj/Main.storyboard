@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment version="4112" identifier="iOS"/>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -110,7 +110,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F70-tz-Agf">
-                                <rect key="frame" x="28" y="171.5" width="60" height="44"/>
+                                <rect key="frame" x="28" y="172" width="60" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="PtV-3C-isn"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="iNY-TG-769"/>
@@ -154,6 +154,7 @@
                             <inset key="imageInsets" minX="0.0" minY="3" maxX="-20" maxY="-3"/>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="doneTableEditBtn" destination="F70-tz-Agf" id="r8L-M1-6mM"/>
                         <outlet property="longPressGestRec" destination="60V-tf-MOK" id="pfl-zJ-gyf"/>
@@ -273,7 +274,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lKZ-AC-IEc"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Second" image="second" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="deviceNameTextField" destination="Ebb-Pk-NJf" id="M0P-3b-tC1"/>
                         <outlet property="ipTextField" destination="cZZ-cS-GXY" id="8c9-Ig-sfs"/>
@@ -332,6 +332,5 @@
     <resources>
         <image name="RPi_Solid" width="75" height="75"/>
         <image name="gear" width="57" height="57"/>
-        <image name="second" width="30" height="30"/>
     </resources>
 </document>

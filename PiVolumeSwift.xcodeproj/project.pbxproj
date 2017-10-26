@@ -8,45 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		C89323969CB7E0826A4A00D0 /* Pods_PiVolumeSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AA75E1876D83014D2F5C2FE /* Pods_PiVolumeSwift.framework */; };
-		CA9D9ACA24EE7FEFD39E57FC /* Pods_PiVolumeSwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5852042A934ED7BA28D93E84 /* Pods_PiVolumeSwiftTests.framework */; };
 		D50B53241E4D00A3003FE794 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53231E4D00A3003FE794 /* AppDelegate.swift */; };
 		D50B53281E4D00A3003FE794 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53271E4D00A3003FE794 /* SettingsViewController.swift */; };
 		D50B532B1E4D00A3003FE794 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D50B53291E4D00A3003FE794 /* Main.storyboard */; };
 		D50B532D1E4D00A3003FE794 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D50B532C1E4D00A3003FE794 /* Assets.xcassets */; };
 		D50B53301E4D00A3003FE794 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D50B532E1E4D00A3003FE794 /* LaunchScreen.storyboard */; };
-		D50B533B1E4D00A3003FE794 /* PiVolumeSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B533A1E4D00A3003FE794 /* PiVolumeSwiftTests.swift */; };
-		D50B53461E4D00A3003FE794 /* PiVolumeSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B53451E4D00A3003FE794 /* PiVolumeSwiftUITests.swift */; };
 		D527E9E31E57EFFD00BBA788 /* OutlinedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */; };
 		D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */; };
 		D527E9E71E57F71C00BBA788 /* XM_NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */; };
-		D52BB6901F98FF7600BC9585 /* Preso Notes in Resources */ = {isa = PBXBuildFile; fileRef = D52BB68F1F98FF7600BC9585 /* Preso Notes */; };
 		D560106D1FA0166F00A786B5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D560106C1FA0166F00A786B5 /* Security.framework */; };
 		D56010701FA1178300A786B5 /* KeyChainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D560106F1FA1178300A786B5 /* KeyChainManager.swift */; };
 		D578E7211E5E3AC500B8F902 /* NavCon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D578E7201E5E3AC500B8F902 /* NavCon.swift */; };
 		D5916C531E4D10C70050458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C521E4D10C70050458B /* Constants.swift */; };
 		D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C541E4D62BE0050458B /* SSHManager.swift */; };
-		D5916C5B1E4E738B0050458B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5916C5A1E4E738B0050458B /* Info.plist */; };
 		D5AC2D141E52467900E6E5C2 /* VolumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AC2D131E52467900E6E5C2 /* VolumeViewController.swift */; };
 		D5CBC60D1E5D023900C5E872 /* SettingsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CBC60C1E5D023900C5E872 /* SettingsProxy.swift */; };
-		D94AF42112017DB80BD225D5 /* Pods_PiVolumeSwiftUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E0AF0E408A6F39086F0874 /* Pods_PiVolumeSwiftUITests.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		D50B53371E4D00A3003FE794 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D50B53181E4D00A3003FE794 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D50B531F1E4D00A3003FE794;
-			remoteInfo = PiVolumeSwift;
-		};
-		D50B53421E4D00A3003FE794 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D50B53181E4D00A3003FE794 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D50B531F1E4D00A3003FE794;
-			remoteInfo = PiVolumeSwift;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1C7F431138764E53F13CC2EC /* Pods-PiVolumeSwiftUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PiVolumeSwiftUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PiVolumeSwiftUITests/Pods-PiVolumeSwiftUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -62,12 +39,6 @@
 		D50B532A1E4D00A3003FE794 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D50B532C1E4D00A3003FE794 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D50B532F1E4D00A3003FE794 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		D50B53361E4D00A3003FE794 /* PiVolumeSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PiVolumeSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D50B533A1E4D00A3003FE794 /* PiVolumeSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiVolumeSwiftTests.swift; sourceTree = "<group>"; };
-		D50B533C1E4D00A3003FE794 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D50B53411E4D00A3003FE794 /* PiVolumeSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PiVolumeSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D50B53451E4D00A3003FE794 /* PiVolumeSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiVolumeSwiftUITests.swift; sourceTree = "<group>"; };
-		D50B53471E4D00A3003FE794 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlinedButton.swift; sourceTree = "<group>"; };
 		D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShyTabBarController.swift; sourceTree = "<group>"; };
 		D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XM_NavigationController.swift; sourceTree = "<group>"; };
@@ -91,22 +62,6 @@
 			files = (
 				D560106D1FA0166F00A786B5 /* Security.framework in Frameworks */,
 				C89323969CB7E0826A4A00D0 /* Pods_PiVolumeSwift.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D50B53331E4D00A3003FE794 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CA9D9ACA24EE7FEFD39E57FC /* Pods_PiVolumeSwiftTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D50B533E1E4D00A3003FE794 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D94AF42112017DB80BD225D5 /* Pods_PiVolumeSwiftUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,8 +96,6 @@
 			isa = PBXGroup;
 			children = (
 				D50B53221E4D00A3003FE794 /* PiVolumeSwift */,
-				D50B53391E4D00A3003FE794 /* PiVolumeSwiftTests */,
-				D50B53441E4D00A3003FE794 /* PiVolumeSwiftUITests */,
 				D50B53211E4D00A3003FE794 /* Products */,
 				51EBE701CDEEA8631AC97A03 /* Pods */,
 				CC5AF7C5647A222C3B95A518 /* Frameworks */,
@@ -153,8 +106,6 @@
 			isa = PBXGroup;
 			children = (
 				D50B53201E4D00A3003FE794 /* PiVolumeSwift.app */,
-				D50B53361E4D00A3003FE794 /* PiVolumeSwiftTests.xctest */,
-				D50B53411E4D00A3003FE794 /* PiVolumeSwiftUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -182,24 +133,6 @@
 			path = PiVolumeSwift;
 			sourceTree = "<group>";
 		};
-		D50B53391E4D00A3003FE794 /* PiVolumeSwiftTests */ = {
-			isa = PBXGroup;
-			children = (
-				D50B533A1E4D00A3003FE794 /* PiVolumeSwiftTests.swift */,
-				D50B533C1E4D00A3003FE794 /* Info.plist */,
-			);
-			path = PiVolumeSwiftTests;
-			sourceTree = "<group>";
-		};
-		D50B53441E4D00A3003FE794 /* PiVolumeSwiftUITests */ = {
-			isa = PBXGroup;
-			children = (
-				D50B53451E4D00A3003FE794 /* PiVolumeSwiftUITests.swift */,
-				D50B53471E4D00A3003FE794 /* Info.plist */,
-			);
-			path = PiVolumeSwiftUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -223,48 +156,6 @@
 			productReference = D50B53201E4D00A3003FE794 /* PiVolumeSwift.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D50B53351E4D00A3003FE794 /* PiVolumeSwiftTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D50B534D1E4D00A3003FE794 /* Build configuration list for PBXNativeTarget "PiVolumeSwiftTests" */;
-			buildPhases = (
-				0957087CFE98012A9D731447 /* [CP] Check Pods Manifest.lock */,
-				D50B53321E4D00A3003FE794 /* Sources */,
-				D50B53331E4D00A3003FE794 /* Frameworks */,
-				D50B53341E4D00A3003FE794 /* Resources */,
-				A1A5310ABA9DB49C27E02C19 /* [CP] Embed Pods Frameworks */,
-				777CFD16237B9962CAEEA9C8 /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D50B53381E4D00A3003FE794 /* PBXTargetDependency */,
-			);
-			name = PiVolumeSwiftTests;
-			productName = PiVolumeSwiftTests;
-			productReference = D50B53361E4D00A3003FE794 /* PiVolumeSwiftTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		D50B53401E4D00A3003FE794 /* PiVolumeSwiftUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D50B53501E4D00A3003FE794 /* Build configuration list for PBXNativeTarget "PiVolumeSwiftUITests" */;
-			buildPhases = (
-				48F5318BAF56CB9ECB4C2935 /* [CP] Check Pods Manifest.lock */,
-				D50B533D1E4D00A3003FE794 /* Sources */,
-				D50B533E1E4D00A3003FE794 /* Frameworks */,
-				D50B533F1E4D00A3003FE794 /* Resources */,
-				973A0FE8C3FBC6B297148A5E /* [CP] Embed Pods Frameworks */,
-				8D557AFA0CCA72F97CAB050E /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D50B53431E4D00A3003FE794 /* PBXTargetDependency */,
-			);
-			name = PiVolumeSwiftUITests;
-			productName = PiVolumeSwiftUITests;
-			productReference = D50B53411E4D00A3003FE794 /* PiVolumeSwiftUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -272,7 +163,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Rainer Standke";
 				TargetAttributes = {
 					D50B531F1E4D00A3003FE794 = {
@@ -280,18 +171,6 @@
 						DevelopmentTeam = GBPX9EPXRH;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
-					};
-					D50B53351E4D00A3003FE794 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = GBPX9EPXRH;
-						ProvisioningStyle = Automatic;
-						TestTargetID = D50B531F1E4D00A3003FE794;
-					};
-					D50B53401E4D00A3003FE794 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = GBPX9EPXRH;
-						ProvisioningStyle = Automatic;
-						TestTargetID = D50B531F1E4D00A3003FE794;
 					};
 				};
 			};
@@ -309,8 +188,6 @@
 			projectRoot = "";
 			targets = (
 				D50B531F1E4D00A3003FE794 /* PiVolumeSwift */,
-				D50B53351E4D00A3003FE794 /* PiVolumeSwiftTests */,
-				D50B53401E4D00A3003FE794 /* PiVolumeSwiftUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -320,49 +197,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D52BB6901F98FF7600BC9585 /* Preso Notes in Resources */,
-				D5916C5B1E4E738B0050458B /* Info.plist in Resources */,
 				D50B53301E4D00A3003FE794 /* LaunchScreen.storyboard in Resources */,
 				D50B532D1E4D00A3003FE794 /* Assets.xcassets in Resources */,
 				D50B532B1E4D00A3003FE794 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D50B53341E4D00A3003FE794 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D50B533F1E4D00A3003FE794 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0957087CFE98012A9D731447 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PiVolumeSwiftTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2D88391163D68895C9013BF8 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -394,84 +237,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PiVolumeSwift/Pods-PiVolumeSwift-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		48F5318BAF56CB9ECB4C2935 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PiVolumeSwiftUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		777CFD16237B9962CAEEA9C8 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PiVolumeSwiftTests/Pods-PiVolumeSwiftTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8D557AFA0CCA72F97CAB050E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PiVolumeSwiftUITests/Pods-PiVolumeSwiftUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		973A0FE8C3FBC6B297148A5E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PiVolumeSwiftUITests/Pods-PiVolumeSwiftUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A1A5310ABA9DB49C27E02C19 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PiVolumeSwiftTests/Pods-PiVolumeSwiftTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C6284090DCD480C66FE9693A /* [CP] Check Pods Manifest.lock */ = {
@@ -513,36 +278,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D50B53321E4D00A3003FE794 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D50B533B1E4D00A3003FE794 /* PiVolumeSwiftTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D50B533D1E4D00A3003FE794 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D50B53461E4D00A3003FE794 /* PiVolumeSwiftUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		D50B53381E4D00A3003FE794 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D50B531F1E4D00A3003FE794 /* PiVolumeSwift */;
-			targetProxy = D50B53371E4D00A3003FE794 /* PBXContainerItemProxy */;
-		};
-		D50B53431E4D00A3003FE794 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D50B531F1E4D00A3003FE794 /* PiVolumeSwift */;
-			targetProxy = D50B53421E4D00A3003FE794 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D50B53291E4D00A3003FE794 /* Main.storyboard */ = {
@@ -573,7 +309,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -581,7 +319,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -623,7 +365,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -631,7 +375,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -665,6 +413,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = GBPX9EPXRH;
 				INFOPLIST_FILE = PiVolumeSwift/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = biz.xmil.PiVolumeSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -682,73 +431,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = GBPX9EPXRH;
 				INFOPLIST_FILE = PiVolumeSwift/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = biz.xmil.PiVolumeSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
-			};
-			name = Release;
-		};
-		D50B534E1E4D00A3003FE794 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3811B7708E19C1F83F986D70 /* Pods-PiVolumeSwiftTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = GBPX9EPXRH;
-				INFOPLIST_FILE = PiVolumeSwiftTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = biz.xmil.PiVolumeSwiftTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PiVolumeSwift.app/PiVolumeSwift";
-			};
-			name = Debug;
-		};
-		D50B534F1E4D00A3003FE794 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DF01F718CA154B072E787851 /* Pods-PiVolumeSwiftTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = GBPX9EPXRH;
-				INFOPLIST_FILE = PiVolumeSwiftTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = biz.xmil.PiVolumeSwiftTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PiVolumeSwift.app/PiVolumeSwift";
-			};
-			name = Release;
-		};
-		D50B53511E4D00A3003FE794 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C7F431138764E53F13CC2EC /* Pods-PiVolumeSwiftUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = GBPX9EPXRH;
-				INFOPLIST_FILE = PiVolumeSwiftUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = biz.xmil.PiVolumeSwiftUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = PiVolumeSwift;
-			};
-			name = Debug;
-		};
-		D50B53521E4D00A3003FE794 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E88A76A88DF116194C40FD0C /* Pods-PiVolumeSwiftUITests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = GBPX9EPXRH;
-				INFOPLIST_FILE = PiVolumeSwiftUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = biz.xmil.PiVolumeSwiftUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = PiVolumeSwift;
 			};
 			name = Release;
 		};
@@ -769,24 +457,6 @@
 			buildConfigurations = (
 				D50B534B1E4D00A3003FE794 /* Debug */,
 				D50B534C1E4D00A3003FE794 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D50B534D1E4D00A3003FE794 /* Build configuration list for PBXNativeTarget "PiVolumeSwiftTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D50B534E1E4D00A3003FE794 /* Debug */,
-				D50B534F1E4D00A3003FE794 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D50B53501E4D00A3003FE794 /* Build configuration list for PBXNativeTarget "PiVolumeSwiftUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D50B53511E4D00A3003FE794 /* Debug */,
-				D50B53521E4D00A3003FE794 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

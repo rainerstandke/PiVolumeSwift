@@ -140,7 +140,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 		// called from appDel before termination / going to background
 		
 		let volVuCons = self.descendantViewControllers(of: VolumeViewController.self)
-		print("volVuCons: \(volVuCons)")
 		
 		for volVuCon in volVuCons {
 			volVuCon.saveSettings()

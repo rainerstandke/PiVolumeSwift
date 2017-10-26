@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		_ = K() // to force userDefs initial, non-nil values
 		
 		// force init
-		NMSSHLogger.shared().isEnabled = true
+		NMSSHLogger.shared().isEnabled = false
 		
 		KeyChainManager.shared.writeKeyFiles()
 		
@@ -40,7 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	func triggerAllSettingsSave() {
 		if let tabBarCon = (self.window?.rootViewController) as? ShyTabBarController {
-			print("tabBarCon: \(tabBarCon)")
 			tabBarCon.makeVolumeVuConsSave()
 		}
 	}

@@ -52,7 +52,7 @@ struct K {
 	
 	struct Misc {
 
-		static let TimerInterval: Double = 5 // TODO: make 30 again
+		static let TimerInterval: Double = 30 // TODO: make 30 again
 		static let TransitionDuration = 1 // TODO: make 0.3
 	}
 	

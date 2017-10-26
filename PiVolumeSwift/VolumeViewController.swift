@@ -41,8 +41,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	// MARK: - life cycle
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		
-		navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear"), style: .plain, target: self, action: #selector(segueToSettings))
+		// add go to settings button
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear"),
+		                                                    style: .plain,
+		                                                    target: self,
+		                                                    action: #selector(segueToSettings))
 	}
 	
 
@@ -95,9 +98,15 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
 			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
 				if isLast && index > 0 {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"), style: .plain, target: self, action: #selector(deleteTab))
+					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"),
+					                                                   style: .plain,
+					                                                   target: self,
+					                                                   action: #selector(deleteTab))
 				} else {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "+Pi"), style: .plain, target: self, action: #selector(addTabItem))
+					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "+Pi"),
+					                                                   style: .plain,
+					                                                   target: self,
+					                                                   action: #selector(addTabItem))
 				}
 			}
 		}
@@ -294,7 +303,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		guard let idxPath = tableView.indexPathForRow(at: lpLocation) else {return }
 		
 		guard let pressedView = lpGestRecog.view?.hitTest(lpLocation, with: nil) else {return }
-		print("pressedView: \(pressedView)")
 		
 		if pressedView.tag == K.UIElementTag.PresetButton {
 			// long touch on preset button to aquire new preset value
