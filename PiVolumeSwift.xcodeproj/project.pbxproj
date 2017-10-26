@@ -21,6 +21,7 @@
 		D527E9E71E57F71C00BBA788 /* XM_NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */; };
 		D52BB6901F98FF7600BC9585 /* Preso Notes in Resources */ = {isa = PBXBuildFile; fileRef = D52BB68F1F98FF7600BC9585 /* Preso Notes */; };
 		D560106D1FA0166F00A786B5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D560106C1FA0166F00A786B5 /* Security.framework */; };
+		D56010701FA1178300A786B5 /* KeyChainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D560106F1FA1178300A786B5 /* KeyChainManager.swift */; };
 		D578E7211E5E3AC500B8F902 /* NavCon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D578E7201E5E3AC500B8F902 /* NavCon.swift */; };
 		D5916C531E4D10C70050458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C521E4D10C70050458B /* Constants.swift */; };
 		D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C541E4D62BE0050458B /* SSHManager.swift */; };
@@ -72,6 +73,7 @@
 		D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XM_NavigationController.swift; sourceTree = "<group>"; };
 		D52BB68F1F98FF7600BC9585 /* Preso Notes */ = {isa = PBXFileReference; explicitFileType = text.rtf; path = "Preso Notes"; sourceTree = "<group>"; };
 		D560106C1FA0166F00A786B5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		D560106F1FA1178300A786B5 /* KeyChainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainManager.swift; sourceTree = "<group>"; };
 		D578E7201E5E3AC500B8F902 /* NavCon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavCon.swift; sourceTree = "<group>"; };
 		D5916C521E4D10C70050458B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D5916C541E4D62BE0050458B /* SSHManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHManager.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				D50B53231E4D00A3003FE794 /* AppDelegate.swift */,
+				D560106F1FA1178300A786B5 /* KeyChainManager.swift */,
 				D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */,
 				D578E7201E5E3AC500B8F902 /* NavCon.swift */,
 				D5AC2D131E52467900E6E5C2 /* VolumeViewController.swift */,
@@ -500,6 +503,7 @@
 				D50B53281E4D00A3003FE794 /* SettingsViewController.swift in Sources */,
 				D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */,
 				D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */,
+				D56010701FA1178300A786B5 /* KeyChainManager.swift in Sources */,
 				D5CBC60D1E5D023900C5E872 /* SettingsProxy.swift in Sources */,
 				D5AC2D141E52467900E6E5C2 /* VolumeViewController.swift in Sources */,
 				D578E7211E5E3AC500B8F902 /* NavCon.swift in Sources */,
