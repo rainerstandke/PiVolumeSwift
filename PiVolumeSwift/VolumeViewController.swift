@@ -43,10 +43,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.awakeFromNib()
 		
 		navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear"), style: .plain, target: self, action: #selector(segueToSettings))
-//		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "⚙",
-//		                                                    style: .plain,
-//		                                                    target: self,
-//		                                                    action: #selector(segueToSettings))
 	}
 	
 
@@ -100,10 +96,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
 				if isLast && index > 0 {
 					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"), style: .plain, target: self, action: #selector(deleteTab))
-//					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "- π", style: .plain, target: self, action: #selector(deleteTab))
 				} else {
 					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "+Pi"), style: .plain, target: self, action: #selector(addTabItem))
-//					navigationItem.leftBarButtonItem = UIBarButtonItem(title: "+ π", style: .plain, target: self, action: #selector(addTabItem))
 				}
 			}
 		}
@@ -161,7 +155,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 
 	
-	// MARK: - scroll snap
+	// MARK: - scrollView snap
 	
 	func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
 		// snap scroll position to table rows (at the top of the table)
@@ -256,7 +250,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	// MARK: -
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
-		// action method for slider: called directly from ui
+		// action method for slider: called directly from UI
 		
 		// make String, omitting post-comma digits
 		let newVal = Int(floor(sender.value))

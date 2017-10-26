@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// force init
 		NMSSHLogger.shared().isEnabled = true
 		
-		KeyChainManager().landing()
+		KeyChainManager.shared.writeKeyFiles()
 		
 		return true
 	}
@@ -52,73 +52,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
 		return true
 	}
-	
-//	func checkForKeys() {
-//		let docDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-//		print("xxx: \(docDirURL)")
-//		let fileURLs = try! FileManager.default.contentsOfDirectory(at: docDirURL, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions(rawValue: 0))
-//		print("xxx: \(fileURLs)")
-//
-//		for fileURL in fileURLs {
-//			print("fileURL.pathExtension: \(fileURL.pathExtension)")
-//			if fileURL.pathExtension == "pub" {
-//				let pubKey = try! String.init(contentsOf: fileURL)
-//				if pubKey.hasPrefix("ssh-rsa ") {
-//					// TODO: move to keyChain
-//					print("pub found")
-//
-//					guard let valueData = try? Data.init(contentsOf: fileURL) else {
-//						print("Error saving text to Keychain")
-//						continue
-//					}
-//					print("valueData: \(valueData)")
-//
-//					let queryAdd: [String: AnyObject] = [
-//						kSecClass as String: kSecClassKey,
-//						kSecValueData as String: valueData as AnyObject,
-//						kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked,
-//						kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
-//						kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-//						]
-//
-//					let resultCode = SecItemAdd(queryAdd as CFDictionary, nil)
-//
-//					if resultCode != noErr {
-//						print("Error saving to Keychain: \(resultCode)")
-//					}
-//				}
-//			}  else if fileURL.pathExtension == "" {
-//				let pubKey = try! String.init(contentsOf: fileURL)
-//
-//				if pubKey.hasPrefix("-----BEGIN RSA PRIVATE KEY-----") {
-//					// TODO: move to keyChain
-//					print("private found")
-//
-//					guard let valueData = try? Data.init(contentsOf: fileURL) else {
-//						print("Error saving text to Keychain")
-//						continue
-//					}
-//					print("valueData: \(valueData)")
-//
-//					let queryAdd: [String: AnyObject] = [
-//						kSecClass as String: kSecClassKey,
-//						kSecValueData as String: valueData as AnyObject,
-//						kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked,
-//						kSecAttrKeyClass as String: kSecAttrKeyClassPrivate,
-//						kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-//						]
-//
-//					let resultCode = SecItemAdd(queryAdd as CFDictionary, nil)
-//
-//					if resultCode != noErr {
-//						print("Error saving to Keychain: \(resultCode)")
-//					}
-//				}
-//
-//			}
-//			//
-//
-//		}
-//	}
 }
 

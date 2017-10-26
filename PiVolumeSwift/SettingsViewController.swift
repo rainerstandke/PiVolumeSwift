@@ -13,9 +13,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	@IBOutlet weak var deviceNameTextField: UITextField!
 	@IBOutlet weak var ipTextField: UITextField!
 	@IBOutlet weak var userNameTextField: UITextField!
-	@IBOutlet weak var pubKeyTextField: UITextField!
-	@IBOutlet weak var privKeyTextField: UITextField!
-	@IBOutlet weak var passTextField: UITextField!
 	
 	@IBOutlet weak var statusLabel: UILabel!
 	
@@ -41,9 +38,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		deviceNameTextField.text = settingsPr!.deviceName
 		ipTextField.text = settingsPr!.ipAddress
 		userNameTextField.text = settingsPr!.userName
-		pubKeyTextField.text = settingsPr!.publicKey
-		privKeyTextField.text = settingsPr!.privateKey
-		passTextField.text = settingsPr!.password
 		
 		// show whatever sshMan has as current
 		updateStatusLabel(status: sshMan!.connectionStatus)
@@ -71,13 +65,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		NotificationCenter.default.removeObserver(self)
 	}
 	
-//	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//		// called before we transition out of here (back to VolumeVuCon)
-//		if let volVuCon = segue.destination as? VolumeViewController {
-//			print("volVuCon: \(volVuCon)") // OBSOLETE, whole method
-//		}
-//	}
-	
 	@objc func performBackSegue() {
 		// called from back btn when we transition back to VolumeViewCon
 		performSegue(withIdentifier: "FromSettingsSegue", sender: self)
@@ -104,12 +91,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 			settingsPr!.ipAddress = textField.text!
 		case userNameTextField:
 			settingsPr!.userName = textField.text!
-		case pubKeyTextField:
-			settingsPr!.publicKey = textField.text!
-		case privKeyTextField:
-			settingsPr!.privateKey = textField.text!
-		case passTextField:
-			settingsPr!.password = textField.text!
 		default:
 			break
 		}

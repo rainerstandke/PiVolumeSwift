@@ -9,69 +9,75 @@
 import Foundation
 
 
-struct KeyChainManager {
+class KeyChainManager {
+	
+	// prevent init from outside
+	private init() {
+	}
+	
+	static let shared = KeyChainManager()
+	
+	
 	func landing() {
-//		readKeys()
-//		try! deleteItem(keyClass: .Private)
-//		try! deleteItem(keyClass: .Public)
+		// for debug...
 		writeKeyFiles()
-//		print("read: \(String(describing: readKeys()))")
+		print("read: \(String(describing: readKeys()))")
 	}
 	
 	func writeKeyFiles() {
+		// see if there are 2 files in our doc folder - put there by iTunes file sharing - that are likely enough to be a public/private key pair
+		
 		let urlResultTuple = documentURLs()
 		if urlResultTuple.success == false {
 			print("no key files found")
 			return
 		}
-		print("urlResultTuple: \(urlResultTuple)")
 		
-		
-		
-//		writeKey(for: .Private)
-		writeKey(for: .Public, with:urlResultTuple)
-	}
-	
-	func writeKey(for keyClass: PVKeyClass, with urlResultTuple: (privateKeyURL: URL?, publicKeyURL: URL?, success: Bool)) {
-		
-		var readURL: URL?
-		switch keyClass {
-		case .Private:
-			readURL = urlResultTuple.privateKeyURL!
-		case .Public:
-			readURL = urlResultTuple.publicKeyURL!
-		}
-		
-		// try to just write, regardless of what may be there already
-		guard let data = dataFrom(url: readURL!) else { return }
-		let query = keyPutQueryDict(keyClass: .Private, payloadData: data)
-		let status = SecItemAdd(query as CFDictionary, nil)
-		
-		switch status {
-		case noErr:
-			// delete file from disk
-			try! FileManager.default.removeItem(at: readURL!)
-		case errSecDuplicateItem:
-			// update existing key
-			var attributesToUpdate = [String : AnyObject]()
-			attributesToUpdate[kSecValueData as String] = data as AnyObject?
-			let status = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
+		func writeKey(for keyClass: PVKeyClass, with urlResultTuple: (privateKeyURL: URL?, publicKeyURL: URL?, success: Bool)) {
 			
-			if status != noErr {
-				print("Error updating Keychain: \(status)")
-				return
+			var readURL: URL?
+			switch keyClass {
+			case .Private:
+				readURL = urlResultTuple.privateKeyURL!
+			case .Public:
+				readURL = urlResultTuple.publicKeyURL!
 			}
-			try! FileManager.default.removeItem(at: readURL!)
-		default:
-			print("Error writing to Keychain: \(status)")
+			
+			// try to just write, regardless of what may be there already
+			guard let data = dataFrom(url: readURL!) else { return }
+			let query = keyPutQueryDict(keyClass: keyClass, payloadData: data)
+			let status = SecItemAdd(query as CFDictionary, nil)
+			
+			switch status {
+			case noErr:
+				// delete file from disk
+				try! FileManager.default.removeItem(at: readURL!)
+				break
+			case errSecDuplicateItem:
+				// update existing key
+				var attributesToUpdate = [String : AnyObject]()
+				attributesToUpdate[kSecValueData as String] = data as AnyObject?
+				let status = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
+				
+				if status != noErr {
+					print("Error updating Keychain: \(status)")
+					return
+				}
+				try! FileManager.default.removeItem(at: readURL!)
+			default:
+				print("Error writing to Keychain: \(status)")
+			}
 		}
+		
+		writeKey(for: .Private, with:urlResultTuple)
+		writeKey(for: .Public, with:urlResultTuple)
 	}
 	
 	
 	func readKeys() -> (privateKeyStr: String, publicKeyString: String)? {
-		//
+		// read keys from keychain
 		
-		// Note:  wanted use kSecAttrApplicationLabel to see if the 2 keys belong together, since the value of this attribute is supposedly the hash of the public key. BUT does not work, returns '<>'?
+		// Note:  wanted use kSecAttrApplicationLabel to see if the 2 keys belong together, since the value of this attribute is supposedly the hash of the public key. BUT does not work, returns '<>'? Maybe the doc only applies to symetric key pairs, or to generated key pairs?
 		
 		// local func to return key as string
 		func keyStr(for keyClass: PVKeyClass) -> String?  {
@@ -105,20 +111,22 @@ struct KeyChainManager {
 	
 	func deleteItem(keyClass: PVKeyClass) throws {
 		// Delete the existing item from the keychain.
-		let query = keyPullDict(keyClass: keyClass)
+		let query = keyQueryDict(keyClass: keyClass)
 		let status = SecItemDelete(query as CFDictionary)
-		print("delete status: \(status)")
+		if status != noErr {
+			print("delete error: \(status)")
+		}
 	}
 	
 	
 	private func dataFrom(url: URL) -> Data? {
+		// convenience
 		return try? Data.init(contentsOf: url)
 	}
 	
 	private func documentURLs() -> (privateKeyURL: URL?, publicKeyURL: URL?, success: Bool) {
 		// go look for exactly 2 files in all of doc dir. Need to be a private and a public key (based on text prefix)
 		let docDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-//		print("docDirURL: \(docDirURL)")
 		
 		let fileURLs = try! FileManager.default.contentsOfDirectory(at: docDirURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
 		
@@ -138,14 +146,14 @@ struct KeyChainManager {
 				}
 			}
 		}
-			
+		
 		let success = fileURLs.count == 2 && pubReturnURL != nil && privReturnURL != nil
 		
 		return (privReturnURL, pubReturnURL, success)
 	}
 	
 	private func keyQueryDict(keyClass: PVKeyClass) -> [String: AnyObject] {
-		// make a dictionary to be used in a search query
+		// make a dictionary to be used in a generic query
 		var keyClassStr: CFString? = nil
 		var label = "PiVolume - "
 		switch keyClass {
@@ -158,7 +166,7 @@ struct KeyChainManager {
 		}
 		
 		let queryDict: [String: AnyObject] = [
-			kSecClass as String: kSecClassKey, // we're talking about a Key
+			kSecClass as String: kSecClassKey, // we're talking about a Key (not a Cert, or so)
 			kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked,
 			kSecAttrKeyClass as String: keyClassStr!,
 			kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
@@ -177,7 +185,7 @@ struct KeyChainManager {
 	}
 	
 	private func keyPullDict(keyClass: PVKeyClass) -> [String: AnyObject] {
-		// make a dictionary to be used in a generic query
+		// make a dictionary to be used in a search query
 		var queryDict = keyQueryDict(keyClass: keyClass)
 		queryDict[kSecMatchLimit as String] = kSecMatchLimitOne
 		queryDict[kSecReturnAttributes as String] = kCFBooleanTrue
