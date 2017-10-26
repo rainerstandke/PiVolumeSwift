@@ -22,6 +22,21 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 	}
 	
 	
+	override func viewWillAppear(_ animated: Bool) {
+		// get titles for all tabs, not just the one that'll appear on screen
+		if let tabBarItems = self.tabBar.items {
+			for tabBarItem in (tabBarItems.enumerated()) {
+				if let settingsPr = SettingsProxy.settingsProxyAt(tabIndex: tabBarItem.offset) {
+					let title = settingsPr.deviceName
+					tabBarItem.element.title = title
+				}
+			}
+		}
+		
+		super.viewWillAppear(animated)
+	}
+	
+	
 	override func viewDidAppear(_ animated: Bool) {
 		// position according to number of childVuCons
 		// oddly, in viewWILLAppear this seems to have no effect

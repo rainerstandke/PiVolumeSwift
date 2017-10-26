@@ -25,4 +25,14 @@ class SettingsProxy: NSObject, Codable
 		let jsonData = try? encoder.encode(self)
 		return String(data: jsonData!, encoding: .utf8)!
 	}
+	
+	static func settingsProxyAt(tabIndex: Int) -> SettingsProxy? {
+		// try to load settings from userDefs
+		if let data = UserDefaults.standard.value(forKey: String(tabIndex)) as? Data {
+			if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
+				return settings
+			}
+		}
+		return nil
+	}
 }

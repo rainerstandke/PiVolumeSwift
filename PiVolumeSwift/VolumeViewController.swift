@@ -57,13 +57,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			// record index so that we can write our settings into userDefs when we disappear
 			tabIndex = index
 			
-			// try to load settings from userDefs
-			if let data = UserDefaults.standard.value(forKey: String(index)) as? Data {
-				if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
-					self.title = settings.deviceName
-					sshMan.settingsPr = settings
-					settingsPr = settings
-				}
+			// try to load settings from userDefs (fall back on virgin created in 'init'
+			if let settings = SettingsProxy.settingsProxyAt(tabIndex: index) {
+				self.title = settings.deviceName // redundant... 
+				sshMan.settingsPr = settings
+				settingsPr = settings
 			}
 		}
 		
