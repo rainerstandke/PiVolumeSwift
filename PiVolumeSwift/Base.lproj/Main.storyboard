@@ -240,7 +240,7 @@
                                         <rect key="frame" x="86" y="0.0" width="202" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="done"/>
                                         <connections>
                                             <outlet property="delegate" destination="8rJ-Kc-sve" id="V9J-px-23y"/>
                                         </connections>

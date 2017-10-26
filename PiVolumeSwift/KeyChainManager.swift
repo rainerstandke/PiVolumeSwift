@@ -6,6 +6,20 @@
 //  Copyright © 2017 Rainer Standke. All rights reserved.
 //
 
+
+
+
+/*
+
+
+public private key pair for ssh into Pis into KeyChain
+
+
+*/
+
+
+
+
 import Foundation
 
 
@@ -25,7 +39,9 @@ class KeyChainManager {
 	}
 	
 	func writeKeyFiles() {
-		// see if there are 2 files in our doc folder - put there by iTunes file sharing - that are likely enough to be a public/private key pair
+		// see if there are exactly 2 files in our doc folder - put there by iTunes file sharing - that are likely enough to be a public/private key pair
+		// if so read them as data and put them into keyChain, afterwards delete file
+		// assumptions: no password on private key, same key for all Pis
 		
 		let urlResultTuple = documentURLs()
 		if urlResultTuple.success == false {

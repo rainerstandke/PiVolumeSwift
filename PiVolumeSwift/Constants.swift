@@ -25,24 +25,15 @@ struct K {
 	}
 	
 	struct Notif {
-		static let VolChanged = "kNotif_VolumeChanged"
 		static let SliderMoved = "kNotif_SliderMoved"
-		static let ConfirmedVolume = "kNotif_ConfirmedVolume"
 		static let SshConnectionStatusChanged = "kSshConnectionStatusChanged"
-		static let AddTabBarItem = "kAddTabBarItem"
-		static let DeleteTabBarItem = "kDeleteTabBarItem"
 	}
 	
 	struct Key {
-		static let PercentValue = "kKey_PercentValue"
 		static let ConnectionStatus = "kConnectionStatus"
 	}
 	
-	struct UIElementTag { // OBSOLETE?
-		static let IpAddress = 1234
-		static let UserName = 1235
-		static let Password = 1236
-		
+	struct UIElementTag {
 		static let PresetButton = 9958
 	}
 	
@@ -51,14 +42,12 @@ struct K {
 	}
 	
 	struct Misc {
-
-		static let TimerInterval: Double = 30 // TODO: make 30 again
-		static let TransitionDuration = 1 // TODO: make 0.3
+	static let TimerInterval: Double = 3 // TODO: make 30 again
 	}
 	
 	
 	init() {
-		// runs once, called from appDel.
+		// runs once, called from appDel. To init userDefs.
 		
 		let defaults = UserDefaults.standard
 		let defaultValues = [
