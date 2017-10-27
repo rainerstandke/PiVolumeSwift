@@ -116,12 +116,16 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 		return tabBarOriginY(with: childViewControllers.count)
 	}
 
-	override func viewWillTransition(to size: CGSize,
-	                        with coordinator: UIViewControllerTransitionCoordinator) {
-		super.viewWillTransition(to: size, with: coordinator)
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		// force right tabBar position for current childView count, needed after rotation
+		// note: block doesn't do anything
+		showHideTabBar(addOrRemoveTab: {}, resultingTabCount: viewControllers!.count)
 	}
 	
 	func updateIncludesOpaque() {
+		// called by self from viewDidAppear, and when the tabBar is shown or hidden (when tabs are added/deleted)
 		if viewControllers!.count > 1 {
 			for viewCon in viewControllers! {
 				viewCon.extendedLayoutIncludesOpaqueBars = true

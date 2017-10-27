@@ -90,7 +90,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		// add back item in UL
+		// add +/- nav item in UL ( to add or remove more tabs )
 		if let tabBarCon = tabBarController as? ShyTabBarController {
 			
 			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
@@ -141,15 +141,23 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.viewWillDisappear(animated)
 	}
 	
-	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-		super.viewWillTransition(to: size, with: coordinator)
-		print("viewWillTransition to size: \(size)")
-		
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		// to force update after rotation
+		viewSafeAreaInsetsDidChange()
 	}
 	
 	override func viewSafeAreaInsetsDidChange() {
 		if #available(iOS 11.0, *) {
-			// set the height constraint on presetTableVu to a whole multiple of its row height
+			// called automatically when tabVuCon changes our property extendedLayoutIncludesOpaqueBars
+			// ... as well as after layouts for rotations
+			// manually set the height constraint on presetTableVu to a whole multiple of its row height
+			
+			if presetTableView == nil {
+				// this seems to happen when we're not on screen
+				return
+			}
+			
 			let rowHt = presetTableView.rowHeight
 			let availableHeight = view.bounds.size.height - view.safeAreaInsets.bottom - presetTableView.frame.origin.y
 			let rowCount = Int(availableHeight / rowHt)
