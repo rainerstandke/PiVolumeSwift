@@ -162,6 +162,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let availableHeight = view.bounds.size.height - view.safeAreaInsets.bottom - presetTableView.frame.origin.y
 			let rowCount = Int(availableHeight / rowHt)
 			tableVuHeightConstraint.constant = (CGFloat(rowCount) * rowHt)
+		
+			super.viewSafeAreaInsetsDidChange()
 		} else {
 			// Fallback on earlier versions
 			
