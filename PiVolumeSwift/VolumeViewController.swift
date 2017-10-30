@@ -261,6 +261,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		self.title = settingsPr.deviceName
 		
 		saveSettings()
+		
+		(tabBarController as! ShyTabBarController).updateTabNames()
 	}
 	
 	
@@ -328,6 +330,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	func updateDoneTableEditBtn() {
+		// show or hide the 'Done' btn for table view editing
+		// animate sideways movement, to visually connect btn to tableVu
+		
 		let visibileFrame = doneTableEditBtn.frame
 		let hiddenFrame = visibileFrame.offsetBy(dx: 10, dy: 0)
 		

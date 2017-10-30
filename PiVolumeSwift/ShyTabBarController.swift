@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UIViewControllerAnimatedTransitioning
+class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 {
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -24,15 +24,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 	
 	override func viewWillAppear(_ animated: Bool) {
 		// get titles for all tabs, not just the one that'll appear on screen
-		if let tabBarItems = self.tabBar.items {
-			for tabBarItem in (tabBarItems.enumerated()) {
-				if let settingsPr = SettingsProxy.settingsProxyAt(tabIndex: tabBarItem.offset) {
-					let title = settingsPr.deviceName
-					tabBarItem.element.title = title
-				}
-			}
-		}
-		
+		updateTabNames()
+
 		super.viewWillAppear(animated)
 	}
 	
@@ -162,6 +155,18 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate//, UI
 		
 		for volVuCon in volVuCons {
 			volVuCon.saveSettings()
+		}
+	}
+	
+	func updateTabNames() {
+		// grab names from each VolumeVuCon, at launch, after an update
+		if let tabBarItems = self.tabBar.items {
+			for tabBarItem in (tabBarItems.enumerated()) {
+				if let settingsPr = SettingsProxy.settingsProxyAt(tabIndex: tabBarItem.offset) {
+					let title = settingsPr.deviceName
+					tabBarItem.element.title = title
+				}
+			}
 		}
 	}
 }

@@ -1,4 +1,18 @@
 
 show breakpoint with applescript say "...", continue
 
-graphic with scroll view, showing math with rowHeights
+graphic with scroll view, showing math with rowHeights, for tableVu height, snap-scroll
+
+log statement with KB Maestro?
+
+throttle / no throttle SSH connection
+
+KeyChain?
+
+Hide Tabbar mechanism with ... extendsUnder...
+
+architecture, ssshMan not a singleton
+
+outline button IB designable
+
+

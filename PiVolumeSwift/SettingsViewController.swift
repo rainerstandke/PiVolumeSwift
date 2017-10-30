@@ -42,7 +42,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		// show whatever sshMan has as current
 		updateStatusLabel(status: sshMan!.connectionStatus)
 		
-		// this could be done with KVO from Swift 4 b/c enum is not available in obj-c
+		// this could mot be done with KVO from Swift 4 b/c enum is not available in obj-c
 		NotificationCenter.default.addObserver(forName: NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
 		                                       object: sshMan!,
 		                                       queue: OperationQueue.main, // effectively: main thread
