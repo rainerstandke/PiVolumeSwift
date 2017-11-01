@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NavCon: UINavigationController
+class NavCon: UINavigationController // OBSOLETE
 {
 //	override func awakeFromNib() {
 //		

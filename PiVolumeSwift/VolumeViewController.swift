@@ -417,7 +417,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		updateSlider()
 		
 		// update our preset in settings
-		if let tv = stepper.superview(of: UITableView.self) {
+		if let tv = stepper.ancestorView(ofType: UITableView.self) {
 			let tvLocation = tv.convert(stepper.center, from: stepper.superview)
 			guard let idxPath = tv.indexPathForRow(at: tvLocation) else {
 				return }
@@ -487,13 +487,13 @@ extension UIView {
 	// from: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
 	// returns either superview if of type T, or recursively superView's superViews
 	
-	func superview<T>(of type: T.Type) -> T? {
-		return superview as? T ?? superview.flatMap { $0.superview(of: T.self) }
+	func ancestorView<T>(ofType type: T.Type) -> T? {
+		return superview as? T ?? superview.flatMap { $0.ancestorView(ofType: T.self) }
 	}
 }
 
 
-// UNUSED
+// OBSOLETE
 extension UIViewController {
 	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
 	
