@@ -94,7 +94,18 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	
 	@objc func removeNavCon() {
 		let newChildCount = viewControllers!.count - 1
-		showHideTabBar( addOrRemoveTab: { self.viewControllers!.remove(at: self.selectedIndex) }, resultingTabCount: newChildCount)
+		
+		let remove = {
+			let goner = self.viewControllers![self.selectedIndex]
+			goner.willMove(toParentViewController: nil)
+			goner.view.removeFromSuperview()
+			goner.removeFromParentViewController()
+//			self.viewControllers!.remove(at: self.selectedIndex)
+			
+		}
+		showHideTabBar( addOrRemoveTab: { remove() }, resultingTabCount: newChildCount)
+		
+		
 		selectedIndex = viewControllers!.count - 1
 	}
 	
