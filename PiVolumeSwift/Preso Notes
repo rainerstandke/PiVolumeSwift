@@ -9,7 +9,7 @@ throttle / no throttle SSH connection
 
 KeyChain?
 
-File Sharing for key pairs
+File Sharing for key pairs - use (both) airPi keys, find doc dir on simulator by stop in debugger, po NSHomeDirectory() - /Users/rainer/Library/Developer/CoreSimulator/Devices/EAA043B0-8753-449B-8CEB-B5E295AF6C11/data/Containers/Data/Application/C388439A-21EF-4450-84CC-CBAB01122833
 
 Hide Tabbar mechanism with ... extendsUnder...
 

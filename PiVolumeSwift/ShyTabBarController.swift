@@ -11,6 +11,7 @@ import UIKit
 class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 {
 	override func viewDidLoad() {
+		print("tab vu didLoad")
 		super.viewDidLoad()
 		
 		self.delegate = self
@@ -24,6 +25,14 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	
 	override func viewWillAppear(_ animated: Bool) {
 		// get titles for all tabs, not just the one that'll appear on screen
+		print("tab vu willAppear")
+		
+		
+		
+		// TODO: check _here_ that all child Vol Cons have found their settings, make them load otherwise
+		
+		
+		
 		updateTabNames()
 
 		super.viewWillAppear(animated)
@@ -31,6 +40,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
+		print("tab vu didAppear")
 		// position according to number of childVuCons
 		// oddly, in viewWILLAppear this seems to have no effect
 		tabBar.frame.origin.y = tabBarOriginY()
@@ -40,28 +50,33 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	
 	
 	override func decodeRestorableState(with coder: NSCoder) {
+		print("tab vu decodeRestorableState")
 		// runs after viewDidLoad
 		super.decodeRestorableState(with: coder)
 		
 		if let previousChildCount = coder.decodeObject(forKey: "childCount") as? Int {
+			print("previousChildCount: \(String(describing: previousChildCount))")
 			// add child vuCons, but not the first one
 			for _: Int in 1..<previousChildCount {
 				addNewVolumeVuCon()
 			}
 		}
 		
+		// NOTE: restoring for selectedIndex works automagically, but all childVuCons after the first have to be added manually
+		
 		// select the childViewCon at last index
-		selectedIndex = coder.decodeInteger(forKey: "selIndex")
+//		selectedIndex = coder.decodeInteger(forKey: "selIndex")
 	}
 	
 	override func encodeRestorableState(with coder: NSCoder) {
+		print("tabVu encode")
+		print("viewControllers: \(String(describing: viewControllers))")
+		
 		// just add current child vuCon count, selectedIndex
 		coder.encode(viewControllers?.count, forKey: "childCount")
 		coder.encode(selectedIndex as NSInteger, forKey: "selIndex")
 		
 		super.encodeRestorableState(with: coder)
-		
-		// TODO: add selected tab to restore
 	}
 	
 	
@@ -183,7 +198,7 @@ extension UIViewController {
 			}
 			retArr.append(contentsOf: vuCon.descendantViewControllers(of: T.self))
 		}
-		return retArr.flatMap{ item in item }
+		return retArr.compactMap{ $0 }
 	}
 }
 

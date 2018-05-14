@@ -17,7 +17,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 {
 	let sshMan = SSHManager()
 	
-	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering?
+	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering? // TODO: try to generate on the fly (might already be there) see: indexInTabBarCon()
 	var settingsPr = SettingsProxy() // this one is used if none can be gotten from userDefs
 	
 	let pushedColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
@@ -50,6 +50,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 
 	override func viewDidLoad() {
+		print("vol vu didLoad")
 		super.viewDidLoad()
 		
 		// load settings based on our position in tabBarCon's childVuCons array
@@ -87,7 +88,25 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		presetTableView.delegate = self
 	}
 	
+	override func decodeRestorableState(with coder: NSCoder) {
+		// NOTE: runs after viewDidLoad, before willAppear - all after tabVuCon's restoration
+		super.decodeRestorableState(with: coder)
+		
+		let xxx = coder.decodeObject(forKey: "deviceName") as? String
+		print("xxx: \(String(describing: xxx))")
+		
+	}
+	
+	override func encodeRestorableState(with coder: NSCoder) {
+		super.encodeRestorableState(with: coder)
+		
+		print("sshMan.settingsPr.deviceName: \(String(describing: sshMan.settingsPr.deviceName))")
+		coder.encode(sshMan.settingsPr.deviceName, forKey:"deviceName")
+	}
+	
+	
 	override func viewWillAppear(_ animated: Bool) {
+		print("vol vu willAppear")
 		super.viewWillAppear(animated)
 		
 		// add +/- nav item in UL ( to add or remove more tabs )
@@ -125,6 +144,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
+		print("vol vu didAppear")
 		super.viewDidAppear(animated)
 		
 		// update UI
@@ -168,6 +188,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			// Fallback on earlier versions
 			
 			// use topLayoutGuide on vuCon, with manual trigger
+			
+			// TODO: ???
 		}
 	}
 
@@ -271,7 +293,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@IBAction func sliderMoved(_ sender: UISlider) {
 		// action method for slider: called directly from UI
 		
-		// make String, omitting post-comma digits
+		// omit post-comma digits
 		let newVal = Int(floor(sender.value))
 		
 		updateVolume(to: newVal)
@@ -282,7 +304,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		volumeLabel.textColor = pushedColor
 		volumeLabel.text = newStr
 		
-		// set on settingsPr for sshMan to find & push
 		settingsPr.pushVolume = newStr
 		
 		sshMan.pushVolumeToRemote()
@@ -384,7 +405,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	
 	@IBAction func tableViewEndEditing(_ sender: Any) {
-		// called from Done btn in tableView when editing of when tapped on main contentView
+		// called from Done btn in tableView when editing or when tapped on main contentView
 		presetTableView .setEditing(false, animated: true)
 		updateDoneTableEditBtn()
 	}
@@ -485,7 +506,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 
 extension UIView {
 	// from: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
-	// returns either superview if of type T, or recursively superView's superViews
+	// returns either superview if of type T, or recursively superView's superViews of type T
 	
 	func ancestorView<T>(ofType type: T.Type) -> T? {
 		return superview as? T ?? superview.flatMap { $0.ancestorView(ofType: T.self) }

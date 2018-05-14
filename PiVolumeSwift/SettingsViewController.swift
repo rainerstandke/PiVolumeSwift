@@ -31,7 +31,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	}
 	
 	override func viewDidLoad() {
-		// called each time we appear - even if we've been on sreen before
+		// called each time we appear - even if we've been on screen before
 		// settingsProxy already set in segue
 		super.viewDidLoad()
 		

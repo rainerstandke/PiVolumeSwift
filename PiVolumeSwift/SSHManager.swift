@@ -27,7 +27,7 @@ class SSHManager: NSObject {
 	var settingsPr = SettingsProxy() {
 		didSet {
 			opsCountObservation =  opQueue.observe(\.operationCount, options: [.new]) { (opQ, change) in
-				// if all ops are done and the slider has been moved beyond the last actually pushed volume, then just push the last know volume
+				// if all ops are done and the slider has been moved beyond the last actually pushed volume, then just push the last known volume
 				if change.newValue == 0 {
 					if self.settingsPr.pushVolume != self.lastInComingVolume {
 						self.pushVolumeToRemote()
@@ -47,8 +47,8 @@ class SSHManager: NSObject {
 		// whenever the status changes send notif - SettingsVuCon could be listening
 		didSet {
 			NotificationCenter.default.post(name:NSNotification.Name(rawValue: K.Notif.SshConnectionStatusChanged),
-			                                object:self,
-			                                userInfo:[K.Key.ConnectionStatus : connectionStatus])
+											object:self,
+											userInfo:[K.Key.ConnectionStatus : connectionStatus])
 		}
 	}
 	
@@ -120,6 +120,7 @@ class TransmitVolumeOperation : Operation
 			                                      withUsername: sshMan.settingsPr.userName)
 		}
 		
+		// local func
 		func resetSession() {
 			sshMan.session = nil // need to nil out
 			sshMan.connectionStatus = .Failed;
@@ -171,8 +172,6 @@ class TransmitVolumeOperation : Operation
 			self.sshMan.resetConnectionTimeOut(K.Misc.TimerInterval)
 		}
 		
-		/* ???: how deal with this more succinctly - want to get a hold of error and guard let at the same time*/
-//		do... catch
 		guard let responseStr = try? localSession.channel.execute(commandStr) else { sshMan.connectionStatus = .Failed; return }
 		
 		guard let resVolStr = volumeFromRemote(outputStr: responseStr) else { sshMan.connectionStatus = .Failed; return }
