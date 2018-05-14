@@ -104,7 +104,7 @@ class SSHManager: NSObject {
 class TransmitVolumeOperation : Operation
 {
 	let mode: OperationMode
-	let sshMan: SSHManager
+	weak var sshMan: SSHManager?
 	
 	init(mode: OperationMode, sshMan:SSHManager) {
 		self.mode = mode
@@ -114,19 +114,19 @@ class TransmitVolumeOperation : Operation
 	let userDefs = UserDefaults.standard
 	
 	override func main() {
-
-		if	sshMan.session == nil {
-			sshMan.session = NMSSHSession.connect(toHost: sshMan.settingsPr.ipAddress,
-			                                      withUsername: sshMan.settingsPr.userName)
+		guard let localSshMan = sshMan else { print("no sshMan in transmit op"); return  }
+		if	localSshMan.session == nil {
+			localSshMan.session = NMSSHSession.connect(toHost: localSshMan.settingsPr.ipAddress,
+													   withUsername: localSshMan.settingsPr.userName)
 		}
 		
 		// local func
 		func resetSession() {
-			sshMan.session = nil // need to nil out
-			sshMan.connectionStatus = .Failed;
+			localSshMan.session = nil // need to nil out
+			localSshMan.connectionStatus = .Failed;
 		}
 		
-		guard let localSession: NMSSHSession = sshMan.session else {
+		guard let localSession: NMSSHSession = localSshMan.session else {
 			resetSession()
 			return
 		}
@@ -156,30 +156,30 @@ class TransmitVolumeOperation : Operation
 		var commandStr : String? = nil
 		switch mode {
 		case .Push:
-			if let volStr = sshMan.settingsPr.pushVolume {
+			if let volStr = localSshMan.settingsPr.pushVolume {
 				commandStr = "amixer -c 0 cset numid=6 \(volStr)"
 			}
 		case.Pull:
 			commandStr = "amixer -c 0 cget numid=6"
 		}
 		
-		if commandStr == nil { sshMan.connectionStatus = .Failed; return }
+		if commandStr == nil { localSshMan.connectionStatus = .Failed; return }
 		
 		// set connection timeout on sshMan
 		DispatchQueue.main.async {
-			self.sshMan.timer?.invalidate()
+			localSshMan.timer?.invalidate()
 			
-			self.sshMan.resetConnectionTimeOut(K.Misc.TimerInterval)
+			localSshMan.resetConnectionTimeOut(K.Misc.TimerInterval)
 		}
 		
-		guard let responseStr = try? localSession.channel.execute(commandStr) else { sshMan.connectionStatus = .Failed; return }
+		guard let responseStr = try? localSession.channel.execute(commandStr) else { localSshMan.connectionStatus = .Failed; return }
 		
-		guard let resVolStr = volumeFromRemote(outputStr: responseStr) else { sshMan.connectionStatus = .Failed; return }
+		guard let resVolStr = volumeFromRemote(outputStr: responseStr) else { localSshMan.connectionStatus = .Failed; return }
 		
 		// this will trigger observation in VolVuCon -> ui update
-		sshMan.settingsPr.confirmedVolume = resVolStr
+		localSshMan.settingsPr.confirmedVolume = resVolStr
 
-		sshMan.connectionStatus = .Succeded
+		localSshMan.connectionStatus = .Succeded
 	}
 	
 	

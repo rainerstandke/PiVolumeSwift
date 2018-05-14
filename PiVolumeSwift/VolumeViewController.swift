@@ -193,6 +193,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 
+	deinit {
+		print("vol vu con gone")
+	}
 	
 	// MARK: - scrollView snap
 	
