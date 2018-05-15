@@ -16,6 +16,7 @@ class SettingsProxy: NSObject, Codable
 	
 	var presetStrings = [String]() // just the preset values as single strings in the order they appear on screen
 
+	// dynamic so they can be observed with KVO
 	@objc dynamic var pushVolume: String?
 	@objc dynamic var confirmedVolume: String?
 	
@@ -24,15 +25,5 @@ class SettingsProxy: NSObject, Codable
 		encoder.outputFormatting = [.prettyPrinted] // another option: .sortedKeys
 		let jsonData = try? encoder.encode(self)
 		return String(data: jsonData!, encoding: .utf8)!
-	}
-	
-	static func settingsProxyAt(tabIndex: Int) -> SettingsProxy? {
-		// try to load settings from userDefs
-		if let data = UserDefaults.standard.value(forKey: String(tabIndex)) as? Data {
-			if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
-				return settings
-			}
-		}
-		return nil
 	}
 }

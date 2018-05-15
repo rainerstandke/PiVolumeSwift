@@ -43,7 +43,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		// show whatever sshMan has as current
 		updateStatusLabel(status: sshMan!.connectionStatus)
 		
-		// this could mot be done with KVO from Swift 4 b/c enum is not available in obj-c
+		// this could not be done with KVO from Swift 4 b/c enum is not available in obj-c
 		NotificationCenter.default.addObserver(forName: NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
 		                                       object: sshMan!,
 		                                       queue: OperationQueue.main, // effectively: main thread
@@ -53,7 +53,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		})
 		
 		// ... but also force update
-		sshMan!.getVolumeFromRemote()
+		sshMan?.getVolumeFromRemote()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -97,7 +97,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 				break
 			}
 		}
-		sshMan!.getVolumeFromRemote() // force status update
+		sshMan?.getVolumeFromRemote() // force status update
 		
 		return true
 	}

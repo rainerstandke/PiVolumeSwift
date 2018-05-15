@@ -51,30 +51,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 	}
 	
-	func updateUiFromSettings() {
-		self.title = sshMan.settingsPr.deviceName
-		tabBarItem.title = self.title
-		
-		if self.volumeLabel != nil { // need to test b/c called before viewDidLoad
-			if sshMan.settingsPr.confirmedVolume != nil {
-				volumeLabel.text = sshMan.settingsPr.confirmedVolume
-			} else if sshMan.settingsPr.pushVolume != nil {
-				volumeLabel.text = sshMan.settingsPr.pushVolume
-			} else {
-				volumeLabel.text = "??"
-			}
-			volumeLabel.textColor = pushedColor
-		}
-		
-		// observe volume confirmation -> update UI
-		confirmedVolumeObservation = sshMan.settingsPr.observe(\.confirmedVolume) { (setPr, change) in
-			DispatchQueue.main.async {
-				self.volumeLabel.text = setPr.confirmedVolume // possibly redundant
-				self.volumeLabel.textColor = self.confirmedColor
-			}
-		}
-	}
-	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
@@ -87,7 +63,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"),
 					                                                   style: .plain,
 					                                                   target: self,
-					                                                   action: #selector(deleteTab))
+					                                                   action: #selector(deleteTabItem))
 				} else {
 					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "+Pi"),
 					                                                   style: .plain,
@@ -98,20 +74,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 		
 		updateUiFromSettings()
-	}
-	
-	@objc func addTabItem() {
-		// runs when user adds a new vuCon by way of + leftBarButtonItem
-		if let tabBarCon = tabBarController as? ShyTabBarController {
-			tabBarCon.addNewVolumeVuCon()
-		}
-	}
-	
-	@objc func deleteTab() {
-		// runs when user deletes this vuCon by way of - leftBarButtonItem
-		if let tabBarCon = tabBarController as? ShyTabBarController {
-			tabBarCon.removeNavCon()
-		}
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -159,8 +121,20 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 
-	deinit {
-		print("vol vu con gone: \(String(describing: self))")
+	// MARK: - tabs
+	
+	@objc func addTabItem() {
+		// runs when user adds a new vuCon by way of + leftBarButtonItem
+		if let tabBarCon = tabBarController as? ShyTabBarController {
+			tabBarCon.addNewVolumeVuCon()
+		}
+	}
+	
+	@objc func deleteTabItem() {
+		// runs when user deletes this vuCon by way of - leftBarButtonItem
+		if let tabBarCon = tabBarController as? ShyTabBarController {
+			tabBarCon.removeNavCon()
+		}
 	}
 	
 	// MARK: - scrollView snap
@@ -201,15 +175,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		lightImpactFeedbackGenerator = nil
 	}
 	
-	// MARK: -
-	
-	func indexInTabBarCon() -> Int? {
-		return (tabBarController as? ShyTabBarController)?.indexOfDescendantVuCon(vuCon: self).index
-	}
+	// MARK: - settings
 	
 	func saveSettings(index: Int? = nil) {
 		// store our settings object in userDefs, using our index in tabBarCon as key
-		print("saving sshMan.settingsPr: \(String(describing: sshMan.settingsPr))")
 		guard let idx = index ?? indexInTabBarCon() else { print("can't save settings"); return }
 		let key = K.Misc.SettingsPrefix + String(idx)
 		UserDefaults.standard.set(try? PropertyListEncoder().encode(sshMan.settingsPr), forKey:key)
@@ -228,12 +197,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 	}
 	
-	func updateSlider() {
-		// if there is a value in the UI animate the slider
-		if let floatVal = Float(volumeLabel.text!){
-			UIView.animate(withDuration: 0.3,
-			               animations: {self.volumeSlider.setValue(floatVal, animated: true)})
-		}
+	func indexInTabBarCon() -> Int? {
+		return (tabBarController as? ShyTabBarController)?.indexOfDescendantVuCon(vuCon: self).index
 	}
 	
 	
@@ -262,8 +227,33 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		updateUiFromSettings()
 	}
 	
+	func updateUiFromSettings() {
+		// called from viewDidAppear and when settings changed
+		self.title = sshMan.settingsPr.deviceName
+		tabBarItem.title = self.title
+		
+		if self.volumeLabel != nil { // need to test b/c called before viewDidLoad
+			if sshMan.settingsPr.confirmedVolume != nil {
+				volumeLabel.text = sshMan.settingsPr.confirmedVolume
+			} else if sshMan.settingsPr.pushVolume != nil {
+				volumeLabel.text = sshMan.settingsPr.pushVolume
+			} else {
+				volumeLabel.text = "??"
+			}
+			volumeLabel.textColor = pushedColor
+		}
+		
+		// observe volume confirmation -> update UI
+		confirmedVolumeObservation = sshMan.settingsPr.observe(\.confirmedVolume) { (setPr, change) in
+			DispatchQueue.main.async {
+				self.volumeLabel.text = setPr.confirmedVolume // possibly redundant
+				self.volumeLabel.textColor = self.confirmedColor
+			}
+		}
+	}
 	
-	// MARK: -
+	
+	// MARK: - volume slider
 	
 	@IBAction func sliderMoved(_ sender: UISlider) {
 		// action method for slider: called directly from UI
@@ -275,6 +265,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	func updateVolume(to newVal: Int) {
+		// update ui & send to pi after slider moved, preset was hit or preset was adjusted
 		let newStr = String(newVal)
 		volumeLabel.textColor = pushedColor
 		volumeLabel.text = newStr
@@ -282,6 +273,15 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		sshMan.settingsPr.pushVolume = newStr
 		
 		sshMan.pushVolumeToRemote()
+	}
+	
+	func updateSlider() {
+		// called from viewDidAppear, when preset is tapped or adjusted
+		// if there is a numerical value in the UI animate the slider
+		if let floatVal = Float(volumeLabel.text!){
+			UIView.animate(withDuration: 0.3,
+						   animations: {self.volumeSlider.setValue(floatVal, animated: true)})
+		}
 	}
 	
 	
@@ -431,7 +431,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	
-	// MARK: - table view delegate / datasource
+	// MARK: - preset table view delegate / datasource
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: K.CellID.PresetTableViewCell)!

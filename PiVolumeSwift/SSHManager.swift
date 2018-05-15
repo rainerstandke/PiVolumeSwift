@@ -166,7 +166,6 @@ class TransmitVolumeOperation : Operation
 		// set connection timeout on sshMan
 		DispatchQueue.main.async {
 			localSshMan.timer?.invalidate()
-			
 			localSshMan.resetConnectionTimeOut(K.Misc.TimerInterval)
 		}
 		

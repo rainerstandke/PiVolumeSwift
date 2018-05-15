@@ -125,6 +125,7 @@ class KeyChainManager {
 	}
 	
 	func deleteItem(keyClass: PVKeyClass) throws {
+		// UNUSED
 		// Delete the existing item from the keychain.
 		let query = keyQueryDict(keyClass: keyClass)
 		let status = SecItemDelete(query as CFDictionary)

@@ -24,7 +24,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		}
 		
 		childViewControllers.enumerated().forEach({ (tuple: (idx: Int, vuCon: UIViewController)) in
-			
 			if let volVuCon = tuple.vuCon.descendantViewController(ofType: VolumeViewController.self) {
 				volVuCon.readSettings(index: tuple.idx)
 			}
@@ -34,8 +33,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	override func viewDidAppear(_ animated: Bool) {
 		// position according to number of childVuCons
 		// oddly, in viewWILLAppear this seems to have no effect
-		tabBar.frame.origin.y = tabBarOriginY()
-		updateIncludesOpaque()
+		updateTabBarPosition()
 		super.viewDidAppear(animated)
 	}
 	
@@ -44,62 +42,27 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		
 		let storyBoard = UIStoryboard(name: "Main", bundle: nil)
 		let newNavCon = storyBoard.instantiateViewController(withIdentifier: "NavCon")
-		let newChildCount = viewControllers!.count + 1
-		
-		showHideTabBar(addOrRemoveTab: { self.viewControllers!.append(newNavCon) }, resultingTabCount: newChildCount)
-		
+		self.viewControllers!.append(newNavCon)
 		selectedViewController = newNavCon
-	}
-	
-	@objc func removeNavCon() {
-		let newChildCount = viewControllers!.count - 1
-		showHideTabBar( addOrRemoveTab: { self.viewControllers!.remove(at: self.selectedIndex) }, resultingTabCount: newChildCount)
-		
-		selectedIndex = viewControllers!.count - 1
-	}
-	
-	func showHideTabBar(addOrRemoveTab: @escaping () -> (), resultingTabCount: Int) {
-		// parm addOrRemoveTab is a block that will add or remove a tab
-		// parm resultingTabCount is the count after that change - need to be told explicitly because we don't know if we're adding or removing
-		
-		// TODO: consider removing resultingTabCount
-		// TODO: factor out shyness / tab bar hiding
-		
-		let newY_Origin = tabBarOriginY(with: resultingTabCount)
-		self.tabBar.frame.origin.y = newY_Origin
-		addOrRemoveTab()
-		updateIncludesOpaque()
 		
 		UserDefaults.standard.set(childViewControllers.count, forKey:K.UserDef.TabCount)
 		UserDefaults.standard.synchronize()
 	}
 	
+	@objc func removeNavCon() {
+		self.viewControllers!.remove(at: self.selectedIndex)
+		selectedIndex = childViewControllers.count - 1
+		updateTabBarPosition()
 	
-	func tabBarOriginY(with childCount: Int) -> CGFloat {
-		// the origin of the tabBar (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or its frame's bottom is alligned with the bottom of the parent view
-		var newY_Origin = self.view.frame.size.height // just outside/under parent view
-		if childCount > 1 {
-			newY_Origin -= tabBar.frame.size.height // regular setup, in view
-		}
-		return newY_Origin
+		UserDefaults.standard.set(childViewControllers.count, forKey:K.UserDef.TabCount)
+		UserDefaults.standard.synchronize()
 	}
 	
-	
-	func tabBarOriginY() -> CGFloat {
-		// for current number of childVuCons
-		return tabBarOriginY(with: childViewControllers.count)
-	}
-
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
+	func updateTabBarPosition() {
+		let newY_Origin = tabBarOriginY()
+		self.tabBar.frame.origin.y = newY_Origin
 		
-		// force right tabBar position for current childView count, needed after rotation
-		// note: block doesn't do anything
-		showHideTabBar(addOrRemoveTab: {}, resultingTabCount: viewControllers!.count)
-	}
-	
-	func updateIncludesOpaque() {
-		// called by self from viewDidAppear, and when the tabBar is shown or hidden (when tabs are added/deleted)
+		// update the children's opaque... to control how far down they extend
 		if viewControllers!.count > 1 {
 			for viewCon in viewControllers! {
 				viewCon.extendedLayoutIncludesOpaqueBars = true
@@ -108,7 +71,32 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 			selectedViewController?.extendedLayoutIncludesOpaqueBars = false
 		}
 	}
+	
+	func tabBarOriginY(with childCount: Int? = nil) -> CGFloat {
+		// the origin of the tabBar (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or its frame's bottom is alligned with the bottom of the parent view
+		
+		let count = childCount != nil ? childCount! : childViewControllers.count
 
+		// huh?
+//		guard let count = childCount ?? childViewControllers.count else {
+//			print("could not get count")
+//			return self.view.frame.size.height
+//		}
+
+		var newY_Origin = self.view.frame.size.height // just outside/under parent view
+		if count > 1 {
+			newY_Origin -= tabBar.frame.size.height // regular setup, in view
+		}
+		return newY_Origin
+	}
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		// force right tabBar position for current childView count, needed after rotation
+		// note: block doesn't do anything
+		updateTabBarPosition()
+	}
 	
 	func indexOfDescendantVuCon(vuCon: UIViewController) -> (index: Int?, isLast: Bool?) {
 		var resolvedVuCon: UIViewController
@@ -133,10 +121,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		// called from appDel before termination / going to background
 		
 		let volVuCons = self.descendantViewControllers(of: VolumeViewController.self)
-		
-		for volVuCon in volVuCons {
-			volVuCon.saveSettings()
-		}
+		volVuCons.forEach { $0.saveSettings() }
 	}
 }
 	
