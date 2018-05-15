@@ -14,7 +14,7 @@
         <!--VolumeViewCon-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController storyboardIdentifier="VolumeViewCon" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9pv-A4-QxB" userLabel="VolumeViewCon" customClass="VolumeViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VolumeViewCon" extendedLayoutIncludesOpaqueBars="YES" id="9pv-A4-QxB" userLabel="VolumeViewCon" customClass="VolumeViewController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -320,7 +320,7 @@
         <!--TabBarCon-->
         <scene sceneID="Qy4-fJ-pVz">
             <objects>
-                <tabBarController storyboardIdentifier="ShyTabBarCon" title="TabBarCon" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wVo-TL-8Cu" customClass="ShyTabBarController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="ShyTabBarCon" title="TabBarCon" extendedLayoutIncludesOpaqueBars="YES" id="wVo-TL-8Cu" customClass="ShyTabBarController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="6HY-yj-X6B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
@@ -339,7 +339,7 @@
         <!--NavCon-->
         <scene sceneID="ngK-jY-VM7">
             <objects>
-                <navigationController storyboardIdentifier="NavCon" title="NavCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2jF-o8-R9z" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavCon" title="NavCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="2jF-o8-R9z" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="RPi_Solid" id="RMK-ht-jCJ"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KWh-u8-Eu3">

@@ -17,7 +17,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	@IBOutlet weak var statusLabel: UILabel!
 	
 	// set by VolVuCon during segue
-	var settingsPr: SettingsProxy?
 	var sshMan: SSHManager?
 	
 	var connectStatusObservation: NSKeyValueObservation?
@@ -35,9 +34,11 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		// settingsProxy already set in segue
 		super.viewDidLoad()
 		
-		deviceNameTextField.text = settingsPr!.deviceName
-		ipTextField.text = settingsPr!.ipAddress
-		userNameTextField.text = settingsPr!.userName
+		if let settingsPr = sshMan?.settingsPr {
+			deviceNameTextField.text = settingsPr.deviceName
+			ipTextField.text = settingsPr.ipAddress
+			userNameTextField.text = settingsPr.userName
+		}
 		
 		// show whatever sshMan has as current
 		updateStatusLabel(status: sshMan!.connectionStatus)
@@ -84,17 +85,18 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		
 		textField.resignFirstResponder()
 		
-		switch textField {
-		case deviceNameTextField:
-			settingsPr!.deviceName = textField.text!
-		case ipTextField:
-			settingsPr!.ipAddress = textField.text!
-		case userNameTextField:
-			settingsPr!.userName = textField.text!
-		default:
-			break
+		if let settingsPr = sshMan?.settingsPr {
+			switch textField {
+			case deviceNameTextField:
+				settingsPr.deviceName = textField.text!
+			case ipTextField:
+				settingsPr.ipAddress = textField.text!
+			case userNameTextField:
+				settingsPr.userName = textField.text!
+			default:
+				break
+			}
 		}
-
 		sshMan!.getVolumeFromRemote() // force status update
 		
 		return true

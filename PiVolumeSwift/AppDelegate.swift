@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	func applicationWillResignActive(_ application: UIApplication) {
-		
+		let xxx = UserDefaults.standard.synchronize()
+		print("xxx: \(String(describing: xxx))")
 		triggerAllSettingsSave()
 	}
 	
@@ -36,17 +37,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	func triggerAllSettingsSave() {
+		UserDefaults.standard.synchronize()
 		if let tabBarCon = (self.window?.rootViewController) as? ShyTabBarController {
 			tabBarCon.makeVolumeVuConsSave()
 		}
 	}
 	
-	func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
-		return true
-	}
-	
-	func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
-		return true
-	}
+//	func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+//		return true
+//	}
+//
+//	func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+//		return true
+//	}
 }
 

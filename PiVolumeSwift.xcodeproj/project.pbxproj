@@ -15,10 +15,9 @@
 		D50B53301E4D00A3003FE794 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D50B532E1E4D00A3003FE794 /* LaunchScreen.storyboard */; };
 		D527E9E31E57EFFD00BBA788 /* OutlinedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */; };
 		D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */; };
-		D527E9E71E57F71C00BBA788 /* XM_NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */; };
+		D52A7F4920AB3BEE00E2D6A3 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A7F4820AB3BEE00E2D6A3 /* UIViewController+Extensions.swift */; };
 		D560106D1FA0166F00A786B5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D560106C1FA0166F00A786B5 /* Security.framework */; };
 		D56010701FA1178300A786B5 /* KeyChainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D560106F1FA1178300A786B5 /* KeyChainManager.swift */; };
-		D578E7211E5E3AC500B8F902 /* NavCon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D578E7201E5E3AC500B8F902 /* NavCon.swift */; };
 		D5916C531E4D10C70050458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C521E4D10C70050458B /* Constants.swift */; };
 		D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5916C541E4D62BE0050458B /* SSHManager.swift */; };
 		D5AC2D141E52467900E6E5C2 /* VolumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AC2D131E52467900E6E5C2 /* VolumeViewController.swift */; };
@@ -41,11 +40,10 @@
 		D50B532F1E4D00A3003FE794 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlinedButton.swift; sourceTree = "<group>"; };
 		D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShyTabBarController.swift; sourceTree = "<group>"; };
-		D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XM_NavigationController.swift; sourceTree = "<group>"; };
+		D52A7F4820AB3BEE00E2D6A3 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		D52BB68F1F98FF7600BC9585 /* Preso Notes */ = {isa = PBXFileReference; explicitFileType = text.rtf; path = "Preso Notes"; sourceTree = "<group>"; };
 		D560106C1FA0166F00A786B5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D560106F1FA1178300A786B5 /* KeyChainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainManager.swift; sourceTree = "<group>"; };
-		D578E7201E5E3AC500B8F902 /* NavCon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavCon.swift; sourceTree = "<group>"; };
 		D5916C521E4D10C70050458B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D5916C541E4D62BE0050458B /* SSHManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHManager.swift; sourceTree = "<group>"; };
 		D5916C5A1E4E738B0050458B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -115,15 +113,14 @@
 			children = (
 				D50B53231E4D00A3003FE794 /* AppDelegate.swift */,
 				D527E9E41E57F0C000BBA788 /* ShyTabBarController.swift */,
-				D578E7201E5E3AC500B8F902 /* NavCon.swift */,
 				D5AC2D131E52467900E6E5C2 /* VolumeViewController.swift */,
 				D5CBC60C1E5D023900C5E872 /* SettingsProxy.swift */,
 				D50B53271E4D00A3003FE794 /* SettingsViewController.swift */,
 				D5916C541E4D62BE0050458B /* SSHManager.swift */,
 				D50B53291E4D00A3003FE794 /* Main.storyboard */,
-				D527E9E61E57F71C00BBA788 /* XM_NavigationController.swift */,
 				D527E9E21E57EFFD00BBA788 /* OutlinedButton.swift */,
 				D560106F1FA1178300A786B5 /* KeyChainManager.swift */,
+				D52A7F4820AB3BEE00E2D6A3 /* UIViewController+Extensions.swift */,
 				D5916C521E4D10C70050458B /* Constants.swift */,
 				D50B532C1E4D00A3003FE794 /* Assets.xcassets */,
 				D5916C5A1E4E738B0050458B /* Info.plist */,
@@ -264,14 +261,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D527E9E71E57F71C00BBA788 /* XM_NavigationController.swift in Sources */,
 				D50B53281E4D00A3003FE794 /* SettingsViewController.swift in Sources */,
 				D5916C551E4D62BE0050458B /* SSHManager.swift in Sources */,
+				D52A7F4920AB3BEE00E2D6A3 /* UIViewController+Extensions.swift in Sources */,
 				D527E9E51E57F0C000BBA788 /* ShyTabBarController.swift in Sources */,
 				D56010701FA1178300A786B5 /* KeyChainManager.swift in Sources */,
 				D5CBC60D1E5D023900C5E872 /* SettingsProxy.swift in Sources */,
 				D5AC2D141E52467900E6E5C2 /* VolumeViewController.swift in Sources */,
-				D578E7211E5E3AC500B8F902 /* NavCon.swift in Sources */,
 				D50B53241E4D00A3003FE794 /* AppDelegate.swift in Sources */,
 				D5916C531E4D10C70050458B /* Constants.swift in Sources */,
 				D527E9E31E57EFFD00BBA788 /* OutlinedButton.swift in Sources */,

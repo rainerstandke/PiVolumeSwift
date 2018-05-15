@@ -19,7 +19,8 @@ struct K {
 		static let Password = "kUsDef_Password"
 		
 		static let LastUIVolumeStr = "kUsDef_LastUIVolumeStr"
-//		static let PresetStrArray = "kPresetStrArray"
+
+		static let TabCount = "kUsDef_TabCount"
 		
 //		static let PresetDicts = "kPresetDicts"
 	}
@@ -51,13 +52,8 @@ struct K {
 		
 		let defaults = UserDefaults.standard
 		let defaultValues = [
-//			UserDef.IpAddress : "??",
-//			UserDef.UserName : "??",
-//			UserDef.Password : "??",
-//			UserDef.LastUIVolumeStr : "??",
-//			UserDef.PresetStrArray : [String](),
-//			UserDef.PresetDicts: [Dictionary<Int, Any>]()
-			:] as [String : Any]
+			K.UserDef.TabCount: 1
+		]
 		defaults.register(defaults: defaultValues)
 		defaults.synchronize()
 	}

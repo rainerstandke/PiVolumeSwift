@@ -11,33 +11,27 @@ import UIKit
 class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 {
 	override func viewDidLoad() {
-		print("tab vu didLoad")
 		super.viewDidLoad()
 		
 		self.delegate = self
-	}
-	
-	deinit
-	{
-		NotificationCenter.default.removeObserver(self)
-	}
-	
-	
-	override func viewWillAppear(_ animated: Bool) {
-		// get titles for all tabs, not just the one that'll appear on screen
-		print("tab vu willAppear")
 		
-		
-		
-		// TODO: check _here_ that all child Vol Cons have found their settings, make them load otherwise
-		
-		
-		
-		updateTabNames()
+		let previousTabCount = UserDefaults.standard.integer(forKey: K.UserDef.TabCount)
 
-		super.viewWillAppear(animated)
+		if previousTabCount > 1 {
+			for _: Int in 1..<previousTabCount {
+				addNewVolumeVuCon()
+			}
+		}
+		
+		childViewControllers.enumerated().forEach({ (tuple: (idx: Int, vuCon: UIViewController)) in
+			
+			if let volVuCon = tuple.vuCon.descendantViewController(ofType: VolumeViewController.self) {
+//				print("volVuCon: \(String(describing: volVuCon))")
+				print("tuple.idx: \(String(describing: tuple.idx))")
+				volVuCon.readSettings(index: tuple.idx)
+			}
+		})
 	}
-	
 	
 	override func viewDidAppear(_ animated: Bool) {
 		print("tab vu didAppear")
@@ -47,38 +41,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		updateIncludesOpaque()
 		super.viewDidAppear(animated)
 	}
-	
-	
-	override func decodeRestorableState(with coder: NSCoder) {
-		print("tab vu decodeRestorableState")
-		// runs after viewDidLoad
-		super.decodeRestorableState(with: coder)
-		
-		if let previousChildCount = coder.decodeObject(forKey: "childCount") as? Int {
-			print("previousChildCount: \(String(describing: previousChildCount))")
-			// add child vuCons, but not the first one
-			for _: Int in 1..<previousChildCount {
-				addNewVolumeVuCon()
-			}
-		}
-		
-		// NOTE: restoring for selectedIndex works automagically, but all childVuCons after the first have to be added manually
-		
-		// select the childViewCon at last index
-//		selectedIndex = coder.decodeInteger(forKey: "selIndex")
-	}
-	
-	override func encodeRestorableState(with coder: NSCoder) {
-		print("tabVu encode")
-		print("viewControllers: \(String(describing: viewControllers))")
-		
-		// just add current child vuCon count, selectedIndex
-		coder.encode(viewControllers?.count, forKey: "childCount")
-		coder.encode(selectedIndex as NSInteger, forKey: "selIndex")
-		
-		super.encodeRestorableState(with: coder)
-	}
-	
 	
 	@objc func addNewVolumeVuCon() {
 		// really: adding volumeController wrapped in NavCon
@@ -94,17 +56,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	
 	@objc func removeNavCon() {
 		let newChildCount = viewControllers!.count - 1
-		
-		let remove = {
-			let goner = self.viewControllers![self.selectedIndex]
-			goner.willMove(toParentViewController: nil)
-			goner.view.removeFromSuperview()
-			goner.removeFromParentViewController()
-//			self.viewControllers!.remove(at: self.selectedIndex)
-			
-		}
-		showHideTabBar( addOrRemoveTab: { remove() }, resultingTabCount: newChildCount)
-		
+		showHideTabBar( addOrRemoveTab: { self.viewControllers!.remove(at: self.selectedIndex) }, resultingTabCount: newChildCount)
 		
 		selectedIndex = viewControllers!.count - 1
 	}
@@ -113,10 +65,18 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		// parm addOrRemoveTab is a block that will add or remove a tab
 		// parm resultingTabCount is the count after that change - need to be told explicitly because we don't know if we're adding or removing
 		
+		// TODO: consider removing resultingTabCount
+		// TODO: factor out shyness / tab bar hiding
+		
 		let newY_Origin = tabBarOriginY(with: resultingTabCount)
 		self.tabBar.frame.origin.y = newY_Origin
 		addOrRemoveTab()
 		updateIncludesOpaque()
+		
+		print("childViewControllers.count: \(String(describing: childViewControllers.count))")
+		
+		UserDefaults.standard.set(childViewControllers.count, forKey:K.UserDef.TabCount)
+		UserDefaults.standard.synchronize()
 	}
 	
 	
@@ -183,34 +143,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 			volVuCon.saveSettings()
 		}
 	}
-	
-	func updateTabNames() {
-		// grab names from each VolumeVuCon, at launch, after an update
-		if let tabBarItems = self.tabBar.items {
-			for tabBarItem in (tabBarItems.enumerated()) {
-				if let settingsPr = SettingsProxy.settingsProxyAt(tabIndex: tabBarItem.offset) {
-					let title = settingsPr.deviceName
-					tabBarItem.element.title = title
-				}
-			}
-		}
-	}
 }
 	
-	
-extension UIViewController {
-	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
-	
-	func descendantViewControllers<T>(of type: T.Type) -> [T] {
-		var retArr = [T]()
-		for vuCon in childViewControllers {
-			if vuCon is T {
-				retArr.append(vuCon as! T)
-			}
-			retArr.append(contentsOf: vuCon.descendantViewControllers(of: T.self))
-		}
-		return retArr.compactMap{ $0 }
-	}
-}
-
 

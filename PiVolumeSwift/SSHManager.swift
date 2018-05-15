@@ -15,13 +15,11 @@ import NMSSH
 class SSHManager: NSObject {
 	
 	@objc override init() {
-		
 		opQueue = OperationQueue()
-		
-		super.init()
-		
 		opQueue.qualityOfService = .userInteractive
 		opQueue.maxConcurrentOperationCount = 1
+		
+		super.init()
 	}
 	
 	var settingsPr = SettingsProxy() {

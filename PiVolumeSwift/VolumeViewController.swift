@@ -10,15 +10,9 @@ import UIKit
 import CoreGraphics
 
 
-// TODO: needs tabbaritem
-
-
 class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate
 {
 	let sshMan = SSHManager()
-	
-	var tabIndex: Int = NSNotFound // may be OBSOLETE - only needed for re-ordering? // TODO: try to generate on the fly (might already be there) see: indexInTabBarCon()
-	var settingsPr = SettingsProxy() // this one is used if none can be gotten from userDefs
 	
 	let pushedColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 	let confirmedColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -50,63 +44,38 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 
 	override func viewDidLoad() {
-		print("vol vu didLoad")
 		super.viewDidLoad()
 		
-		// load settings based on our position in tabBarCon's childVuCons array
-		if let index = indexInTabBarCon() {
-			// record index so that we can write our settings into userDefs when we disappear
-			tabIndex = index
-			
-			// try to load settings from userDefs (fall back on virgin created in 'init'
-			if let settings = SettingsProxy.settingsProxyAt(tabIndex: index) {
-				self.title = settings.deviceName // redundant... 
-				sshMan.settingsPr = settings
-				settingsPr = settings
-			}
-		}
-		
-		if settingsPr.confirmedVolume != nil {
-			volumeLabel.text = settingsPr.confirmedVolume
-		} else if settingsPr.pushVolume != nil {
-			volumeLabel.text = settingsPr.pushVolume
-		} else {
-			volumeLabel.text = "??"
-		}
-		volumeLabel.textColor = pushedColor
-		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
+		presetTableView.delegate = self
+		
+	}
+	
+	func updateUiFromSettings() {
+		self.title = sshMan.settingsPr.deviceName
+		tabBarItem.title = self.title
+		
+		if self.volumeLabel != nil { // need to test b/c called before viewDidLoad
+			if sshMan.settingsPr.confirmedVolume != nil {
+				volumeLabel.text = sshMan.settingsPr.confirmedVolume
+			} else if sshMan.settingsPr.pushVolume != nil {
+				volumeLabel.text = sshMan.settingsPr.pushVolume
+			} else {
+				volumeLabel.text = "??"
+			}
+			volumeLabel.textColor = pushedColor
+		}
 		
 		// observe volume confirmation -> update UI
-		confirmedVolumeObservation = settingsPr.observe(\.confirmedVolume) { (setPr, change) in
+		confirmedVolumeObservation = sshMan.settingsPr.observe(\.confirmedVolume) { (setPr, change) in
 			DispatchQueue.main.async {
 				self.volumeLabel.text = setPr.confirmedVolume // possibly redundant
 				self.volumeLabel.textColor = self.confirmedColor
 			}
 		}
-		
-		presetTableView.delegate = self
 	}
-	
-	override func decodeRestorableState(with coder: NSCoder) {
-		// NOTE: runs after viewDidLoad, before willAppear - all after tabVuCon's restoration
-		super.decodeRestorableState(with: coder)
-		
-		let xxx = coder.decodeObject(forKey: "deviceName") as? String
-		print("xxx: \(String(describing: xxx))")
-		
-	}
-	
-	override func encodeRestorableState(with coder: NSCoder) {
-		super.encodeRestorableState(with: coder)
-		
-		print("sshMan.settingsPr.deviceName: \(String(describing: sshMan.settingsPr.deviceName))")
-		coder.encode(sshMan.settingsPr.deviceName, forKey:"deviceName")
-	}
-	
 	
 	override func viewWillAppear(_ animated: Bool) {
-		print("vol vu willAppear")
 		super.viewWillAppear(animated)
 		
 		// add +/- nav item in UL ( to add or remove more tabs )
@@ -127,6 +96,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 				}
 			}
 		}
+		
+		updateUiFromSettings()
 	}
 	
 	@objc func addTabItem() {
@@ -144,7 +115,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
-		print("vol vu didAppear")
 		super.viewDidAppear(animated)
 		
 		// update UI
@@ -156,10 +126,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		self.presetTableView.flashScrollIndicators()
 	}
 	
-	override func viewWillDisappear(_ animated: Bool) {
-		saveSettings()
-		super.viewWillDisappear(animated)
-	}
 	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
@@ -194,7 +160,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 
 	deinit {
-		print("vol vu con gone")
+		print("vol vu con gone: \(String(describing: self))")
 	}
 	
 	// MARK: - scrollView snap
@@ -238,18 +204,28 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	// MARK: -
 	
 	func indexInTabBarCon() -> Int? {
-		// in short: our position in tabBarCon's childVuCons array
-		// this assumes we are in a NavigationCon which is inside a TabBarCon
-		return tabBarController?.viewControllers?.index(of: navigationController!)
+		return (tabBarController as? ShyTabBarController)?.indexOfDescendantVuCon(vuCon: self).index
 	}
 	
-	func saveSettings() {
+	func saveSettings(index: Int? = nil) {
 		// store our settings object in userDefs, using our index in tabBarCon as key
-		if let index = indexInTabBarCon() {
-			// store our index as we leave screen - just in case we get re-ordered -- OBSOLETE?
-			tabIndex = index
-			
-			UserDefaults.standard.set(try? PropertyListEncoder().encode(settingsPr), forKey:String(index))
+		print("saving sshMan.settingsPr: \(String(describing: sshMan.settingsPr))")
+		guard let idx = index ?? indexInTabBarCon() else { print("can't save"); return }
+		let key = "settings-" + String(idx)
+		UserDefaults.standard.set(try? PropertyListEncoder().encode(sshMan.settingsPr), forKey:key)
+	}
+	
+	func readSettings(index: Int? = nil) {
+		guard let idx = index ?? indexInTabBarCon() else { print("can't save"); return }
+		
+		let key = "settings-" + String(idx)
+		// TODO: -> K
+		
+		if let data = UserDefaults.standard.value(forKey: key) as? Data {
+			if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
+				sshMan.settingsPr = settings
+//				updateUiFromSettings()
+			}
 		}
 	}
 	
@@ -273,7 +249,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		// called when we transition to SettingsViewCon
 		// pass settingPr to SettingsCon
 		if let settingsCon = segue.destination as? SettingsViewController {
-			settingsCon.settingsPr = settingsPr
 			settingsCon.sshMan = sshMan
 		}
 	}
@@ -283,11 +258,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		// set in IB menu on segue
 		// our settingsPr was passsed by ref to SettingsCon
 		// deviceName might be changed -> just in case update
-		self.title = settingsPr.deviceName
 		
 		saveSettings()
-		
-		(tabBarController as! ShyTabBarController).updateTabNames()
+		updateUiFromSettings()
 	}
 	
 	
@@ -307,7 +280,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		volumeLabel.textColor = pushedColor
 		volumeLabel.text = newStr
 		
-		settingsPr.pushVolume = newStr
+		sshMan.settingsPr.pushVolume = newStr
 		
 		sshMan.pushVolumeToRemote()
 	}
@@ -317,7 +290,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	@IBAction func addPreset(_ plusBtn: Any) {
 		// called when + btn is pressed
-		settingsPr.presetStrings.append("Preset")
+		sshMan.settingsPr.presetStrings.append("Preset")
 		presetTableView.reloadData()
 		presetTableView.flashScrollIndicators()
 		saveSettings()
@@ -343,7 +316,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let presetBtn = pressedView as! UIButton
 			presetBtn.setTitle(volumeLabel.text, for: .normal)
 
-			settingsPr.presetStrings[idxPath.row] = volumeLabel.text!
+			sshMan.settingsPr.presetStrings[idxPath.row] = volumeLabel.text!
 			
 			saveSettings()
 		} else {
@@ -445,7 +418,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			let tvLocation = tv.convert(stepper.center, from: stepper.superview)
 			guard let idxPath = tv.indexPathForRow(at: tvLocation) else {
 				return }
-			settingsPr.presetStrings[idxPath.row] = String(newPresetVal)
+			sshMan.settingsPr.presetStrings[idxPath.row] = String(newPresetVal)
 		}
 		
 	}
@@ -465,8 +438,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		let cell = tableView.dequeueReusableCell(withIdentifier: K.CellID.PresetTableViewCell)!
 		
 		if let presetBtn = cell.viewWithTag(K.UIElementTag.PresetButton) as? UIButton {
-			if settingsPr.presetStrings.count >= indexPath.row + 1 {
-				presetBtn.setTitle(settingsPr.presetStrings[indexPath.row] as String, for: .normal)
+			if sshMan.settingsPr.presetStrings.count >= indexPath.row + 1 {
+				presetBtn.setTitle(sshMan.settingsPr.presetStrings[indexPath.row] as String, for: .normal)
 			} else {
 				presetBtn.setTitle("Preset", for: .normal)
 			}
@@ -477,7 +450,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		updateViewConstraints()
-		return settingsPr.presetStrings.count
+		return sshMan.settingsPr.presetStrings.count
 	}
 	
 	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -493,14 +466,14 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-		let removedStr = settingsPr.presetStrings.remove(at: sourceIndexPath.row)
-		settingsPr.presetStrings.insert(removedStr, at: destinationIndexPath.row)
+		let removedStr = sshMan.settingsPr.presetStrings.remove(at: sourceIndexPath.row)
+		sshMan.settingsPr.presetStrings.insert(removedStr, at: destinationIndexPath.row)
 		// seems like this method being here enables swipe-left to delete
 	}
 	
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-			settingsPr.presetStrings.remove(at: indexPath.row)
+			sshMan.settingsPr.presetStrings.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		}
 	}
@@ -515,17 +488,6 @@ extension UIView {
 		return superview as? T ?? superview.flatMap { $0.ancestorView(ofType: T.self) }
 	}
 }
-
-
-// OBSOLETE
-extension UIViewController {
-	// based on: http://stackoverflow.com/questions/37705819/swift-find-superview-of-given-class-with-generics
-	
-	func ancestorViewController<T>(of type: T.Type) -> T? {
-		return parent as? T ?? parent.flatMap { $0.ancestorViewController(of: T.self) }
-	}
-}
-
 
 
 
