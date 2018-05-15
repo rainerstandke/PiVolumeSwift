@@ -45,7 +45,6 @@ class KeyChainManager {
 		
 		let urlResultTuple = documentURLs()
 		if urlResultTuple.success == false {
-			print("no key files found")
 			return
 		}
 		
@@ -188,7 +187,7 @@ class KeyChainManager {
 			kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
 			kSecAttrLabel as String: label as AnyObject
 		]
-		// Could add label designating different Pis... but won't
+		// Could add label designating different Pis... but won't -> relying on one key only for all possible Pis
 		
 		return queryDict
 	}

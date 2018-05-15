@@ -83,7 +83,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			
 			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
 			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
-				if isLast && index > 0 {
+				if (isLast && index > 0)  || (tabBarCon.viewControllers?.count)! >= 5 {
 					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"),
 					                                                   style: .plain,
 					                                                   target: self,
@@ -210,21 +210,20 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	func saveSettings(index: Int? = nil) {
 		// store our settings object in userDefs, using our index in tabBarCon as key
 		print("saving sshMan.settingsPr: \(String(describing: sshMan.settingsPr))")
-		guard let idx = index ?? indexInTabBarCon() else { print("can't save"); return }
-		let key = "settings-" + String(idx)
+		guard let idx = index ?? indexInTabBarCon() else { print("can't save settings"); return }
+		let key = K.Misc.SettingsPrefix + String(idx)
 		UserDefaults.standard.set(try? PropertyListEncoder().encode(sshMan.settingsPr), forKey:key)
 	}
 	
 	func readSettings(index: Int? = nil) {
-		guard let idx = index ?? indexInTabBarCon() else { print("can't save"); return }
+		guard let idx = index ?? indexInTabBarCon() else { print("can't read settings"); return }
 		
-		let key = "settings-" + String(idx)
-		// TODO: -> K
-		
+		let key = K.Misc.SettingsPrefix + String(idx)
 		if let data = UserDefaults.standard.value(forKey: key) as? Data {
 			if let settings = try? PropertyListDecoder().decode(SettingsProxy.self, from: data) {
 				sshMan.settingsPr = settings
-//				updateUiFromSettings()
+				// setting our own tabBarItem does not get updated on screen if we are not the front tab
+				navigationController?.tabBarItem.title = settings.deviceName
 			}
 		}
 	}

@@ -21,8 +21,6 @@ struct K {
 		static let LastUIVolumeStr = "kUsDef_LastUIVolumeStr"
 
 		static let TabCount = "kUsDef_TabCount"
-		
-//		static let PresetDicts = "kPresetDicts"
 	}
 	
 	struct Notif {
@@ -43,7 +41,8 @@ struct K {
 	}
 	
 	struct Misc {
-	static let TimerInterval: Double = 3 // TODO: make 30 again
+		static let TimerInterval: Double = 3 // TODO: make 30 again
+		static let SettingsPrefix = "settings-"
 	}
 	
 	

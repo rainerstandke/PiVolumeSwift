@@ -26,15 +26,12 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		childViewControllers.enumerated().forEach({ (tuple: (idx: Int, vuCon: UIViewController)) in
 			
 			if let volVuCon = tuple.vuCon.descendantViewController(ofType: VolumeViewController.self) {
-//				print("volVuCon: \(String(describing: volVuCon))")
-				print("tuple.idx: \(String(describing: tuple.idx))")
 				volVuCon.readSettings(index: tuple.idx)
 			}
 		})
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
-		print("tab vu didAppear")
 		// position according to number of childVuCons
 		// oddly, in viewWILLAppear this seems to have no effect
 		tabBar.frame.origin.y = tabBarOriginY()
@@ -72,8 +69,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		self.tabBar.frame.origin.y = newY_Origin
 		addOrRemoveTab()
 		updateIncludesOpaque()
-		
-		print("childViewControllers.count: \(String(describing: childViewControllers.count))")
 		
 		UserDefaults.standard.set(childViewControllers.count, forKey:K.UserDef.TabCount)
 		UserDefaults.standard.synchronize()
