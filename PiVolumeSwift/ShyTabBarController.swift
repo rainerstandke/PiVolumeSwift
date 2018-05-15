@@ -10,18 +10,22 @@ import UIKit
 
 class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 {
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		self.delegate = self
-		
+	
+	func restoreChildViewControllers() {
+		// called _before_ viewDidLoad from AppDel
 		let previousTabCount = UserDefaults.standard.integer(forKey: K.UserDef.TabCount)
-
+		
 		if previousTabCount > 1 {
 			for _: Int in 1..<previousTabCount {
 				addNewVolumeVuCon()
 			}
 		}
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		self.delegate = self
 		
 		childViewControllers.enumerated().forEach({ (tuple: (idx: Int, vuCon: UIViewController)) in
 			if let volVuCon = tuple.vuCon.descendantViewController(ofType: VolumeViewController.self) {

@@ -14,6 +14,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	var window: UIWindow?
 	
+	func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+		
+		if let tabBarCon = window?.rootViewController as? ShyTabBarController {
+			tabBarCon.restoreChildViewControllers()
+		}
+		
+		return true
+	}
+	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		
 		_ = K() // to force userDefs initial, non-nil values
@@ -27,8 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	func applicationWillResignActive(_ application: UIApplication) {
-		let xxx = UserDefaults.standard.synchronize()
-		print("xxx: \(String(describing: xxx))")
+		UserDefaults.standard.synchronize()
 		triggerAllSettingsSave()
 	}
 	
