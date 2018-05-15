@@ -64,7 +64,7 @@ class SSHManager: NSObject {
 		if settingsPr.pushVolume == lastInComingVolume {
 			// new value is no change vs confirmed value
 			// since the slider can move and not produce a new *Int* value (from a *different* float value), and the slider is turned grey even then, we need to turn it black here
-			settingsPr.confirmedVolume = lastInComingVolume
+			getVolumeFromRemote()
 			return
 		}
 		
@@ -105,7 +105,7 @@ class TransmitVolumeOperation : Operation
 	weak var sshMan: SSHManager?
 	
 	init(mode: OperationMode, sshMan:SSHManager) {
-		self.mode = mode
+		self.mode = mode // push or pull
 		self.sshMan = sshMan
 	}
 	

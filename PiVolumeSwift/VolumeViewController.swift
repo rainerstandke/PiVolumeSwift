@@ -88,6 +88,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		self.presetTableView.flashScrollIndicators()
 	}
 	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		saveSettings()
+	}
 	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
@@ -250,6 +254,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 				self.volumeLabel.textColor = self.confirmedColor
 			}
 		}
+		
+		sshMan.getVolumeFromRemote()
 	}
 	
 	
