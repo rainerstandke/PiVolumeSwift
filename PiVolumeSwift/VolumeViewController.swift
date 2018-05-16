@@ -49,6 +49,10 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		presetTableView.allowsMultipleSelectionDuringEditing = false
 		presetTableView.delegate = self
 		
+		
+		
+		sshMan.restorationParent = self
+		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -258,6 +262,24 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		sshMan.getVolumeFromRemote()
 	}
 	
+	// MARK: -
+	
+	override func encodeRestorableState(with coder: NSCoder) {
+		super.encodeRestorableState(with: coder)
+		coder.encode(sshMan.settingsPr.confirmedVolume, forKey: "lastConfirmedVolumeStr")
+		coder.encode(sshMan, forKey: "localSshMan")
+	}
+	
+	override func decodeRestorableState(with coder: NSCoder) {
+		super.decodeRestorableState(with: coder)
+		if let lastVolStr = coder.decodeObject(forKey: "lastConfirmedVolumeStr") {
+			print("lastVolStr: \(String(describing: lastVolStr))")
+			// TODO: set UI directly
+		}
+		if let xxx = coder.decodeObject(forKey: "localSshMan") {
+			print("xxx: \(String(describing: xxx))")
+		} else { print("no decode sshMan") }
+	}
 	
 	// MARK: - volume slider
 	

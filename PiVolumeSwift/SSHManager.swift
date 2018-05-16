@@ -6,13 +6,18 @@
 //  Copyright © 2017 Rainer Standke. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import NMSSH
 
 
 // TODO: have long timeout during normal ops, short when doing settings
 
-class SSHManager: NSObject {
+class SSHManager: NSObject, UIStateRestoring, UIObjectRestoration
+{
+	static func object(withRestorationIdentifierPath identifierComponents: [String], coder: NSCoder) -> UIStateRestoring? {
+		print("identifierComponents: \(String(describing: identifierComponents))")
+		return SSHManager.init()
+	}
 	
 	@objc override init() {
 		opQueue = OperationQueue()
@@ -20,6 +25,9 @@ class SSHManager: NSObject {
 		opQueue.maxConcurrentOperationCount = 1
 		
 		super.init()
+		restorationIdentifier = "RestID_SshMan"
+		
+		UIApplication.registerObject(forStateRestoration: self, restorationIdentifier: restorationIdentifier!)
 	}
 	
 	var settingsPr = SettingsProxy() {
@@ -50,11 +58,25 @@ class SSHManager: NSObject {
 		}
 	}
 	
+	var restorationIdentifier: String?
+	var restorationParent: UIStateRestoring?
+	var objectRestorationClass: UIObjectRestoration.Type? { get { return SSHManager.self} }
+	
 	deinit {
 		timer?.invalidate()
 	}
 	
+	func encodeRestorableState(with coder: NSCoder) {
+		print("sshMan encode")
+		coder.encode("sshMan", forKey: "signal")
+	}
 	
+	func decodeRestorableState(with coder: NSCoder) {
+		if let str = coder.decodeObject(forKey: "signal") {
+			print("signal str: \(String(describing: str))")
+		}
+	}
+
 	func pushVolumeToRemote() {
 		if opQueue.operationCount > 0 {
 			// throttle - if any operation is already underway just drop this one
