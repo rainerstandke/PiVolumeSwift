@@ -25,6 +25,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="352" id="Fh2-Yr-fg4"/>
                                 </constraints>
+                                <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" semanticContentAttribute="spatial" selectionStyle="blue" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="kPresetTableViewCell" id="Qhd-yI-5Yc">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
