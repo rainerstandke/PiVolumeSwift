@@ -12,7 +12,7 @@ import CoreGraphics
 
 class VolumeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate
 {
-	let sshMan = SSHManager()
+	var sshMan = SSHManager()
 	
 	let pushedColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 	let confirmedColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -278,6 +278,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 		if let xxx = coder.decodeObject(forKey: "localSshMan") {
 			print("xxx: \(String(describing: xxx))")
+			self.sshMan = xxx as! SSHManager
 		} else { print("no decode sshMan") }
 	}
 	
