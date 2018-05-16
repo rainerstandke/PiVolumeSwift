@@ -320,7 +320,7 @@
         <!--TabBarCon-->
         <scene sceneID="Qy4-fJ-pVz">
             <objects>
-                <tabBarController storyboardIdentifier="ShyTabBarCon" title="TabBarCon" extendedLayoutIncludesOpaqueBars="YES" id="wVo-TL-8Cu" customClass="ShyTabBarController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="ShyTabBarCon" title="TabBarCon" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wVo-TL-8Cu" customClass="ShyTabBarController" customModule="PiVolumeSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="6HY-yj-X6B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
