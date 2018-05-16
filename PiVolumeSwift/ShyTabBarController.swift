@@ -13,6 +13,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	
 	func restoreChildViewControllers() {
 		// called _before_ viewDidLoad from AppDel
+		// ... so that all tabs that existed in state encoding will exist when the state is restored via UIStateRestoration
+		// only the slected tab will be restored, as inherited from super
 		let previousTabCount = UserDefaults.standard.integer(forKey: K.UserDef.TabCount)
 		
 		if previousTabCount > 1 {
@@ -53,7 +55,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		UserDefaults.standard.synchronize()
 	}
 	
-	@objc func removeNavCon() {
+	@objc func removeVolumeCon() {
+		// really: dump volumeController wrapped in NavCon
 		self.viewControllers!.remove(at: self.selectedIndex)
 		selectedIndex = childViewControllers.count - 1
 		updateTabBarPosition()
@@ -80,12 +83,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		// the origin of the tabBar (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or its frame's bottom is alligned with the bottom of the parent view
 		
 		let count = childCount != nil ? childCount! : childViewControllers.count
-
-		// huh?
-//		guard let count = childCount ?? childViewControllers.count else {
-//			print("could not get count")
-//			return self.view.frame.size.height
-//		}
 
 		var newY_Origin = self.view.frame.size.height // just outside/under parent view
 		if count > 1 {

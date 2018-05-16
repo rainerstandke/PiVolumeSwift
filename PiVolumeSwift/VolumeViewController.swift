@@ -48,7 +48,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		presetTableView.allowsMultipleSelectionDuringEditing = false
 		presetTableView.delegate = self
-		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -116,12 +115,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 			tableVuHeightConstraint.constant = (CGFloat(rowCount) * rowHt)
 		
 			super.viewSafeAreaInsetsDidChange()
-		} else {
-			// Fallback on earlier versions
-			
-			// use topLayoutGuide on vuCon, with manual trigger
-			
-			// TODO: ???
 		}
 	}
 
@@ -137,7 +130,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@objc func deleteTabItem() {
 		// runs when user deletes this vuCon by way of - leftBarButtonItem
 		if let tabBarCon = tabBarController as? ShyTabBarController {
-			tabBarCon.removeNavCon()
+			tabBarCon.removeVolumeCon()
 		}
 	}
 	
@@ -236,7 +229,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		self.title = sshMan.settingsPr.deviceName
 		tabBarItem.title = self.title
 		
-		if self.volumeLabel != nil { // need to test b/c called before viewDidLoad
+		if self.volumeLabel != nil { // need to test b/c can be called before viewDidLoad
 			if sshMan.settingsPr.confirmedVolume != nil {
 				volumeLabel.text = sshMan.settingsPr.confirmedVolume
 			} else if sshMan.settingsPr.pushVolume != nil {
@@ -425,7 +418,6 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 				return }
 			sshMan.settingsPr.presetStrings[idxPath.row] = String(newPresetVal)
 		}
-		
 	}
 	
 	

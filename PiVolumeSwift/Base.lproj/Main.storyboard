@@ -339,7 +339,7 @@
         <!--NavCon-->
         <scene sceneID="ngK-jY-VM7">
             <objects>
-                <navigationController storyboardIdentifier="NavCon" title="NavCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="2jF-o8-R9z" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavCon" title="NavCon" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2jF-o8-R9z" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="RPi_Solid" id="RMK-ht-jCJ"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KWh-u8-Eu3">

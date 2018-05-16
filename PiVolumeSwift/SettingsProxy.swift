@@ -6,6 +6,15 @@
 //  Copyright © 2017 Rainer Standke. All rights reserved.
 //
 
+
+
+
+/* settings and state of the raspberry pi - perhaps naming ought to reflect that */
+
+
+
+
+
 import Foundation
 
 class SettingsProxy: NSObject, Codable
@@ -16,9 +25,9 @@ class SettingsProxy: NSObject, Codable
 	
 	var presetStrings = [String]() // just the preset values as single strings in the order they appear on screen
 
-	// dynamic so they can be observed with KVO
-	@objc dynamic var pushVolume: String?
-	@objc dynamic var confirmedVolume: String?
+	// dynamic so they can be observed with KVO using objc dynamic runtime
+	@objc dynamic var pushVolume: String? // the volume sent to the pi
+	@objc dynamic var confirmedVolume: String? // the volume read from the pi
 	
 	override var description: String {
 		let encoder = JSONEncoder()

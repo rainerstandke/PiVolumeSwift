@@ -6,11 +6,14 @@
 //  Copyright © 2017 Rainer Standke. All rights reserved.
 //
 
+
+
+/* manages secure shell communications with rasperry pi */
+
+
+
 import Foundation
 import NMSSH
-
-
-// TODO: have long timeout during normal ops, short when doing settings
 
 class SSHManager: NSObject {
 	
@@ -98,6 +101,8 @@ class SSHManager: NSObject {
 	}
 }
 
+
+/* represents one single transaction between iOS device and raspberry pi */
 
 class TransmitVolumeOperation : Operation
 {

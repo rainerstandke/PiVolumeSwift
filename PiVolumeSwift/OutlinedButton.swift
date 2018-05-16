@@ -6,6 +6,12 @@
 //  Copyright © 2017 Rainer Standke. All rights reserved.
 //
 
+
+
+/* just to get rounded corners and control border drawing */
+
+
+
 import UIKit
 
 

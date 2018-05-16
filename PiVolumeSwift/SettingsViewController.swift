@@ -16,8 +16,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 	
 	@IBOutlet weak var statusLabel: UILabel!
 	
-	// set by VolVuCon during segue
-	var sshMan: SSHManager?
+	// set by VolVuCon during segue, held strongly by VolVuCon
+	weak var sshMan: SSHManager?
 	
 	var connectStatusObservation: NSKeyValueObservation?
 	

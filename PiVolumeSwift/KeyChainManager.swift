@@ -12,7 +12,8 @@
 /*
 
 
-public private key pair for ssh into Pis into KeyChain
+handle public private key pair for ssh into Pis, storing in KeyChain
+limited to one key pair used for any and all raspberry pis
 
 
 */
