@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wVo-TL-8Cu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wVo-TL-8Cu">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-63-VUd">
-                                <rect key="frame" x="0.0" y="203" width="414" height="352"/>
+                                <rect key="frame" x="0.0" y="193" width="414" height="352"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="352" id="Fh2-Yr-fg4"/>
@@ -31,7 +31,7 @@
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" semanticContentAttribute="spatial" tableViewCell="Qhd-yI-5Yc" id="Q1I-xr-cj2">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="39" translatesAutoresizingMaskIntoConstraints="NO" id="vY3-rI-nq4">
@@ -65,6 +65,7 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="I1f-bo-Vo3" firstAttribute="width" secondItem="He2-Gh-qtb" secondAttribute="width" id="Jiu-vH-oYn"/>
+                                                        <constraint firstItem="I1f-bo-Vo3" firstAttribute="height" secondItem="He2-Gh-qtb" secondAttribute="height" id="U0L-av-UKI"/>
                                                     </constraints>
                                                 </stackView>
                                             </subviews>
@@ -144,7 +145,7 @@
                             <constraint firstItem="zIr-63-VUd" firstAttribute="trailing" secondItem="Naz-G2-F9V" secondAttribute="trailing" id="bns-rR-ZQV"/>
                             <constraint firstAttribute="trailingMargin" secondItem="O73-Zg-0cZ" secondAttribute="trailing" constant="9" id="ijf-Em-ElW"/>
                             <constraint firstItem="F70-tz-Agf" firstAttribute="top" secondItem="zIr-63-VUd" secondAttribute="top" constant="-3" id="mKR-hq-BKv"/>
-                            <constraint firstItem="zIr-63-VUd" firstAttribute="top" secondItem="O73-Zg-0cZ" secondAttribute="bottom" constant="5" id="pfr-4B-AAU">
+                            <constraint firstItem="O73-Zg-0cZ" firstAttribute="bottom" secondItem="zIr-63-VUd" secondAttribute="top" constant="5" id="pfr-4B-AAU">
                                 <variation key="heightClass=compact-widthClass=regular" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="9cn-dV-GrP" firstAttribute="top" secondItem="Naz-G2-F9V" secondAttribute="top" constant="14" id="vWb-1h-oWz"/>

@@ -95,7 +95,6 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		super.viewDidLayoutSubviews()
 		
 		// force right tabBar position for current childView count, needed after rotation
-		// note: block doesn't do anything
 		updateTabBarPosition()
 	}
 	
@@ -123,6 +122,25 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		
 		let volVuCons = self.descendantViewControllers(of: VolumeViewController.self)
 		volVuCons.forEach { $0.saveSettings() }
+	}
+	
+	override func encodeRestorableState(with coder: NSCoder) {
+		if let count = tabBar.items?.count {
+			coder.encode(Int64(count), forKey: K.UIStateRestoration.TabCount)
+			coder.encode(Int64(selectedIndex), forKey: K.UIStateRestoration.SelectedTab	)
+		}
+		super.encodeRestorableState(with: coder)
+	}
+	
+	override func decodeRestorableState(with coder: NSCoder) {
+		super.decodeRestorableState(with: coder)
+		
+		let tabCount = Int(coder.decodeInt64(forKey: K.UIStateRestoration.TabCount))
+		let selectedTab = Int(coder.decodeInt64(forKey: K.UIStateRestoration.SelectedTab))
+
+		if tabCount == tabBar.items?.count {
+			selectedIndex = selectedTab
+		}
 	}
 }
 	

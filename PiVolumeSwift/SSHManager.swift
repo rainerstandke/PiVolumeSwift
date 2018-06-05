@@ -61,13 +61,16 @@ class SSHManager: NSObject {
 	func pushVolumeToRemote() {
 		if opQueue.operationCount > 0 {
 			// throttle - if any operation is already underway just drop this one
+//			print("drop")
 			return
 		}
-		
+//		print("settingsPr.pushVolume: \(String(describing: settingsPr.pushVolume))")
+
 		if settingsPr.pushVolume == lastInComingVolume {
 			// new value is no change vs confirmed value
 			// since the slider can move and not produce a new *Int* value (from a *different* float value), and the slider is turned grey even then, we need to turn it black here
 			getVolumeFromRemote()
+//			print("redundant")
 			return
 		}
 		
@@ -89,11 +92,13 @@ class SSHManager: NSObject {
 	}
 	
 	func resetConnectionTimeOut(_ interval: Double) {
+//		print("interval: \(String(describing: interval))")
 		// called from TransmitOp for automatic disconnect
 		DispatchQueue.main.async {
 			self.timer?.invalidate()
 			
 			self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: false, block: { (timer: Timer) in
+//				print(" • disconnect")
 				self.session?.disconnect()
 				self.session = nil
 			})
@@ -119,6 +124,7 @@ class TransmitVolumeOperation : Operation
 	override func main() {
 		guard let localSshMan = sshMan else { print("no sshMan in transmit op"); return  }
 		if	localSshMan.session == nil {
+//			print("• new session")
 			localSshMan.session = NMSSHSession.connect(toHost: localSshMan.settingsPr.ipAddress,
 													   withUsername: localSshMan.settingsPr.userName)
 		}
@@ -135,6 +141,7 @@ class TransmitVolumeOperation : Operation
 		}
 		
 		if !localSession.isConnected {
+//			print("• connect")
 			if !localSession.connect() {
 				resetSession()
 				return

@@ -109,6 +109,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 				return
 			}
 			
+			// maximize number of table columns on screen & prevent fractional rows
 			let rowHt = presetTableView.rowHeight
 			let availableHeight = view.bounds.size.height - view.safeAreaInsets.bottom - presetTableView.frame.origin.y
 			let rowCount = Int(availableHeight / rowHt)

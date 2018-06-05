@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			tabBarCon.restoreChildViewControllers()
 		}
 		
+		window?.makeKeyAndVisible()
+		
 		return true
 	}
 	

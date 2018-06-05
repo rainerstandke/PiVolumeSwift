@@ -45,6 +45,10 @@ struct K {
 		static let SettingsPrefix = "settings-"
 	}
 	
+	struct UIStateRestoration {
+		static let TabCount = "kTabCount"
+		static let SelectedTab = "kSelectedTab"
+	}
 	
 	init() {
 		// runs once, called from appDel. To init userDefs.
