@@ -49,8 +49,8 @@ struct K {
 		static let TabCount = "kTabCount"
 		static let SelectedTab = "kSelectedTab"
 	}
-	
-	init() {
+
+	static func prepUserDefaults() {
 		// runs once, called from appDel. To init userDefs.
 		
 		let defaults = UserDefaults.standard

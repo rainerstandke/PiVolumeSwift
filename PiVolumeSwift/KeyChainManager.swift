@@ -34,7 +34,7 @@ class KeyChainManager {
 	
 	
 	func landing() {
-		// for debug...
+		// for debug... / UNUSED
 		writeKeyFiles()
 		print("read: \(String(describing: readKeys()))")
 	}
@@ -44,30 +44,20 @@ class KeyChainManager {
 		// if so read them as data and put them into keyChain, afterwards delete file
 		// assumptions: no password on private key, same key for all Pis
 		
-		let urlResultTuple = documentURLs()
-		if urlResultTuple.success == false {
-			return
-		}
-		
-		func writeKey(for keyClass: PVKeyClass, with urlResultTuple: (privateKeyURL: URL?, publicKeyURL: URL?, success: Bool)) {
-			
-			var readURL: URL?
-			switch keyClass {
-			case .Private:
-				readURL = urlResultTuple.privateKeyURL!
-			case .Public:
-				readURL = urlResultTuple.publicKeyURL!
-			}
+		guard let urlResultTuple = documentURLs() else { return }
+
+		// return type : Alamo fire / make tuple ingredients non optional, tuple optional
+		func writeKey(for keyClass: PVKeyClass, with readURL: URL) {
 			
 			// try to just write, regardless of what may be there already
-			guard let data = dataFrom(url: readURL!) else { return }
+			guard let data = dataFrom(url: readURL) else { return }
 			let query = keyPutQueryDict(keyClass: keyClass, payloadData: data)
 			let status = SecItemAdd(query as CFDictionary, nil)
 			
 			switch status {
 			case noErr:
 				// delete file from disk
-				try! FileManager.default.removeItem(at: readURL!)
+				try? FileManager.default.removeItem(at: readURL)
 				break
 			case errSecDuplicateItem:
 				// update existing key
@@ -79,14 +69,14 @@ class KeyChainManager {
 					print("Error updating Keychain: \(status)")
 					return
 				}
-				try! FileManager.default.removeItem(at: readURL!)
+				try? FileManager.default.removeItem(at: readURL)
 			default:
 				print("Error writing to Keychain: \(status)")
 			}
 		}
 		
-		writeKey(for: .Private, with:urlResultTuple)
-		writeKey(for: .Public, with:urlResultTuple)
+		writeKey(for: .privateKey, with:urlResultTuple.privateKeyURL)
+		writeKey(for: .publicKey, with:urlResultTuple.privateKeyURL)
 	}
 	
 	
@@ -104,7 +94,8 @@ class KeyChainManager {
 			let status = withUnsafeMutablePointer(to: &queryResult) {
 				SecItemCopyMatching(query as CFDictionary, UnsafeMutablePointer($0))
 			}
-			if status != noErr {
+			
+			guard status == noErr else {
 				print("key read error: \(status)")
 				return nil
 			}
@@ -112,13 +103,14 @@ class KeyChainManager {
 			guard let resDict = queryResult as? [String : AnyObject],
 				let keyData = resDict[kSecValueData as String],
 				let keyStr = String.init(data: keyData as! Data, encoding: .utf8)
-				else { return nil}
+				else { return nil }
 			
 			return keyStr
 		}
 		
-		if let privKeyStr = keyStr(for: .Private),
-			let pubKeyStr =  keyStr(for: .Public) {
+		// enum instance lower case
+		if let privKeyStr = keyStr(for: .privateKey),
+			let pubKeyStr =  keyStr(for: .publicKey) {
 			return (privKeyStr, pubKeyStr)
 		} else {
 			return nil
@@ -141,14 +133,15 @@ class KeyChainManager {
 		return try? Data.init(contentsOf: url)
 	}
 	
-	private func documentURLs() -> (privateKeyURL: URL?, publicKeyURL: URL?, success: Bool) {
+	private func documentURLs() -> (privateKeyURL: URL, publicKeyURL: URL)? {
 		// go look for exactly 2 files in all of doc dir. Need to be a private and a public key (based on text prefix)
 		let docDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 		
-		let fileURLs = try! FileManager.default.contentsOfDirectory(at: docDirURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+		// guard let try?
+		guard let fileURLs = try? FileManager.default.contentsOfDirectory(at: docDirURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) else { return nil }
 		
-		var pubReturnURL: URL? = nil
-		var privReturnURL: URL? = nil
+		var pubReturnURL: URL?
+		var privReturnURL: URL?
 		for fileURL in fileURLs {
 			if fileURL.pathExtension == "pub" {
 				let pubKey = try! String.init(contentsOf: fileURL)
@@ -164,9 +157,10 @@ class KeyChainManager {
 			}
 		}
 		
-		let success = fileURLs.count == 2 && pubReturnURL != nil && privReturnURL != nil
+		guard let privURL = privReturnURL,
+			let pubURL = pubReturnURL else { return nil }
 		
-		return (privReturnURL, pubReturnURL, success)
+		return (privURL, pubURL)
 	}
 	
 	private func keyQueryDict(keyClass: PVKeyClass) -> [String: AnyObject] {
@@ -174,10 +168,10 @@ class KeyChainManager {
 		var keyClassStr: CFString? = nil
 		var label = "PiVolume - "
 		switch keyClass {
-		case .Private:
+		case .privateKey:
 			keyClassStr = kSecAttrKeyClassPrivate
 			label += "Private Key"
-		case .Public:
+		case .publicKey:
 			keyClassStr = kSecAttrKeyClassPublic
 			label += "Public Key"
 		}
@@ -211,8 +205,8 @@ class KeyChainManager {
 	}
 	
 	enum PVKeyClass: Int {
-		case Private = 10
-		case Public
+		case privateKey = 10
+		case publicKey
 	}
 }
 

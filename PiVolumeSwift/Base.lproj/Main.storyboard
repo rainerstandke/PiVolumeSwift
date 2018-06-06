@@ -31,7 +31,7 @@
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" semanticContentAttribute="spatial" tableViewCell="Qhd-yI-5Yc" id="Q1I-xr-cj2">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="39" translatesAutoresizingMaskIntoConstraints="NO" id="vY3-rI-nq4">
@@ -43,7 +43,7 @@
                                                             <state key="normal" title="??"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                    <real key="value" value="4"/>
+                                                                    <integer key="value" value="4"/>
                                                                 </userDefinedRuntimeAttribute>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                                                     <real key="value" value="1"/>
@@ -170,10 +170,10 @@
                                 <exclude reference="P0N-YD-CUc"/>
                                 <include reference="mKR-hq-BKv"/>
                                 <include reference="2d2-mW-3pr"/>
-                                <exclude reference="pfr-4B-AAU"/>
                                 <include reference="CQp-nF-2pF"/>
                                 <exclude reference="Jqy-JP-jhl"/>
                                 <exclude reference="S1L-Bs-9yg"/>
+                                <exclude reference="pfr-4B-AAU"/>
                                 <include reference="w6D-Kk-D7f"/>
                             </mask>
                         </variation>

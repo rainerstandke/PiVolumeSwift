@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		
-		_ = K() // to force userDefs initial, non-nil values
+		K.prepUserDefaults() // to force userDefs initial, non-nil values
 		
 		// force init
 		NMSSHLogger.shared().isEnabled = false

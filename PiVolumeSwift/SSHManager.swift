@@ -16,15 +16,7 @@ import Foundation
 import NMSSH
 
 class SSHManager: NSObject {
-	
-	@objc override init() {
-		opQueue = OperationQueue()
-		opQueue.qualityOfService = .userInteractive
-		opQueue.maxConcurrentOperationCount = 1
-		
-		super.init()
-	}
-	
+
 	var settingsPr = SettingsProxy() {
 		didSet {
 			opsCountObservation =  opQueue.observe(\.operationCount, options: [.new]) { (opQ, change) in
@@ -47,10 +39,19 @@ class SSHManager: NSObject {
 	var connectionStatus: SshConnectionStatus = .Unknown {
 		// whenever the status changes send notif - SettingsVuCon could be listening
 		didSet {
+			// extend notif name w/ static let
 			NotificationCenter.default.post(name:NSNotification.Name(rawValue: K.Notif.SshConnectionStatusChanged),
 											object:self,
 											userInfo:[K.Key.ConnectionStatus : connectionStatus])
 		}
+	}
+	
+	@objc override init() {
+		opQueue = OperationQueue()
+		opQueue.qualityOfService = .userInteractive
+		opQueue.maxConcurrentOperationCount = 1
+		
+		super.init()
 	}
 	
 	deinit {
@@ -162,18 +163,15 @@ class TransmitVolumeOperation : Operation
 			}
 		}
 		
-
-		var commandStr : String? = nil
-		switch mode {
-		case .Push:
-			if let volStr = localSshMan.settingsPr.pushVolume {
-				commandStr = "amixer -c 0 cset numid=6 \(volStr)"
+		guard let commandStr = { () -> String? in
+			switch self.mode {
+			case .Push:
+				guard let volStr = localSshMan.settingsPr.pushVolume else { return nil }
+				return "amixer -c 0 cset numid=6 \(volStr)"
+			case.Pull:
+				return "amixer -c 0 cget numid=6"
 			}
-		case.Pull:
-			commandStr = "amixer -c 0 cget numid=6"
-		}
-		
-		if commandStr == nil { localSshMan.connectionStatus = .Failed; return }
+		}() else { localSshMan.connectionStatus = .Failed; return }
 		
 		// set connection timeout on sshMan
 		DispatchQueue.main.async {
@@ -200,16 +198,12 @@ class TransmitVolumeOperation : Operation
 	
 	func regexMatch(inStr: String, regexStr: String) -> String?
 	{
-		let regex = try! NSRegularExpression(pattern: regexStr, options: [])
+		guard let regex = try? NSRegularExpression(pattern: regexStr, options: []),
+			let res = regex.firstMatch(in: inStr,
+									   options: [],
+									   range: NSRange(location: 0, length: inStr.utf16.count))
+			else { return nil }
 		
-		let res = regex.firstMatch(in: inStr,
-		                           options: [],
-		                           range: NSRange(location: 0, length: inStr.utf16.count))
-		
-		if res == nil {
-			return nil
-		}
-		
-		return (inStr as NSString).substring(with: res!.range)
+		return (inStr as NSString).substring(with: res.range)
 	}
 }

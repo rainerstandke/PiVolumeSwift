@@ -54,21 +54,18 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		super.viewWillAppear(animated)
 		
 		// add +/- nav item in UL ( to add or remove more tabs )
-		if let tabBarCon = tabBarController as? ShyTabBarController {
-			
-			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self)
-			if let index = idxIsLast.index, let isLast = idxIsLast.isLast {
-				if (isLast && index > 0)  || (tabBarCon.viewControllers?.count)! >= 5 {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"),
-					                                                   style: .plain,
-					                                                   target: self,
-					                                                   action: #selector(deleteTabItem))
-				} else {
-					navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "+Pi"),
-					                                                   style: .plain,
-					                                                   target: self,
-					                                                   action: #selector(addTabItem))
-				}
+		if let tabBarCon = tabBarController as? ShyTabBarController,
+			let idxIsLast = tabBarCon.indexOfDescendantVuCon(vuCon: self) {
+			if (idxIsLast.isLast && idxIsLast.index > 0)  || (tabBarCon.viewControllers?.count)! >= 5 {
+				navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "-Pi"),
+																   style: .plain,
+																   target: self,
+																   action: #selector(deleteTabItem))
+			} else {
+				navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "+Pi"),
+																   style: .plain,
+																   target: self,
+																   action: #selector(addTabItem))
 			}
 		}
 		
@@ -177,7 +174,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	
 	func saveSettings(index: Int? = nil) {
 		// store our settings object in userDefs, using our index in tabBarCon as key
-		guard let idx = index ?? indexInTabBarCon() else { print("can't save settings"); return }
+		guard let idx = index ?? indexInTabBarCon() else { return }
 		let key = K.Misc.SettingsPrefix + String(idx)
 		UserDefaults.standard.set(try? PropertyListEncoder().encode(sshMan.settingsPr), forKey:key)
 	}
@@ -196,7 +193,8 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	}
 	
 	func indexInTabBarCon() -> Int? {
-		return (tabBarController as? ShyTabBarController)?.indexOfDescendantVuCon(vuCon: self).index
+		guard let idx = (tabBarController as? ShyTabBarController)?.indexOfDescendantVuCon(vuCon: self) else { return nil }
+		return idx.index
 	}
 	
 	
@@ -242,7 +240,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		}
 		
 		// observe volume confirmation -> update UI
-		confirmedVolumeObservation = sshMan.settingsPr.observe(\.confirmedVolume) { (setPr, change) in
+		confirmedVolumeObservation = sshMan.settingsPr.observe(\.confirmedVolume) { [unowned self] (setPr, change) in
 			DispatchQueue.main.async {
 				self.volumeLabel.text = setPr.confirmedVolume // possibly redundant
 				self.volumeLabel.textColor = self.confirmedColor
@@ -278,10 +276,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	func updateSlider() {
 		// called from viewDidAppear, when preset is tapped or adjusted
 		// if there is a numerical value in the UI animate the slider
-		if let floatVal = Float(volumeLabel.text!){
-			UIView.animate(withDuration: 0.3,
-						   animations: {self.volumeSlider.setValue(floatVal, animated: true)})
-		}
+		// guard let & unwrap text
+		guard let floatStr = volumeLabel.text,
+			let floatVal = Float(floatStr) else { return }
+		UIView.animate(withDuration: 0.3,
+					   animations: {self.volumeSlider.setValue(floatVal, animated: true)})
 	}
 	
 	
@@ -312,14 +311,14 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		if pressedView.tag == K.UIElementTag.PresetButton {
 			// long touch on preset button to aquire new preset value
-			let presetBtn = pressedView as! UIButton
-			presetBtn.setTitle(volumeLabel.text, for: .normal)
-
-			sshMan.settingsPr.presetStrings[idxPath.row] = volumeLabel.text!
-			
-			saveSettings()
+			if let volumeStr = volumeLabel.text,
+				let presetBtn = pressedView as? UIButton {
+				presetBtn.setTitle(volumeLabel.text, for: .normal)
+				sshMan.settingsPr.presetStrings[idxPath.row] = volumeStr
+				saveSettings()
+			}
 		} else {
-			//long press on row to reorder - toggle tv isEditing
+			// long press on row to reorder - toggle tv isEditing
 			tableView.setEditing(!tableView.isEditing, animated: true)
 			updateDoneTableEditBtn()
 		}
@@ -356,7 +355,7 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		                  animations: {
 							self.doneTableEditBtn.frame = targetFrame
 							self.doneTableEditBtn.alpha = targetAlpha
-		}) { (completed: Bool) in
+		}) { _ in
 			if self.doneTableEditBtn.alpha == 0 {
 				// has to happen after animation
 				self.doneTableEditBtn.isHidden = true
@@ -388,19 +387,18 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 	@IBAction func stepped(_ stepper: UIStepper) {
 		// stepper + or - was pressed
 		
+		defer {
+			stepper.value = 0.0 // don't let the value accumulate
+		}
+		
 		let presetButton = stepper.superview!.subviews.first { siblingOrSelf -> Bool in
 			return siblingOrSelf.tag == K.UIElementTag.PresetButton
 		} as! UIButton
 		
-		var newPresetVal: Int
-		if let currPreset = Int((presetButton.titleLabel?.text)!) {
-			newPresetVal = currPreset + Int(stepper.value)
-		} else {
-			stepper.value = 0.0
-			return
-		}
+		guard let currPresetStr = presetButton.titleLabel?.text,
+			let currPreset = Int(currPresetStr) else { return }
 		
-		stepper.value = 0.0
+		let newPresetVal = currPreset + Int(stepper.value)
 		
 		if newPresetVal < 0 || newPresetVal > 151 {
 			return
@@ -413,12 +411,11 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		updateSlider()
 		
 		// update our preset in settings
-		if let tv = stepper.ancestorView(ofType: UITableView.self) {
-			let tvLocation = tv.convert(stepper.center, from: stepper.superview)
-			guard let idxPath = tv.indexPathForRow(at: tvLocation) else {
-				return }
-			sshMan.settingsPr.presetStrings[idxPath.row] = String(newPresetVal)
-		}
+		guard let tv = stepper.ancestorView(ofType: UITableView.self) else { return }
+		let tvLocation = tv.convert(stepper.center, from: stepper.superview)
+		guard let idxPath = tv.indexPathForRow(at: tvLocation) else { return }
+		
+		sshMan.settingsPr.presetStrings[idxPath.row] = String(newPresetVal)
 	}
 	
 	

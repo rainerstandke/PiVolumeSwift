@@ -34,26 +34,26 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		// settingsProxy already set in segue
 		super.viewDidLoad()
 		
-		if let settingsPr = sshMan?.settingsPr {
-			deviceNameTextField.text = settingsPr.deviceName
-			ipTextField.text = settingsPr.ipAddress
-			userNameTextField.text = settingsPr.userName
-		}
+		guard let sshMan = sshMan else { fatalError("SettingsVuCon: no sshMan") }
+		
+		deviceNameTextField.text = sshMan.settingsPr.deviceName
+		ipTextField.text = sshMan.settingsPr.ipAddress
+		userNameTextField.text = sshMan.settingsPr.userName
 		
 		// show whatever sshMan has as current
-		updateStatusLabel(status: sshMan!.connectionStatus)
+		updateStatusLabel(status: sshMan.connectionStatus)
 		
 		// this could not be done with KVO from Swift 4 b/c enum is not available in obj-c
 		NotificationCenter.default.addObserver(forName: NSNotification.Name("\(K.Notif.SshConnectionStatusChanged)"),
-		                                       object: sshMan!,
-		                                       queue: OperationQueue.main, // effectively: main thread
-		                                       using: { [weak self] (notif) in
-												guard let state = notif.userInfo?[K.Key.ConnectionStatus] as? SshConnectionStatus else { return }
-												self?.updateStatusLabel(status: state)
+											   object: sshMan,
+											   queue: OperationQueue.main, // effectively: main thread
+			using: { [weak self] (notif) in
+				guard let state = notif.userInfo?[K.Key.ConnectionStatus] as? SshConnectionStatus else { return }
+				self?.updateStatusLabel(status: state)
 		})
 		
 		// ... but also force update
-		sshMan?.getVolumeFromRemote()
+		sshMan.getVolumeFromRemote()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -62,12 +62,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate
 		super.viewWillDisappear(animated)
 	}
 	
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-	
 	@objc func performBackSegue() {
 		// called from back btn when we transition back to VolumeViewCon
+		// this is an unwind segue
 		performSegue(withIdentifier: "FromSettingsSegue", sender: self)
 	}
 	

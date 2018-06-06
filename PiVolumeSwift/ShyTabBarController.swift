@@ -14,7 +14,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	func restoreChildViewControllers() {
 		// called _before_ viewDidLoad from AppDel
 		// ... so that all tabs that existed in state encoding will exist when the state is restored via UIStateRestoration
-		// only the slected tab will be restored, as inherited from super
+		// only the selected tab will be restored, as inherited from super
 		let previousTabCount = UserDefaults.standard.integer(forKey: K.UserDef.TabCount)
 		
 		if previousTabCount > 1 {
@@ -29,11 +29,11 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		
 		self.delegate = self
 		
-		childViewControllers.enumerated().forEach({ (tuple: (idx: Int, vuCon: UIViewController)) in
-			if let volVuCon = tuple.vuCon.descendantViewController(ofType: VolumeViewController.self) {
-				volVuCon.readSettings(index: tuple.idx)
+		childViewControllers.enumerated().forEach { (index, vuCon) in
+			if let volVuCon = vuCon.descendantViewController(ofType: VolumeViewController.self) {
+				volVuCon.readSettings(index: index)
 			}
-		})
+		}
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -48,7 +48,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		
 		let storyBoard = UIStoryboard(name: "Main", bundle: nil)
 		let newNavCon = storyBoard.instantiateViewController(withIdentifier: "NavCon")
-		self.viewControllers!.append(newNavCon)
+		viewControllers?.append(newNavCon)
 		selectedViewController = newNavCon
 		
 		UserDefaults.standard.set(childViewControllers.count, forKey:K.UserDef.TabCount)
@@ -57,7 +57,7 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 	
 	@objc func removeVolumeCon() {
 		// really: dump volumeController wrapped in NavCon
-		self.viewControllers!.remove(at: self.selectedIndex)
+		viewControllers?.remove(at: self.selectedIndex)
 		selectedIndex = childViewControllers.count - 1
 		updateTabBarPosition()
 	
@@ -70,8 +70,8 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		self.tabBar.frame.origin.y = newY_Origin
 		
 		// update the children's opaque... to control how far down they extend
-		if viewControllers!.count > 1 {
-			for viewCon in viewControllers! {
+		if (viewControllers?.count ?? 0) > 1 {
+			for viewCon in (viewControllers ?? []) {
 				viewCon.extendedLayoutIncludesOpaqueBars = true
 			}
 		} else {
@@ -79,13 +79,11 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		}
 	}
 	
-	func tabBarOriginY(with childCount: Int? = nil) -> CGFloat {
+	func tabBarOriginY() -> CGFloat {
 		// the origin of the tabBar (i.e. its upper left from the screen's upper left) is either outside / just under the screen, or its frame's bottom is alligned with the bottom of the parent view
 		
-		let count = childCount != nil ? childCount! : childViewControllers.count
-
 		var newY_Origin = self.view.frame.size.height // just outside/under parent view
-		if count > 1 {
+		if childViewControllers.count > 1 {
 			newY_Origin -= tabBar.frame.size.height // regular setup, in view
 		}
 		return newY_Origin
@@ -98,9 +96,12 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 		updateTabBarPosition()
 	}
 	
-	func indexOfDescendantVuCon(vuCon: UIViewController) -> (index: Int?, isLast: Bool?) {
+	func indexOfDescendantVuCon(vuCon: UIViewController) -> (index: Int, isLast: Bool)? {
+		
+		guard let viewCons = viewControllers else { return nil }
+		
 		var resolvedVuCon: UIViewController
-		if (viewControllers?.contains(vuCon))! {
+		if viewCons.contains(vuCon) {
 			// vuCon is our child
 			resolvedVuCon = vuCon
 		} else {
@@ -109,13 +110,14 @@ class ShyTabBarController: UITabBarController , UITabBarControllerDelegate
 				resolvedVuCon = vuCon.parent!
 			} else {
 				// neither child nor grandchild
-				return (nil, nil)
+				return nil
 			}
 		}
 		
-		let idx = viewControllers!.index(of: resolvedVuCon)
-		return (idx, idx == viewControllers!.count - 1)
+		guard let idx = viewControllers!.index(of: resolvedVuCon) else { return nil }
+		return (idx, idx == viewCons.count - 1)
 	}
+	
 	
 	func makeVolumeVuConsSave() {
 		// called from appDel before termination / going to background
