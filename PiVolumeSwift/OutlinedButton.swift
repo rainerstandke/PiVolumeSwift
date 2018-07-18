@@ -41,8 +41,11 @@ class OutlinedButton: UIButton {
 	
 	@IBInspectable var borderColor: UIColor {
 		get {
-			// TODO: nil coalesce to clear color
-			return UIColor.init(cgColor: layer.borderColor!)
+			if let cgCol = layer.borderColor {
+				return UIColor(cgColor: cgCol)
+			} else {
+				return .clear
+			}
 		}
 		set {
 			layer.borderColor = newValue.cgColor

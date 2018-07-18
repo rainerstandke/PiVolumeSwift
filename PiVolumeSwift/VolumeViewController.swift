@@ -241,9 +241,9 @@ class VolumeViewController: UIViewController, UITableViewDataSource, UITableView
 		
 		// observe volume confirmation -> update UI
 		confirmedVolumeObservation = sshMan.settingsPr.observe(\.confirmedVolume) { [unowned self] (setPr, change) in
-			DispatchQueue.main.async {
-				self.volumeLabel.text = setPr.confirmedVolume // possibly redundant
-				self.volumeLabel.textColor = self.confirmedColor
+			DispatchQueue.main.async { [weak self] in
+				self?.volumeLabel.text = setPr.confirmedVolume // possibly redundant
+				self?.volumeLabel.textColor = self?.confirmedColor
 			}
 		}
 		

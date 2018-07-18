@@ -64,14 +64,14 @@ struct K {
 
 
 enum SshConnectionStatus: String {
-	case Succeded = "ok"
-	case Failed = "failed"
-	case InProgress = "…"
-	case Unknown = "??"
+	case succeded = "ok"
+	case failed = "failed"
+	case inProgress = "…"
+	case unknown = "??"
 }
 
 
 enum OperationMode: Int {
-	case Push = 1496
-	case Pull
+	case push = 1496
+	case pull
 }

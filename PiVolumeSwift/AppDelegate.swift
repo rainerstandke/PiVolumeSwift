@@ -38,7 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	func applicationWillResignActive(_ application: UIApplication) {
-		UserDefaults.standard.synchronize()
 		triggerAllSettingsSave()
 	}
 	

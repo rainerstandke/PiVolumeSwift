@@ -17,13 +17,13 @@ import NMSSH
 
 class SSHManager: NSObject {
 
-	var settingsPr = SettingsProxy() {
+	var settingsPr: SettingsProxy {
 		didSet {
-			opsCountObservation =  opQueue.observe(\.operationCount, options: [.new]) { (opQ, change) in
+			opsCountObservation =  opQueue.observe(\.operationCount, options: [.new]) { [weak self] (opQ, change) in
 				// if all ops are done and the slider has been moved beyond the last actually pushed volume, then just push the last known volume
 				if change.newValue == 0 {
-					if self.settingsPr.pushVolume != self.lastInComingVolume {
-						self.pushVolumeToRemote()
+					if self?.settingsPr.pushVolume != self?.lastInComingVolume {
+						self?.pushVolumeToRemote()
 					}
 				}
 			}
@@ -36,7 +36,7 @@ class SSHManager: NSObject {
 	var session: NMSSHSession?
 	var lastInComingVolume: String?
 	var timer: Timer?
-	var connectionStatus: SshConnectionStatus = .Unknown {
+	var connectionStatus: SshConnectionStatus = .unknown {
 		// whenever the status changes send notif - SettingsVuCon could be listening
 		didSet {
 			// extend notif name w/ static let
@@ -50,58 +50,54 @@ class SSHManager: NSObject {
 		opQueue = OperationQueue()
 		opQueue.qualityOfService = .userInteractive
 		opQueue.maxConcurrentOperationCount = 1
-		
+		settingsPr = SettingsProxy()
 		super.init()
 	}
 	
 	deinit {
 		timer?.invalidate()
+		print("deinit sshMan")
 	}
 	
 	
 	func pushVolumeToRemote() {
 		if opQueue.operationCount > 0 {
 			// throttle - if any operation is already underway just drop this one
-//			print("drop")
 			return
 		}
-//		print("settingsPr.pushVolume: \(String(describing: settingsPr.pushVolume))")
 
 		if settingsPr.pushVolume == lastInComingVolume {
 			// new value is no change vs confirmed value
 			// since the slider can move and not produce a new *Int* value (from a *different* float value), and the slider is turned grey even then, we need to turn it black here
 			getVolumeFromRemote()
-//			print("redundant")
 			return
 		}
 		
 		// remember this one for next time around
 		lastInComingVolume = settingsPr.pushVolume
 		
-		let transmitOp = TransmitVolumeOperation(mode: .Push, sshMan: self)
+		let transmitOp = TransmitVolumeOperation(mode: .push, sshMan: self)
 		opQueue.addOperation(transmitOp)
 		
-		self.connectionStatus = .InProgress;
+		self.connectionStatus = .inProgress;
 	}
 	
 	func getVolumeFromRemote()
 	{
-		let transmitOp = TransmitVolumeOperation(mode: .Pull, sshMan: self)
+		let transmitOp = TransmitVolumeOperation(mode: .pull, sshMan: self)
 		opQueue.addOperation(transmitOp)
 		
-		self.connectionStatus = .InProgress;
+		self.connectionStatus = .inProgress;
 	}
 	
 	func resetConnectionTimeOut(_ interval: Double) {
-//		print("interval: \(String(describing: interval))")
 		// called from TransmitOp for automatic disconnect
-		DispatchQueue.main.async {
-			self.timer?.invalidate()
+		DispatchQueue.main.async { [weak self] in
+			self?.timer?.invalidate()
 			
-			self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: false, block: { (timer: Timer) in
-//				print(" • disconnect")
-				self.session?.disconnect()
-				self.session = nil
+			self?.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: false, block: { [weak self] (timer: Timer) in
+				self?.session?.disconnect()
+				self?.session = nil
 			})
 		}
 	}
@@ -125,7 +121,6 @@ class TransmitVolumeOperation : Operation
 	override func main() {
 		guard let localSshMan = sshMan else { print("no sshMan in transmit op"); return  }
 		if	localSshMan.session == nil {
-//			print("• new session")
 			localSshMan.session = NMSSHSession.connect(toHost: localSshMan.settingsPr.ipAddress,
 													   withUsername: localSshMan.settingsPr.userName)
 		}
@@ -133,7 +128,7 @@ class TransmitVolumeOperation : Operation
 		// local func
 		func resetSession() {
 			localSshMan.session = nil // need to nil out
-			localSshMan.connectionStatus = .Failed;
+			localSshMan.connectionStatus = .failed;
 		}
 		
 		guard let localSession: NMSSHSession = localSshMan.session else {
@@ -142,7 +137,6 @@ class TransmitVolumeOperation : Operation
 		}
 		
 		if !localSession.isConnected {
-//			print("• connect")
 			if !localSession.connect() {
 				resetSession()
 				return
@@ -153,10 +147,9 @@ class TransmitVolumeOperation : Operation
 			let keyPair = KeyChainManager.shared.readKeys()
 			if let privKey = keyPair?.privateKeyStr,
 				let pubKey = keyPair?.publicKeyString {
-				
 				if !localSession.authenticateBy(inMemoryPublicKey: pubKey,
-				                                privateKey: privKey,
-				                                andPassword: "") {
+												privateKey: privKey,
+												andPassword: "") {
 					resetSession()
 					return
 				}
@@ -165,13 +158,13 @@ class TransmitVolumeOperation : Operation
 		
 		guard let commandStr = { () -> String? in
 			switch self.mode {
-			case .Push:
+			case .push:
 				guard let volStr = localSshMan.settingsPr.pushVolume else { return nil }
 				return "amixer -c 0 cset numid=6 \(volStr)"
-			case.Pull:
+			case.pull:
 				return "amixer -c 0 cget numid=6"
 			}
-		}() else { localSshMan.connectionStatus = .Failed; return }
+		}() else { localSshMan.connectionStatus = .failed; return }
 		
 		// set connection timeout on sshMan
 		DispatchQueue.main.async {
@@ -179,14 +172,14 @@ class TransmitVolumeOperation : Operation
 			localSshMan.resetConnectionTimeOut(K.Misc.TimerInterval)
 		}
 		
-		guard let responseStr = try? localSession.channel.execute(commandStr) else { localSshMan.connectionStatus = .Failed; return }
+		guard let responseStr = try? localSession.channel.execute(commandStr) else { localSshMan.connectionStatus = .failed; return }
 		
-		guard let resVolStr = volumeFromRemote(outputStr: responseStr) else { localSshMan.connectionStatus = .Failed; return }
+		guard let resVolStr = volumeFromRemote(outputStr: responseStr) else { localSshMan.connectionStatus = .failed; return }
 		
 		// this will trigger observation in VolVuCon -> ui update
 		localSshMan.settingsPr.confirmedVolume = resVolStr
 
-		localSshMan.connectionStatus = .Succeded
+		localSshMan.connectionStatus = .succeded
 	}
 	
 	
